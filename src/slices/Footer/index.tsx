@@ -22,11 +22,16 @@ export default function Footer({ slice }: FooterProps) {
   const deliveredByUrl = slice.primary.delivered_by_url || "https://lunim.io";
 
   return (
-    <footer className="site-footer" aria-label="Footer">
-      <div className="container">
-        <p className="footer__text">
+    <footer className="py-8 border-t border-slate-200 bg-slate-50">
+      <div className="max-w-6xl mx-auto px-6">
+        <p className="text-sm text-slate-500">
           © {currentYear} {copyrightText}. Delivered by{" "}
-          <a href={deliveredByUrl} target="_blank" rel="noopener noreferrer">
+          <a
+            href={deliveredByUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-slate-600 underline underline-offset-2 hover:text-primary transition-colors"
+          >
             {deliveredByText}
           </a>
           .

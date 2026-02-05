@@ -1,0 +1,97 @@
+{
+  "id": "about_with_newsletter_and_contact",
+  "type": "SharedSlice",
+  "name": "AboutWithNewsletterAndContact",
+  "description": "Two-column layout with About section on left, Newsletter and Contact forms stacked on right",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default variation",
+      "imageUrl": "",
+      "primary": {
+        "about_title": {
+          "type": "Text",
+          "config": {
+            "label": "About Title",
+            "placeholder": "About the Awards"
+          }
+        },
+        "about_subtitle": {
+          "type": "Text",
+          "config": {
+            "label": "About Subtitle",
+            "placeholder": "Optional subtitle text"
+          }
+        },
+        "about_description": {
+          "type": "StructuredText",
+          "config": {
+            "label": "About Description",
+            "placeholder": "Enter the about section content...",
+            "allowTargetBlank": true,
+            "multi": "paragraph,strong,em,hyperlink,list-item,o-list-item,heading3"
+          }
+        },
+        "newsletter_heading": {
+          "type": "Text",
+          "config": {
+            "label": "Newsletter Heading",
+            "placeholder": "Newsletter"
+          }
+        },
+        "newsletter_description": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Newsletter Description",
+            "placeholder": "Stay updated with award news...",
+            "allowTargetBlank": true,
+            "multi": "paragraph,strong,em,hyperlink"
+          }
+        },
+        "newsletter_button_text": {
+          "type": "Text",
+          "config": {
+            "label": "Newsletter Button Text",
+            "placeholder": "Subscribe"
+          }
+        },
+        "contact_heading": {
+          "type": "Text",
+          "config": {
+            "label": "Contact Heading",
+            "placeholder": "Contact Us"
+          }
+        },
+        "contact_description": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Contact Description",
+            "placeholder": "Have questions? We're here to help.",
+            "allowTargetBlank": true,
+            "multi": "paragraph,strong,em,hyperlink"
+          }
+        },
+        "contact_button_text": {
+          "type": "Text",
+          "config": {
+            "label": "Contact Button Text",
+            "placeholder": "Send Message"
+          }
+        },
+        "show_newsletter_checkbox": {
+          "type": "Boolean",
+          "config": {
+            "label": "Show Newsletter Checkbox in Contact Form",
+            "default_value": true,
+            "placeholder_false": "Hide",
+            "placeholder_true": "Show"
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

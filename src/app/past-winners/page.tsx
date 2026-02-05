@@ -14,52 +14,41 @@ export default async function PastWinnersPage() {
     .getSingle("past_winners_page")
     .catch(() => null);
 
-  // If we have Prismic content, use SliceZone
   if (doc) {
     return (
       <SliceZone slices={doc.data.slices} components={components} />
     );
   }
 
-  // Fallback to static content
+  // Fallback
   return (
     <>
-      {/* Hero Section */}
-      <section className="hero hero--small">
-        <div className="container">
-          <div className="hero__inner">
-            <p className="eyebrow">Browse Our</p>
-            <h1 className="hero__title">Past Winners</h1>
+      <section className="min-h-[140px] bg-slate-50 border-b border-slate-200 flex items-center">
+        <div className="w-full max-w-5xl mx-auto px-6 py-8">
+          <div className="text-center">
+            <p className="text-xs font-semibold tracking-wider uppercase text-accent mb-2">Browse Our</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-slate-900">Past Winners</h1>
           </div>
         </div>
       </section>
 
-      {/* Main Content */}
-      <section className="after-hero">
-        <div className="container">
-          <div className="content sketch-card">
-            <h2>Winners by Year</h2>
-            <p>
+      <section className="py-12 bg-white">
+        <div className="max-w-3xl mx-auto px-6">
+          <div className="bg-white border border-slate-200 rounded-xl p-6 md:p-8 shadow-sm">
+            <h2 className="text-xl font-semibold text-slate-900 mb-2">Winners by Year</h2>
+            <p className="text-slate-600 mb-6">
               Explore the exceptional poetry collections that have been recognized
               by the Maya Poetry Book Awards over the years.
             </p>
 
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
-                gap: "1rem",
-                marginTop: "2rem",
-              }}
-            >
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {defaultYears.map((year) => (
                 <Link
                   key={year}
                   href={`/past-winners/${year}`}
-                  className="btn btn--ghost"
-                  style={{ textAlign: "center", padding: "1rem 1.5rem" }}
+                  className="text-center px-4 py-3 border border-slate-200 rounded-lg font-medium text-slate-700 hover:border-primary hover:text-primary hover:bg-primary/5 transition-colors"
                 >
-                  <span className="btn__label">{year} Winners</span>
+                  {year} Winners
                 </Link>
               ))}
             </div>

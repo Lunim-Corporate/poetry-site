@@ -10,7 +10,6 @@ interface PageProps {
 
 export const revalidate = 60;
 
-// Sample winner data - in production this would come from Prismic
 const sampleWinners = {
   "1st Place": {
     title: "Taplash Meditations",
@@ -49,146 +48,71 @@ export default async function WinnersYearPage({ params }: PageProps) {
   const { year } = await params;
   const client = createClient();
 
-  // Try to fetch from Prismic
   const doc = await (client as any)
     .getByUID("past_winners_year", year)
     .catch(() => null);
 
-  // If we have Prismic content, use SliceZone
   if (doc) {
     return (
       <SliceZone slices={doc.data.slices} components={components} />
     );
   }
 
-  // Fallback to static content
+  // Fallback
   return (
     <>
-      {/* Hero Section */}
-      <section className="hero hero--small">
-        <div className="container">
-          <div className="hero__inner">
-            <p className="eyebrow">{year}</p>
-            <h1 className="hero__title">Winners</h1>
+      <section className="min-h-[140px] bg-slate-50 border-b border-slate-200 flex items-center">
+        <div className="w-full max-w-5xl mx-auto px-6 py-8">
+          <div className="text-center">
+            <p className="text-xs font-semibold tracking-wider uppercase text-accent mb-2">{year}</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-slate-900">Winners</h1>
           </div>
         </div>
       </section>
 
-      {/* Main Content */}
-      <section className="after-hero">
-        <div className="container">
-          <div className="content sketch-card">
-            <h2>{year} Award Winners</h2>
+      <section className="py-12 bg-white">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="bg-white border border-slate-200 rounded-xl p-6 md:p-8 shadow-sm">
+            <h2 className="text-xl font-semibold text-slate-900 mb-6">{year} Award Winners</h2>
 
             {/* Winners Grid */}
-            <div className="winnersGrid">
-              {/* Header Row */}
-              <div className="winnersGrid__cell">
-                <h3>1st Place</h3>
-              </div>
-              <div className="winnersGrid__cell">
-                <h3>2nd Place</h3>
-              </div>
-              <div className="winnersGrid__cell">
-                <h3>3rd Place</h3>
-              </div>
-              <div className="winnersGrid__cell">
-                <h3>Children&apos;s</h3>
-              </div>
-
-              {/* Winner Cells */}
-              <div className="winnersGrid__cell">
-                <div
-                  style={{
-                    width: "100%",
-                    paddingTop: "140%",
-                    background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)",
-                    borderRadius: "10px",
-                    marginBottom: "0.75rem",
-                    boxShadow: "0 4px 6px -1px rgba(15, 23, 42, 0.08)",
-                  }}
-                />
-                <p className="winnersGrid__caption">
-                  <span>{sampleWinners["1st Place"].title}</span>
-                  <br />
-                  {sampleWinners["1st Place"].author}
-                  <br />
-                  {sampleWinners["1st Place"].location}
-                </p>
-              </div>
-              <div className="winnersGrid__cell">
-                <div
-                  style={{
-                    width: "100%",
-                    paddingTop: "140%",
-                    background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)",
-                    borderRadius: "10px",
-                    marginBottom: "0.75rem",
-                    boxShadow: "0 4px 6px -1px rgba(15, 23, 42, 0.08)",
-                  }}
-                />
-                <p className="winnersGrid__caption--small">
-                  <span>{sampleWinners["2nd Place"].title}</span>
-                  <br />
-                  {sampleWinners["2nd Place"].author}
-                  <br />
-                  {sampleWinners["2nd Place"].location}
-                </p>
-              </div>
-              <div className="winnersGrid__cell">
-                <div
-                  style={{
-                    width: "100%",
-                    paddingTop: "140%",
-                    background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)",
-                    borderRadius: "10px",
-                    marginBottom: "0.75rem",
-                    boxShadow: "0 4px 6px -1px rgba(15, 23, 42, 0.08)",
-                  }}
-                />
-                <p className="winnersGrid__caption--small">
-                  <span>{sampleWinners["3rd Place"].title}</span>
-                  <br />
-                  {sampleWinners["3rd Place"].author}
-                  <br />
-                  {sampleWinners["3rd Place"].location}
-                </p>
-              </div>
-              <div className="winnersGrid__cell">
-                <div
-                  style={{
-                    width: "100%",
-                    paddingTop: "140%",
-                    background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)",
-                    borderRadius: "10px",
-                    marginBottom: "0.75rem",
-                    boxShadow: "0 4px 6px -1px rgba(15, 23, 42, 0.08)",
-                  }}
-                />
-                <p className="winnersGrid__caption--small">
-                  <span>{sampleWinners["Children's"].title}</span>
-                  <br />
-                  {sampleWinners["Children's"].authors.join(" & ")}
-                  <br />
-                  {sampleWinners["Children's"].location}
-                </p>
-              </div>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              {(["1st Place", "2nd Place", "3rd Place", "Children's"] as const).map((place) => {
+                const winner = sampleWinners[place];
+                return (
+                  <div key={place} className="text-center">
+                    <p className={`text-sm font-semibold mb-3 ${place === "1st Place" ? "text-accent-dark" : "text-slate-500"}`}>
+                      {place}
+                    </p>
+                    <div className="aspect-[5/7] bg-gradient-to-br from-slate-100 to-slate-200 rounded-lg shadow-md mb-3" />
+                    <p className="text-sm">
+                      <span className="font-semibold text-slate-900 block">{winner.title}</span>
+                      {"author" in winner ? winner.author : winner.authors.join(" & ")}
+                      <br />
+                      <span className="text-slate-500">{winner.location}</span>
+                    </p>
+                  </div>
+                );
+              })}
             </div>
 
             {/* Shortlist */}
-            <h3>Shortlist</h3>
-            <ul>
+            <h3 className="text-lg font-semibold text-slate-900 mt-8 mb-4">Shortlist</h3>
+            <ul className="space-y-2 text-slate-600">
               {shortlist.map((entry, index) => (
                 <li key={index}>
-                  <strong>{entry.title}</strong> by {entry.author} ({entry.location})
+                  <strong className="text-slate-900">{entry.title}</strong> by {entry.author} ({entry.location})
                 </li>
               ))}
             </ul>
 
             {/* Navigation */}
-            <div style={{ marginTop: "2rem" }}>
-              <Link href="/past-winners" className="btn btn--ghost">
-                <span className="btn__label">← Back to All Years</span>
+            <div className="mt-8 pt-6 border-t border-slate-200">
+              <Link
+                href="/past-winners"
+                className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-primary transition-colors"
+              >
+                ← Back to All Years
               </Link>
             </div>
           </div>
@@ -201,7 +125,6 @@ export default async function WinnersYearPage({ params }: PageProps) {
 export async function generateStaticParams() {
   const client = createClient();
 
-  // Try to fetch years from Prismic
   const docs = await (client as any)
     .getAllByType("past_winners_year")
     .catch(() => []);
@@ -210,7 +133,6 @@ export async function generateStaticParams() {
     return docs.map((doc: any) => ({ year: doc.uid }));
   }
 
-  // Fallback to default years
   return [
     { year: "2025" },
     { year: "2024" },
