@@ -1,0 +1,40 @@
+{
+  "id": "footer",
+  "type": "SharedSlice",
+  "name": "Footer",
+  "description": "Site footer",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default footer",
+      "imageUrl": "",
+      "primary": {
+        "copyright_text": {
+          "type": "Text",
+          "config": {
+            "label": "Copyright Text",
+            "placeholder": "Maya Poetry Book Awards"
+          }
+        },
+        "delivered_by_text": {
+          "type": "Text",
+          "config": {
+            "label": "Delivered By Text",
+            "placeholder": "Lunim"
+          }
+        },
+        "delivered_by_url": {
+          "type": "Text",
+          "config": {
+            "label": "Delivered By URL",
+            "placeholder": "https://lunim.io"
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

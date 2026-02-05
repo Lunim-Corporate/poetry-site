@@ -1,0 +1,118 @@
+{
+  "id": "judge_profile",
+  "type": "SharedSlice",
+  "name": "JudgeProfile",
+  "description": "Judge biography and book showcase",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default judge profile",
+      "imageUrl": "",
+      "primary": {
+        "name": {
+          "type": "Text",
+          "config": {
+            "label": "Name",
+            "placeholder": "Judge name..."
+          }
+        },
+        "title": {
+          "type": "Text",
+          "config": {
+            "label": "Title",
+            "placeholder": "Author, Entrepreneur..."
+          }
+        },
+        "location": {
+          "type": "Text",
+          "config": {
+            "label": "Location",
+            "placeholder": "Cardiff, Wales"
+          }
+        },
+        "portrait": {
+          "type": "Image",
+          "config": {
+            "label": "Portrait",
+            "constraint": {
+              "width": 400,
+              "height": 400
+            },
+            "thumbnails": []
+          }
+        },
+        "bio": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Biography",
+            "placeholder": "Enter biography...",
+            "allowTargetBlank": true,
+            "multi": "paragraph,strong,em,hyperlink"
+          }
+        },
+        "entrepreneurial_history": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Entrepreneurial History",
+            "placeholder": "Enter entrepreneurial history...",
+            "allowTargetBlank": true,
+            "multi": "paragraph,strong,em,hyperlink"
+          }
+        },
+        "literary_history": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Literary History",
+            "placeholder": "Enter literary history...",
+            "allowTargetBlank": true,
+            "multi": "paragraph,strong,em,hyperlink"
+          }
+        },
+        "books": {
+          "type": "Group",
+          "config": {
+            "label": "Books",
+            "fields": {
+              "book_title": {
+                "type": "Text",
+                "config": {
+                  "label": "Book Title",
+                  "placeholder": "Enter book title..."
+                }
+              },
+              "book_image": {
+                "type": "Image",
+                "config": {
+                  "label": "Book Cover",
+                  "constraint": {
+                    "width": 300,
+                    "height": 450
+                  },
+                  "thumbnails": []
+                }
+              },
+              "book_amazon_url": {
+                "type": "Text",
+                "config": {
+                  "label": "Amazon URL",
+                  "placeholder": "https://amazon.com/..."
+                }
+              },
+              "book_description": {
+                "type": "Text",
+                "config": {
+                  "label": "Description",
+                  "placeholder": "Short description..."
+                }
+              }
+            }
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

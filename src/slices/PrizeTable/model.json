@@ -1,0 +1,48 @@
+{
+  "id": "prize_table",
+  "type": "SharedSlice",
+  "name": "PrizeTable",
+  "description": "Table displaying prize amounts",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default prize table",
+      "imageUrl": "",
+      "primary": {
+        "items": {
+          "type": "Group",
+          "config": {
+            "label": "Prize Items",
+            "fields": {
+              "level": {
+                "type": "Text",
+                "config": {
+                  "label": "Prize Level",
+                  "placeholder": "1st Place"
+                }
+              },
+              "amount": {
+                "type": "Text",
+                "config": {
+                  "label": "Amount",
+                  "placeholder": "£800"
+                }
+              }
+            }
+          }
+        },
+        "note": {
+          "type": "Text",
+          "config": {
+            "label": "Note",
+            "placeholder": "Additional prize information..."
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

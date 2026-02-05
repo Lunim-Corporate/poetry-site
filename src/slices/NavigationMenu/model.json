@@ -1,0 +1,76 @@
+{
+  "id": "navigation_menu",
+  "type": "SharedSlice",
+  "name": "NavigationMenu",
+  "description": "Site navigation menu",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default navigation menu",
+      "imageUrl": "",
+      "primary": {
+        "brand_name": {
+          "type": "Text",
+          "config": {
+            "label": "Brand Name",
+            "placeholder": "Maya"
+          }
+        },
+        "brand_logo": {
+          "type": "Image",
+          "config": {
+            "label": "Brand Logo",
+            "constraint": {
+              "width": 50,
+              "height": 50
+            },
+            "thumbnails": []
+          }
+        },
+        "nav_links": {
+          "type": "Group",
+          "config": {
+            "label": "Navigation Links",
+            "repeat": true,
+            "fields": {
+              "label": {
+                "type": "Text",
+                "config": {
+                  "label": "Label",
+                  "placeholder": "Link text"
+                }
+              },
+              "url": {
+                "type": "Text",
+                "config": {
+                  "label": "URL",
+                  "placeholder": "/page"
+                }
+              }
+            }
+          }
+        },
+        "past_winners_years": {
+          "type": "Group",
+          "config": {
+            "label": "Past Winners Years",
+            "repeat": true,
+            "fields": {
+              "year": {
+                "type": "Number",
+                "config": {
+                  "label": "Year",
+                  "placeholder": "2025"
+                }
+              }
+            }
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

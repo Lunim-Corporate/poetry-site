@@ -1,0 +1,198 @@
+{
+  "format": "page",
+  "id": "past_winners_year",
+  "label": "Past Winners Year",
+  "repeatable": true,
+  "status": true,
+  "json": {
+    "Main": {
+      "uid": {
+        "type": "UID",
+        "config": {
+          "label": "Year (e.g., 2025)",
+          "placeholder": "2025"
+        }
+      },
+      "year": {
+        "type": "Number",
+        "config": {
+          "label": "Year",
+          "placeholder": "2025"
+        }
+      },
+      "slices": {
+        "type": "Slices",
+        "fieldset": "Slice Zone",
+        "config": {
+          "choices": {
+            "hero": {
+              "type": "SharedSlice"
+            },
+            "winners_grid": {
+              "type": "SharedSlice"
+            },
+            "rich_text": {
+              "type": "SharedSlice"
+            }
+          }
+        }
+      }
+    },
+    "Winners": {
+      "winners": {
+        "type": "Group",
+        "config": {
+          "label": "Winners",
+          "repeat": true,
+          "fields": {
+            "prize_level": {
+              "type": "Select",
+              "config": {
+                "label": "Prize Level",
+                "placeholder": "Select prize level",
+                "options": ["1st Place", "2nd Place", "3rd Place", "Children's"]
+              }
+            },
+            "book_title": {
+              "type": "Text",
+              "config": {
+                "label": "Book Title",
+                "placeholder": ""
+              }
+            },
+            "author": {
+              "type": "Text",
+              "config": {
+                "label": "Author",
+                "placeholder": ""
+              }
+            },
+            "author_2": {
+              "type": "Text",
+              "config": {
+                "label": "Co-Author (optional)",
+                "placeholder": ""
+              }
+            },
+            "location": {
+              "type": "Text",
+              "config": {
+                "label": "Location",
+                "placeholder": ""
+              }
+            },
+            "cover_image": {
+              "type": "Image",
+              "config": {
+                "label": "Cover Image",
+                "constraint": {
+                  "width": 400,
+                  "height": 600
+                },
+                "thumbnails": []
+              }
+            },
+            "amazon_url": {
+              "type": "Text",
+              "config": {
+                "label": "Amazon URL",
+                "placeholder": ""
+              }
+            }
+          }
+        }
+      }
+    },
+    "Shortlist": {
+      "shortlist": {
+        "type": "Group",
+        "config": {
+          "label": "Shortlist",
+          "repeat": true,
+          "fields": {
+            "book_title": {
+              "type": "Text",
+              "config": {
+                "label": "Book Title",
+                "placeholder": ""
+              }
+            },
+            "author": {
+              "type": "Text",
+              "config": {
+                "label": "Author",
+                "placeholder": ""
+              }
+            },
+            "location": {
+              "type": "Text",
+              "config": {
+                "label": "Location",
+                "placeholder": ""
+              }
+            }
+          }
+        }
+      }
+    },
+    "Longlist": {
+      "longlist": {
+        "type": "Group",
+        "config": {
+          "label": "Longlist",
+          "repeat": true,
+          "fields": {
+            "book_title": {
+              "type": "Text",
+              "config": {
+                "label": "Book Title",
+                "placeholder": ""
+              }
+            },
+            "author": {
+              "type": "Text",
+              "config": {
+                "label": "Author",
+                "placeholder": ""
+              }
+            },
+            "location": {
+              "type": "Text",
+              "config": {
+                "label": "Location",
+                "placeholder": ""
+              }
+            }
+          }
+        }
+      }
+    },
+    "SEO & Metadata": {
+      "meta_title": {
+        "type": "Text",
+        "config": {
+          "label": "Meta Title",
+          "placeholder": ""
+        }
+      },
+      "meta_description": {
+        "type": "Text",
+        "config": {
+          "label": "Meta Description",
+          "placeholder": ""
+        }
+      },
+      "meta_image": {
+        "type": "Image",
+        "config": {
+          "label": "Meta Image",
+          "constraint": {
+            "width": 1200,
+            "height": 630
+          },
+          "thumbnails": []
+        }
+      }
+    }
+  }
+}

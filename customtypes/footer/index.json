@@ -1,0 +1,32 @@
+{
+  "format": "custom",
+  "id": "footer",
+  "label": "Footer",
+  "repeatable": false,
+  "status": true,
+  "json": {
+    "Main": {
+      "copyright_text": {
+        "type": "Text",
+        "config": {
+          "label": "Copyright Text",
+          "placeholder": "Maya Poetry Book Awards"
+        }
+      },
+      "delivered_by_text": {
+        "type": "Text",
+        "config": {
+          "label": "Delivered By Text",
+          "placeholder": "Lunim"
+        }
+      },
+      "delivered_by_url": {
+        "type": "Text",
+        "config": {
+          "label": "Delivered By URL",
+          "placeholder": "https://lunim.io"
+        }
+      }
+    }
+  }
+}

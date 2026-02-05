@@ -1,0 +1,110 @@
+{
+  "format": "page",
+  "id": "enter_page",
+  "label": "Enter Page",
+  "repeatable": false,
+  "status": true,
+  "json": {
+    "Main": {
+      "uid": {
+        "type": "UID",
+        "config": {
+          "label": "UID",
+          "placeholder": ""
+        }
+      },
+      "slices": {
+        "type": "Slices",
+        "fieldset": "Slice Zone",
+        "config": {
+          "choices": {
+            "hero": {
+              "type": "SharedSlice"
+            },
+            "rich_text": {
+              "type": "SharedSlice"
+            }
+          }
+        }
+      }
+    },
+    "Entry Settings": {
+      "price_single_book": {
+        "type": "Number",
+        "config": {
+          "label": "Price per book (single entry)",
+          "placeholder": "40"
+        }
+      },
+      "price_multiple_books": {
+        "type": "Number",
+        "config": {
+          "label": "Price per book (2+ entries)",
+          "placeholder": "35"
+        }
+      },
+      "shipping_name": {
+        "type": "Text",
+        "config": {
+          "label": "Shipping Address - Name",
+          "placeholder": ""
+        }
+      },
+      "shipping_street": {
+        "type": "Text",
+        "config": {
+          "label": "Shipping Address - Street",
+          "placeholder": ""
+        }
+      },
+      "shipping_town": {
+        "type": "Text",
+        "config": {
+          "label": "Shipping Address - Town",
+          "placeholder": ""
+        }
+      },
+      "shipping_postcode": {
+        "type": "Text",
+        "config": {
+          "label": "Shipping Address - Postcode",
+          "placeholder": ""
+        }
+      },
+      "shipping_country": {
+        "type": "Text",
+        "config": {
+          "label": "Shipping Address - Country",
+          "placeholder": ""
+        }
+      }
+    },
+    "SEO & Metadata": {
+      "meta_title": {
+        "type": "Text",
+        "config": {
+          "label": "Meta Title",
+          "placeholder": ""
+        }
+      },
+      "meta_description": {
+        "type": "Text",
+        "config": {
+          "label": "Meta Description",
+          "placeholder": ""
+        }
+      },
+      "meta_image": {
+        "type": "Image",
+        "config": {
+          "label": "Meta Image",
+          "constraint": {
+            "width": 1200,
+            "height": 630
+          },
+          "thumbnails": []
+        }
+      }
+    }
+  }
+}

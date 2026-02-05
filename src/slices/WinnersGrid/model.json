@@ -1,0 +1,88 @@
+{
+  "id": "winners_grid",
+  "type": "SharedSlice",
+  "name": "WinnersGrid",
+  "description": "Grid displaying award winners",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default winners grid",
+      "imageUrl": "",
+      "primary": {
+        "year": {
+          "type": "Number",
+          "config": {
+            "label": "Year",
+            "placeholder": "2025"
+          }
+        },
+        "items": {
+          "type": "Group",
+          "config": {
+            "label": "Winners",
+            "fields": {
+              "prize_level": {
+                "type": "Select",
+                "config": {
+                  "label": "Prize Level",
+                  "placeholder": "Select prize level",
+                  "options": ["1st Place", "2nd Place", "3rd Place", "Children's"]
+                }
+              },
+              "book_title": {
+                "type": "Text",
+                "config": {
+                  "label": "Book Title",
+                  "placeholder": "Enter book title..."
+                }
+              },
+              "author": {
+                "type": "Text",
+                "config": {
+                  "label": "Author",
+                  "placeholder": "Enter author name..."
+                }
+              },
+              "author_2": {
+                "type": "Text",
+                "config": {
+                  "label": "Author 2 (if co-authored)",
+                  "placeholder": "Enter second author name..."
+                }
+              },
+              "location": {
+                "type": "Text",
+                "config": {
+                  "label": "Location",
+                  "placeholder": "Enter location..."
+                }
+              },
+              "cover_image": {
+                "type": "Image",
+                "config": {
+                  "label": "Cover Image",
+                  "constraint": {
+                    "width": 400,
+                    "height": 600
+                  },
+                  "thumbnails": []
+                }
+              },
+              "amazon_url": {
+                "type": "Text",
+                "config": {
+                  "label": "Amazon URL",
+                  "placeholder": "https://amazon.com/..."
+                }
+              }
+            }
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}
