@@ -2,17 +2,9 @@
 
 import { PrismicRichText } from "@prismicio/react";
 import { useState, FormEvent } from "react";
+import type { NewsletterSliceData, SliceComponentProps } from "@/types";
 
-type NewsletterSlice = {
-  slice_type: string;
-  variation: string;
-  primary: {
-    title?: string;
-    description?: any;
-  };
-};
-
-export default function Newsletter({ slice }: { slice: NewsletterSlice }) {
+export default function Newsletter({ slice }: SliceComponentProps<NewsletterSliceData>) {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -20,10 +12,7 @@ export default function Newsletter({ slice }: { slice: NewsletterSlice }) {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
-    // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 2000));
-
     setIsLoading(false);
     setIsSuccess(true);
   };

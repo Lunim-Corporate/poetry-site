@@ -1,16 +1,6 @@
-type PrizeTableSlice = {
-  slice_type: string;
-  variation: string;
-  primary: {
-    items?: Array<{
-      level: string;
-      amount: string;
-    }>;
-    note?: string;
-  };
-};
+import type { PrizeTableSliceData, SliceComponentProps } from "@/types";
 
-export default function PrizeTable({ slice }: { slice: PrizeTableSlice }) {
+export default function PrizeTable({ slice }: SliceComponentProps<PrizeTableSliceData>) {
   return (
     <table
       className="prizeTable"

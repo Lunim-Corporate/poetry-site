@@ -1,19 +1,29 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { SliceZone } from "@prismicio/react";
 import { createClient } from "@/prismicio";
 import { components } from "@/slices";
+import TwoColumnLayout from "@/components/TwoColumnLayout";
+import { partitionSlices } from "@/utils/slices";
+import { generateMetaDataInfo } from "@/utils/generateMetaDataInfo";
+import type { PrismicMetaFields, PrismicSlice } from "@/types";
 
 export const revalidate = 60;
 
 export default async function JudgePage() {
   const client = createClient();
-  const doc = await (client as any)
-    .getSingle("judge_page")
-    .catch(() => null);
+  const doc = await client.getSingle("judge_page").catch(() => null);
 
   if (doc) {
+    const slices: PrismicSlice[] = (doc.data as Record<string, unknown>).slices as PrismicSlice[] ?? [];
+    const { hero, content } = partitionSlices(slices);
+
     return (
-      <SliceZone slices={doc.data.slices} components={components} />
+      <>
+        <SliceZone slices={hero} components={components} />
+        <TwoColumnLayout>
+          <SliceZone slices={content} components={components} />
+        </TwoColumnLayout>
+      </>
     );
   }
 
@@ -21,7 +31,7 @@ export default async function JudgePage() {
   return (
     <>
       <section className="min-h-[140px] bg-slate-50 border-b border-slate-200 flex items-center">
-        <div className="w-full max-w-5xl mx-auto px-6 py-8">
+        <div className="w-full max-w-6xl mx-auto px-6 py-8">
           <div className="text-center">
             <p className="text-xs font-semibold tracking-wider uppercase text-accent mb-2">Meet Our</p>
             <h1 className="text-2xl md:text-3xl font-bold text-slate-900">Judge</h1>
@@ -29,8 +39,8 @@ export default async function JudgePage() {
         </div>
       </section>
 
-      <section className="py-12 bg-white">
-        <div className="max-w-4xl mx-auto px-6">
+      <TwoColumnLayout>
+        <div>
           <div className="grid md:grid-cols-[280px_1fr] gap-8 md:gap-12">
             <div className="md:sticky md:top-24">
               <div className="aspect-square bg-slate-100 border border-slate-200 rounded-2xl flex items-center justify-center shadow-md">
@@ -90,26 +100,18 @@ export default async function JudgePage() {
             </div>
           </div>
         </div>
-      </section>
+      </TwoColumnLayout>
     </>
   );
 }
 
 export async function generateMetadata(): Promise<Metadata> {
   const client = createClient();
-  const doc = await (client as any)
-    .getSingle("judge_page")
-    .catch(() => null);
+  const doc = await client.getSingle("judge_page").catch(() => null);
 
-  if (doc?.data) {
-    return {
-      title: doc.data.meta_title || "Our Judge",
-      description: doc.data.meta_description || "Meet Dave Lewis, the judge for the Maya Poetry Book Awards.",
-    };
-  }
-
-  return {
-    title: "Our Judge",
-    description: "Meet Dave Lewis, the judge for the Maya Poetry Book Awards. An acclaimed author and entrepreneur bringing decades of literary expertise.",
-  };
+  return generateMetaDataInfo(
+    doc?.data as PrismicMetaFields | undefined,
+    "Our Judge",
+    "Meet Dave Lewis, the judge for the Maya Poetry Book Awards. An acclaimed author and entrepreneur bringing decades of literary expertise."
+  );
 }

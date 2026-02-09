@@ -2,17 +2,9 @@
 
 import { PrismicRichText } from "@prismicio/react";
 import { useState, FormEvent } from "react";
+import type { ContactCardSliceData, SliceComponentProps } from "@/types";
 
-type ContactCardSlice = {
-  slice_type: string;
-  variation: string;
-  primary: {
-    title?: string;
-    description?: any;
-  };
-};
-
-export default function ContactCard({ slice }: { slice: ContactCardSlice }) {
+export default function ContactCard({ slice }: SliceComponentProps<ContactCardSliceData>) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -25,10 +17,7 @@ export default function ContactCard({ slice }: { slice: ContactCardSlice }) {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
-    // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 2000));
-
     setIsLoading(false);
     setIsSuccess(true);
   };
@@ -53,9 +42,7 @@ export default function ContactCard({ slice }: { slice: ContactCardSlice }) {
         <form className="form" onSubmit={handleSubmit}>
           <div className="formRow formRow--split">
             <div>
-              <label className="label" htmlFor="contact-name">
-                Name
-              </label>
+              <label className="label" htmlFor="contact-name">Name</label>
               <input
                 id="contact-name"
                 type="text"
@@ -63,15 +50,11 @@ export default function ContactCard({ slice }: { slice: ContactCardSlice }) {
                 placeholder="Your name"
                 required
                 value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />
             </div>
             <div>
-              <label className="label" htmlFor="contact-email">
-                Email
-              </label>
+              <label className="label" htmlFor="contact-email">Email</label>
               <input
                 id="contact-email"
                 type="email"
@@ -79,17 +62,13 @@ export default function ContactCard({ slice }: { slice: ContactCardSlice }) {
                 placeholder="you@example.com"
                 required
                 value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
             </div>
           </div>
 
           <div className="formRow">
-            <label className="label" htmlFor="contact-message">
-              Message
-            </label>
+            <label className="label" htmlFor="contact-message">Message</label>
             <textarea
               id="contact-message"
               name="message"
@@ -97,9 +76,7 @@ export default function ContactCard({ slice }: { slice: ContactCardSlice }) {
               rows={4}
               required
               value={formData.message}
-              onChange={(e) =>
-                setFormData({ ...formData, message: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, message: e.target.value })}
             />
           </div>
 
@@ -109,9 +86,7 @@ export default function ContactCard({ slice }: { slice: ContactCardSlice }) {
               type="checkbox"
               name="newsletter"
               checked={formData.newsletter}
-              onChange={(e) =>
-                setFormData({ ...formData, newsletter: e.target.checked })
-              }
+              onChange={(e) => setFormData({ ...formData, newsletter: e.target.checked })}
             />
             <label htmlFor="contact-newsletter">
               Also sign me up for the newsletter

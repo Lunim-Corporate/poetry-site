@@ -2,20 +2,9 @@
 
 import { PrismicRichText, PrismicText } from "@prismicio/react";
 import { useState } from "react";
+import type { FaqSliceData, SliceComponentProps } from "@/types";
 
-type FaqSlice = {
-  slice_type: string;
-  variation: string;
-  primary: {
-    title: any;
-    items?: Array<{
-      question: string;
-      answer: any;
-    }>;
-  };
-};
-
-export default function Faq({ slice }: { slice: FaqSlice }) {
+export default function Faq({ slice }: SliceComponentProps<FaqSliceData>) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const handleToggle = (index: number) => {

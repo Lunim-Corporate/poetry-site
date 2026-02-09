@@ -6,7 +6,9 @@
       "Bash(xargs:*)",
       "Bash(npm run slicemachine:*)",
       "Bash(netstat:*)",
-      "Bash(taskkill:*)"
+      "Bash(taskkill:*)",
+      "Bash(dir:*)",
+      "Bash(npx next build:*)"
     ]
   }
 }

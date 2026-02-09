@@ -1,163 +1,210 @@
 import type { ImageField, KeyTextField, RichTextField } from "@prismicio/client";
 
-// Domain Models
+// ---------------------------------------------------------------------------
+// Prismic Slice Component Props
+// All slices receive this shape from SliceZone. Only `slice` is typically used.
+// ---------------------------------------------------------------------------
 
-export interface Prize {
-  level: "1st" | "2nd" | "3rd" | "Children";
-  amount: string;
-  note?: string;
+export interface SliceComponentProps<T> {
+  slice: T;
+  index: number;
+  slices: PrismicSlice[];
+  context: Record<string, unknown>;
 }
 
-export interface Winner {
-  year: number;
-  prizeLevel: "1st" | "2nd" | "3rd" | "Children";
-  bookTitle: string;
-  authors: string[];
-  location: string;
-  coverImage: ImageField;
-  amazonUrl?: string;
+// Base shape shared by every Prismic slice
+export interface PrismicSlice {
+  id: string;
+  slice_type: string;
+  variation: string;
+  primary: Record<string, unknown>;
+  items?: Record<string, unknown>[];
 }
 
-export interface ShortlistEntry {
-  bookTitle: string;
-  authors: string[];
-  location: string;
+// ---------------------------------------------------------------------------
+// Prismic Document Data (returned by client queries)
+// ---------------------------------------------------------------------------
+
+export interface PrismicDocument<T = Record<string, unknown>> {
+  id: string;
+  uid?: string;
+  type: string;
+  data: T;
 }
 
-export interface FAQItem {
-  question: string;
-  answer: string;
+export interface PrismicMetaFields {
+  meta_title?: string;
+  meta_description?: string;
+  meta_image?: ImageField;
 }
 
-export interface Book {
-  title: string;
-  image: ImageField;
-  amazonUrl?: string;
-  description?: string;
-}
+// ---------------------------------------------------------------------------
+// Slice Types — one per slice component
+// ---------------------------------------------------------------------------
 
-export interface JudgeProfile {
-  name: string;
-  title?: string;
-  location?: string;
-  bio: string;
-  portrait: ImageField;
-  entrepreneurialHistory?: string;
-  literaryHistory?: string;
-  books: Book[];
-}
-
-export interface PricingTier {
-  quantity: number;
-  pricePerBook: number;
-  totalPrice: number;
-}
-
-export interface ShippingAddress {
-  name: string;
-  street: string;
-  town: string;
-  postcode: string;
-  country: string;
-}
-
-// Prismic Slice Types
-
-export interface HeroSlice {
+export interface HeroSliceData extends PrismicSlice {
   slice_type: "hero";
   primary: {
     title: RichTextField;
-    subtitle: RichTextField;
-    cta_text: KeyTextField;
-    cta_link: KeyTextField;
-    variant: "default" | "home" | "small";
+    subtitle?: RichTextField;
+    cta_text?: string;
+    cta_link?: string;
+    secondary_cta_text?: string;
+    secondary_cta_link?: string;
+    variant?: "default" | "home" | "small";
   };
 }
 
-export interface RichTextSlice {
+export interface RichTextSliceData extends PrismicSlice {
   slice_type: "rich_text";
   primary: {
     content: RichTextField;
   };
 }
 
-export interface FAQSlice {
+export interface FaqSliceData extends PrismicSlice {
   slice_type: "faq";
   primary: {
     title: RichTextField;
+    items?: Array<{
+      question: string;
+      answer: RichTextField;
+    }>;
   };
-  items: {
-    question: KeyTextField;
-    answer: RichTextField;
-  }[];
 }
 
-export interface PrizeTableSlice {
+export interface PrizeTableSliceData extends PrismicSlice {
   slice_type: "prize_table";
-  items: {
-    level: KeyTextField;
-    amount: KeyTextField;
-    note: KeyTextField;
-  }[];
+  primary: {
+    items?: Array<{
+      level: string;
+      amount: string;
+    }>;
+    note?: string;
+  };
 }
 
-export interface WinnersGridSlice {
+export interface WinnersGridSliceData extends PrismicSlice {
   slice_type: "winners_grid";
   primary: {
-    year: number;
+    year?: number;
+    items?: Array<{
+      prize_level: string;
+      book_title: string;
+      author: string;
+      author_2?: string;
+      location?: string;
+      cover_image?: ImageField;
+      amazon_url?: string;
+    }>;
   };
-  items: {
-    prize_level: KeyTextField;
-    book_title: KeyTextField;
-    author: KeyTextField;
-    author_2: KeyTextField;
-    location: KeyTextField;
-    cover_image: ImageField;
-    amazon_url: KeyTextField;
-  }[];
 }
 
-export interface JudgeProfileSlice {
+export interface JudgeProfileSliceData extends PrismicSlice {
   slice_type: "judge_profile";
   primary: {
-    name: KeyTextField;
-    title: KeyTextField;
-    location: KeyTextField;
-    portrait: ImageField;
-    bio: RichTextField;
-    entrepreneurial_history: RichTextField;
-    literary_history: RichTextField;
+    name?: string;
+    title?: string;
+    location?: string;
+    portrait?: ImageField;
+    bio?: RichTextField;
+    entrepreneurial_history?: RichTextField;
+    literary_history?: RichTextField;
+    books?: Array<{
+      book_title?: string;
+      book_image?: ImageField;
+      book_amazon_url?: string;
+      book_description?: string;
+    }>;
   };
-  items: {
-    book_title: KeyTextField;
-    book_image: ImageField;
-    book_amazon_url: KeyTextField;
-    book_description: KeyTextField;
-  }[];
 }
 
-export interface NewsletterSlice {
+export interface NewsletterSliceData extends PrismicSlice {
   slice_type: "newsletter";
   primary: {
-    title: KeyTextField;
-    description: RichTextField;
+    title?: string;
+    description?: RichTextField;
   };
 }
 
-export interface ContactCardSlice {
+export interface ContactCardSliceData extends PrismicSlice {
   slice_type: "contact_card";
   primary: {
-    title: KeyTextField;
-    description: RichTextField;
+    title?: string;
+    description?: RichTextField;
   };
 }
 
-export interface TwoColumnSlice {
-  slice_type: "two_column";
+export interface NavigationMenuSliceData extends PrismicSlice {
+  slice_type: "navigation_menu";
   primary: {
-    variant: "default" | "home";
+    brand_name?: string;
+    brand_logo?: ImageField;
+    nav_links?: Array<{
+      label: string;
+      url: string;
+    }>;
+    past_winners_years?: Array<{
+      year: number;
+    }>;
   };
-  items: {
-    content: RichTextField;
-  }[];
 }
+
+export interface FooterSliceData extends PrismicSlice {
+  slice_type: "footer";
+  primary: {
+    copyright_text?: string;
+    delivered_by_text?: string;
+    delivered_by_url?: string;
+  };
+}
+
+export interface AboutSectionSliceData extends PrismicSlice {
+  slice_type: "about_section";
+  primary: {
+    about_title?: string;
+    about_subtitle?: string;
+    intro?: RichTextField;
+    background?: RichTextField;
+    funding?: RichTextField;
+    partnerships?: RichTextField;
+    sign_off_name?: string;
+    sign_off_role?: string;
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Past Winners Year — document-level fields (not slices)
+// ---------------------------------------------------------------------------
+
+export interface PastWinnersYearData extends PrismicMetaFields {
+  year?: number;
+  slices: PrismicSlice[];
+  winners?: WinnerEntry[];
+  shortlist?: ListEntry[];
+  longlist?: ListEntry[];
+}
+
+export interface WinnerEntry {
+  prize_level: string;
+  book_title: string;
+  author: string;
+  author_2?: string;
+  location?: string;
+  cover_image?: ImageField;
+  amazon_url?: string;
+}
+
+export interface ListEntry {
+  book_title: string;
+  author: string;
+  location?: string;
+}
+
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
+
+export const PRIZE_ORDER = ["1st Place", "2nd Place", "3rd Place", "Children's"] as const;
+
+export const DEFAULT_YEARS = [2025, 2024, 2023, 2022, 2021, 2020];

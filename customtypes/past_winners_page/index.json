@@ -23,9 +23,6 @@
             },
             "rich_text": {
               "type": "SharedSlice"
-            },
-            "winners_grid": {
-              "type": "SharedSlice"
             }
           }
         }

@@ -1,30 +1,23 @@
 import type { Metadata } from "next";
+import type { PrismicMetaFields } from "@/types";
 
-interface MetaData {
-  meta_title?: string;
-  meta_description?: string;
-  meta_image?: { url?: string };
-}
-
-export const generateMetaDataInfo = (
-  docData: MetaData | null,
+/**
+ * Generates Next.js Metadata from Prismic document fields with fallback defaults.
+ */
+export function generateMetaDataInfo(
+  docData: PrismicMetaFields | null | undefined,
   defaultTitle: string,
   defaultDescription: string
-): Metadata => {
+): Metadata {
   if (!docData) {
-    return {
-      title: defaultTitle,
-      description: defaultDescription,
-    };
+    return { title: defaultTitle, description: defaultDescription };
   }
 
   return {
     title: docData.meta_title || defaultTitle,
     description: docData.meta_description || defaultDescription,
     openGraph: docData.meta_image?.url
-      ? {
-          images: [{ url: docData.meta_image.url }],
-        }
+      ? { images: [{ url: docData.meta_image.url }] }
       : undefined,
   };
-};
+}

@@ -46,7 +46,7 @@ export default function EnterPage() {
     <>
       {/* Hero Section */}
       <section className="min-h-[140px] bg-slate-50 border-b border-slate-200 flex items-center">
-        <div className="w-full max-w-5xl mx-auto px-6 py-8">
+        <div className="w-full max-w-6xl mx-auto px-6 py-8">
           <div className="text-center">
             <p className="text-xs font-semibold tracking-wider uppercase text-accent mb-2">Submit Your</p>
             <h1 className="text-2xl md:text-3xl font-bold text-slate-900">Book Entry</h1>

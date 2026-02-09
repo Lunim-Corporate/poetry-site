@@ -4,31 +4,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
+import type { NavigationMenuSliceData, SliceComponentProps } from "@/types";
+import { DEFAULT_YEARS } from "@/types";
 
-type NavigationMenuSlice = {
-  slice_type: string;
-  variation: string;
-  primary: {
-    brand_name?: string;
-    brand_logo?: any;
-    nav_links?: Array<{
-      label: string;
-      url: string;
-    }>;
-    past_winners_years?: Array<{
-      year: number;
-    }>;
-  };
-};
-
-interface NavigationMenuProps {
-  slice: NavigationMenuSlice;
-  index: number;
-  slices: any[];
-  context: any;
-}
-
-export default function NavigationMenu({ slice }: NavigationMenuProps) {
+export default function NavigationMenu({ slice }: SliceComponentProps<NavigationMenuSliceData>) {
   const pathname = usePathname();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -40,7 +19,7 @@ export default function NavigationMenu({ slice }: NavigationMenuProps) {
     { label: "Our Judge", url: "/judge" },
   ];
   const pastWinnersYears =
-    slice.primary.past_winners_years?.map((y) => y.year) || [2025, 2024, 2023, 2022, 2021, 2020];
+    slice.primary.past_winners_years?.map((y) => y.year) || DEFAULT_YEARS;
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";

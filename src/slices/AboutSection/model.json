@@ -1,0 +1,83 @@
+{
+  "id": "about_section",
+  "type": "SharedSlice",
+  "name": "AboutSection",
+  "description": "About section with structured subsections for the homepage",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default variation",
+      "imageUrl": "",
+      "primary": {
+        "about_title": {
+          "type": "Text",
+          "config": {
+            "label": "About Title",
+            "placeholder": "About Maya"
+          }
+        },
+        "about_subtitle": {
+          "type": "Text",
+          "config": {
+            "label": "About Subtitle",
+            "placeholder": "Optional subtitle text"
+          }
+        },
+        "intro": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Introduction",
+            "placeholder": "Bold opening paragraph about the awards...",
+            "allowTargetBlank": true,
+            "multi": "paragraph,strong,em,hyperlink"
+          }
+        },
+        "background": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Background",
+            "placeholder": "History and context of the awards...",
+            "allowTargetBlank": true,
+            "multi": "paragraph,strong,em,hyperlink,list-item,o-list-item"
+          }
+        },
+        "funding": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Funding",
+            "placeholder": "How the awards are funded...",
+            "allowTargetBlank": true,
+            "multi": "paragraph,strong,em,hyperlink"
+          }
+        },
+        "partnerships": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Partnerships",
+            "placeholder": "Partnership and sponsorship information...",
+            "allowTargetBlank": true,
+            "multi": "paragraph,strong,em,hyperlink"
+          }
+        },
+        "sign_off_name": {
+          "type": "Text",
+          "config": {
+            "label": "Sign-off Name",
+            "placeholder": "Dave Lewis"
+          }
+        },
+        "sign_off_role": {
+          "type": "Text",
+          "config": {
+            "label": "Sign-off Role",
+            "placeholder": "Organiser"
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

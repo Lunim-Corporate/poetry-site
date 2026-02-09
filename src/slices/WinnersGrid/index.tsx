@@ -1,25 +1,9 @@
 import { PrismicNextImage } from "@prismicio/next";
+import type { WinnersGridSliceData, SliceComponentProps } from "@/types";
+import { PRIZE_ORDER } from "@/types";
 
-type WinnersGridSlice = {
-  slice_type: string;
-  variation: string;
-  primary: {
-    year?: number;
-    items?: Array<{
-      prize_level: string;
-      book_title: string;
-      author: string;
-      author_2?: string;
-      location?: string;
-      cover_image?: any;
-      amazon_url?: string;
-    }>;
-  };
-};
-
-export default function WinnersGrid({ slice }: { slice: WinnersGridSlice }) {
+export default function WinnersGrid({ slice }: SliceComponentProps<WinnersGridSliceData>) {
   const winners = slice.primary.items || [];
-  const prizeOrder = ["1st Place", "2nd Place", "3rd Place", "Children's"];
 
   return (
     <div
@@ -28,14 +12,14 @@ export default function WinnersGrid({ slice }: { slice: WinnersGridSlice }) {
       data-slice-variation={slice.variation}
     >
       {/* Header row */}
-      {prizeOrder.map((level, index) => (
+      {PRIZE_ORDER.map((level, index) => (
         <div key={`header-${index}`} className="winnersGrid__cell">
           <h3>{level}</h3>
         </div>
       ))}
 
       {/* Winner cells */}
-      {prizeOrder.map((level, index) => {
+      {PRIZE_ORDER.map((level, index) => {
         const winner = winners.find(w => w.prize_level === level);
 
         if (!winner) {
@@ -55,6 +39,7 @@ export default function WinnersGrid({ slice }: { slice: WinnersGridSlice }) {
               <PrismicNextImage
                 field={winner.cover_image}
                 className="winnersGrid__img"
+                fallbackAlt=""
               />
             )}
             <p className={isFirst ? "winnersGrid__caption" : "winnersGrid__caption--small"}>

@@ -1,36 +1,25 @@
 import { PrismicRichText } from "@prismicio/react";
 import Link from "next/link";
+import type { HeroSliceData, SliceComponentProps } from "@/types";
 
-type HeroSlice = {
-  slice_type: string;
-  variation: string;
-  primary: {
-    title: any;
-    subtitle?: any;
-    cta_text?: string;
-    cta_link?: string;
-    secondary_cta_text?: string;
-    secondary_cta_link?: string;
-    variant?: "default" | "home" | "small";
-  };
-};
+type HeroVariant = NonNullable<HeroSliceData["primary"]["variant"]>;
 
-export default function Hero({ slice }: { slice: HeroSlice }) {
-  const variant = slice.primary.variant || "default";
+export default function Hero({ slice }: SliceComponentProps<HeroSliceData>) {
+  const variant: HeroVariant = slice.primary.variant || "default";
 
-  const sectionClasses = {
+  const sectionClasses: Record<HeroVariant, string> = {
     home: "min-h-[480px] bg-gradient-to-br from-primary to-primary-dark text-white flex items-center",
     small: "min-h-[140px] bg-slate-50 border-b border-slate-200 flex items-center",
     default: "min-h-[320px] bg-slate-50 border-b border-slate-200 flex items-center",
   };
 
-  const titleClasses = {
+  const titleClasses: Record<HeroVariant, string> = {
     home: "text-3xl md:text-4xl lg:text-5xl font-bold leading-tight",
     small: "text-2xl md:text-3xl font-bold text-slate-900",
     default: "text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900",
   };
 
-  const subtitleClasses = {
+  const subtitleClasses: Record<HeroVariant, string> = {
     home: "text-lg text-white/85 mt-4 max-w-2xl mx-auto",
     small: "text-slate-600 mt-2",
     default: "text-lg text-slate-600 mt-4 max-w-2xl mx-auto",
@@ -42,7 +31,7 @@ export default function Hero({ slice }: { slice: HeroSlice }) {
       data-slice-type={slice.slice_type}
       data-slice-variation={slice.variation}
     >
-      <div className="w-full max-w-5xl mx-auto px-6 py-8">
+      <div className="w-full max-w-6xl mx-auto px-6 py-8">
         <div className="text-center max-w-3xl mx-auto">
           <div className={titleClasses[variant]}>
             <PrismicRichText field={slice.primary.title} />

@@ -1,21 +1,6 @@
-type FooterSlice = {
-  slice_type: string;
-  variation: string;
-  primary: {
-    copyright_text?: string;
-    delivered_by_text?: string;
-    delivered_by_url?: string;
-  };
-};
+import type { FooterSliceData, SliceComponentProps } from "@/types";
 
-interface FooterProps {
-  slice: FooterSlice;
-  index: number;
-  slices: any[];
-  context: any;
-}
-
-export default function Footer({ slice }: FooterProps) {
+export default function Footer({ slice }: SliceComponentProps<FooterSliceData>) {
   const currentYear = new Date().getFullYear();
   const copyrightText = slice.primary.copyright_text || "Maya Poetry Book Awards";
   const deliveredByText = slice.primary.delivered_by_text || "Lunim";

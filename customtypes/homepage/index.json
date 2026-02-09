@@ -36,7 +36,7 @@
             "contact_card": {
               "type": "SharedSlice"
             },
-            "about_with_newsletter_and_contact": {
+            "about_section": {
               "type": "SharedSlice"
             }
           }

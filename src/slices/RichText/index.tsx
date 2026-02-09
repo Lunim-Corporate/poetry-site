@@ -1,14 +1,7 @@
 import { PrismicRichText } from "@prismicio/react";
+import type { RichTextSliceData, SliceComponentProps } from "@/types";
 
-type RichTextSlice = {
-  slice_type: string;
-  variation: string;
-  primary: {
-    content: any;
-  };
-};
-
-export default function RichText({ slice }: { slice: RichTextSlice }) {
+export default function RichText({ slice }: SliceComponentProps<RichTextSliceData>) {
   return (
     <section
       className="content sketch-card"

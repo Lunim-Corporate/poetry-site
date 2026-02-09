@@ -3,6 +3,8 @@ import { PrismicPreview } from "@prismicio/next";
 import { createClient, repositoryName } from "@/prismicio";
 import NavigationMenu from "@/slices/NavigationMenu";
 import FooterSlice from "@/slices/Footer";
+import type { NavigationMenuSliceData, FooterSliceData, PrismicSlice } from "@/types";
+import { DEFAULT_YEARS } from "@/types";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -19,6 +21,31 @@ export const metadata: Metadata = {
   },
 };
 
+const defaultNavigationSlice: NavigationMenuSliceData = {
+  id: "default-nav",
+  slice_type: "navigation_menu",
+  variation: "default",
+  primary: {
+    brand_name: "Maya",
+    nav_links: [
+      { label: "Enter Your Book", url: "/enter" },
+      { label: "Our Judge", url: "/judge" },
+    ],
+    past_winners_years: DEFAULT_YEARS.map((year) => ({ year })),
+  },
+};
+
+const defaultFooterSlice: FooterSliceData = {
+  id: "default-footer",
+  slice_type: "footer",
+  variation: "default",
+  primary: {
+    copyright_text: "Maya Poetry Book Awards",
+    delivered_by_text: "Lunim",
+    delivered_by_url: "https://lunim.io",
+  },
+};
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -27,66 +54,18 @@ export default async function RootLayout({
   const client = createClient();
 
   // Fetch navigation
-  let navigationMenu: any = null;
-  let navigationSlices: any[] = [];
-
-  const primaryNav = await (client as any)
-    .getSingle("primary_navigation")
-    .catch(() => null);
-
-  if (primaryNav) {
-    navigationSlices = primaryNav?.data?.slices || [];
-    navigationMenu = navigationSlices.find(
-      (slice: any) => slice.slice_type === "navigation_menu"
-    );
-  }
+  const primaryNav = await client.getSingle("primary_navigation").catch(() => null);
+  const navigationSlices: PrismicSlice[] = (primaryNav as any)?.data?.slices || [];
+  const navigationMenu = navigationSlices.find(
+    (s) => s.slice_type === "navigation_menu"
+  ) as NavigationMenuSliceData | undefined;
 
   // Fetch footer
-  let footerSlice: any = null;
-  let footerSlices: any[] = [];
-
-  const footer = await (client as any)
-    .getSingle("footer")
-    .catch(() => null);
-
-  if (footer) {
-    footerSlices = footer?.data?.slices || [];
-    footerSlice = footerSlices.find(
-      (slice: any) => slice.slice_type === "footer"
-    );
-  }
-
-  // Default navigation slice if none found in Prismic
-  const defaultNavigationSlice = {
-    slice_type: "navigation_menu",
-    variation: "default",
-    primary: {
-      brand_name: "Maya",
-      nav_links: [
-        { label: "Enter Your Book", url: "/enter" },
-        { label: "Our Judge", url: "/judge" },
-      ],
-      past_winners_years: [
-        { year: 2025 },
-        { year: 2024 },
-        { year: 2023 },
-        { year: 2022 },
-        { year: 2021 },
-        { year: 2020 },
-      ],
-    },
-  };
-
-  // Default footer slice if none found in Prismic
-  const defaultFooterSlice = {
-    slice_type: "footer",
-    variation: "default",
-    primary: {
-      copyright_text: "Maya Poetry Book Awards",
-      delivered_by_text: "Lunim",
-      delivered_by_url: "https://lunim.io",
-    },
-  };
+  const footer = await client.getSingle("footer").catch(() => null);
+  const footerSlices: PrismicSlice[] = (footer as any)?.data?.slices || [];
+  const footerSlice = footerSlices.find(
+    (s) => s.slice_type === "footer"
+  ) as FooterSliceData | undefined;
 
   return (
     <html lang="en">
