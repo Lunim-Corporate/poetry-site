@@ -157,16 +157,26 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
             </div>
 
             <Link
+              href="/enter"
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                pathname === "/enter"
+                  ? "bg-primary/10 text-primary"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+              }`}
+            >
+              The Rules
+            </Link>
+            <Link
               href="/#faq"
               className="px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
             >
               FAQ
             </Link>
             <Link
-              href="/#contact"
+              href="/#contact-form"
               className="px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
             >
-              Contact
+              Contact Us
             </Link>
           </nav>
 
@@ -259,6 +269,17 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                 </div>
 
                 <Link
+                  href="/enter"
+                  onClick={() => setMobileNavOpen(false)}
+                  className={`px-4 py-3 rounded-lg font-medium transition-colors ${
+                    pathname === "/enter"
+                      ? "bg-primary/10 text-primary"
+                      : "text-slate-600 hover:bg-slate-100"
+                  }`}
+                >
+                  The Rules
+                </Link>
+                <Link
                   href="/#faq"
                   onClick={() => setMobileNavOpen(false)}
                   className="px-4 py-3 rounded-lg font-medium text-slate-600 hover:bg-slate-100 transition-colors"
@@ -266,11 +287,11 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                   FAQ
                 </Link>
                 <Link
-                  href="/#contact"
+                  href="/#contact-form"
                   onClick={() => setMobileNavOpen(false)}
                   className="px-4 py-3 rounded-lg font-medium text-slate-600 hover:bg-slate-100 transition-colors"
                 >
-                  Contact
+                  Contact Us
                 </Link>
               </nav>
             </>

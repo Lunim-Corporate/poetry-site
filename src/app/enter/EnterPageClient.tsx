@@ -1,0 +1,397 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import type { EnterPageSettings } from "@/types";
+import { WIZARD_STEPS, DEFAULT_PRICE_SINGLE, DEFAULT_PRICE_MULTIPLE } from "./constants";
+
+type Step = 1 | 2 | 3;
+
+const RULES = [
+  "This is an international competition and we accept poetry books & pamphlets from anywhere in the world provided all submissions are in English. The competition is open to anyone aged 18 or over at the time of entering.",
+  "Each book must only be sent once. We only accept physical copies (i.e. paperbacks or pamphlets) as we then donate your book(s) to local libraries (RCT), Storyville Books (free library/bookshop), and Tesco (free books) each autumn/Christmas.",
+  "Only poetry books published by small, truly independent presses and self-published books are eligible to enter. Publishers that receive grants from arts councils, universities and other sponsorships are not considered independent.",
+  "Only individual poets are eligible to enter (although if a book is co-authored we may bend the rules \u2013 please contact us first). The poet must be living. We do not accept anthologies. Translations of other poets\u2019 works are not accepted.",
+  "Entry fees are payable via credit or debit card. Unfortunately, we can no longer accept UK cheques due to our bank charging excessive fees.",
+  "You may enter the competition as many times as you wish, as long as each submission is accompanied by an entry fee.",
+  "There is no publication date requirement but books should not be out of print.",
+  "Only books under 200 pages are eligible. If in doubt, please email us first.",
+  "Unpublished manuscripts are not accepted and will not be returned. No refund will be issued.",
+  "Entries cannot be returned but all books will be donated to local libraries in south Wales, so your book will have the chance to be read by even more people.",
+  "The Maya Poetry Book Awards holds no responsibility for incomplete or ineligible entries.",
+  "It is your responsibility to ensure the correct postage is applied to your parcel and to pay for it. Incorrect postage could result in your package being returned to you and possibly in you missing the deadline.",
+  "If posting from overseas (outside the UK), it is exclusively your responsibility to fill out any customs forms and declarations that may be needed.",
+  "All prizes will be paid in pounds sterling by card. The Poetry Book Awards cannot be held responsible for any payment processing or currency conversion fees.",
+  "By entering, you agree that if you win one of our awards, you will send us a photo and short biography for us to post on our website, to share on social media, as well as for any other advertising/press releases.",
+  "The judge(s) will read all entries. Their decision is final and no correspondence will be entered into.",
+  "The competition organisers reserve the right to change the judge(s) without notice.",
+  "No feedback is offered and no personal comments regarding entries will be given.",
+  "No refunds will be given.",
+  "Entrants will be signed up for the newsletter to be kept informed of changes in announcement dates, judges, winners, etc.",
+  "Winners will be awarded a cash prize and emailed a certificate and logo to use for publicity, and will also receive a review from us on the relevant Goodreads and Amazon UK web pages, if your book is listed on these platforms.",
+  "Any entries received after the closing date will automatically be put forward for the following year\u2019s competition. No returns will be given.",
+  "You retain all rights to your work.",
+  "By entering this competition, each entrant agrees to be bound by these rules.",
+];
+
+function buildBookPrices(priceSingle: number, priceMultiple: number) {
+  const prices: Record<number, number> = {};
+  for (let i = 1; i <= 6; i++) {
+    prices[i] = i === 1 ? priceSingle : priceMultiple * i;
+  }
+  return prices;
+}
+
+function numberToWord(n: number): string {
+  const words = ["One", "Two", "Three", "Four", "Five", "Six"];
+  return words[n - 1] || String(n);
+}
+
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+  return isMobile;
+}
+
+function getStepMessage(targetStep: number, action: string): string {
+  switch (targetStep) {
+    case 2:
+      return `To continue to step 2, please first confirm you have read the rules then ${action} "I have read the rules \u2014 Continue" at the bottom of Step 1.`;
+    case 3:
+      return `To continue to step 3, please first enter your personal details and the number of books you're entering, then ${action} "Continue to payment" at the bottom of Step 2.`;
+    case 4:
+      return `To continue to step 4, please complete your payment via Stripe in Step 3. You will be redirected back here automatically.`;
+    default:
+      return "";
+  }
+}
+
+export default function EnterPageClient({
+  settings,
+  cancelled,
+}: {
+  settings: EnterPageSettings;
+  cancelled?: boolean;
+}) {
+  const [currentStep, setCurrentStep] = useState<Step>(cancelled ? 3 : 1);
+  const [formData, setFormData] = useState({ name: "", email: "", bookCount: 0 });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(
+    cancelled ? "Payment was cancelled. You can try again when you're ready." : null
+  );
+  const [modalMessage, setModalMessage] = useState<string | null>(null);
+  const isMobile = useIsMobile();
+
+  const priceSingle = settings.price_single_book ?? DEFAULT_PRICE_SINGLE;
+  const priceMultiple = settings.price_multiple_books ?? DEFAULT_PRICE_MULTIPLE;
+  const bookPrices = buildBookPrices(priceSingle, priceMultiple);
+  const action = isMobile ? "tap" : "click";
+
+  const bookOptions = Array.from({ length: 6 }, (_, i) => {
+    const count = i + 1;
+    return {
+      value: count,
+      label: `${numberToWord(count)} book${count > 1 ? "s" : ""}: \u00A3${bookPrices[count]} GBP`,
+    };
+  });
+
+  const handleStepClick = (stepNum: number) => {
+    if (stepNum === currentStep) return;
+    if (stepNum < currentStep) {
+      setCurrentStep(stepNum as Step);
+      return;
+    }
+    setModalMessage(getStepMessage(stepNum, action));
+  };
+
+  const validateStep2 = () => {
+    const newErrors: Record<string, string> = {};
+    if (!formData.name.trim()) newErrors.name = "Please enter your name.";
+    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
+      newErrors.email = "Please enter a valid email address.";
+    if (!formData.bookCount)
+      newErrors.bookCount = "Please select how many books you'd like to enter.";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleStep2Submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (validateStep2()) setCurrentStep(3);
+  };
+
+  const handlePayment = async () => {
+    setIsProcessing(true);
+    setCheckoutError(null);
+
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          bookCount: formData.bookCount,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.url) {
+        setCheckoutError(data.error || "Something went wrong. Please try again.");
+        setIsProcessing(false);
+        return;
+      }
+
+      window.location.href = data.url;
+    } catch {
+      setCheckoutError("Could not connect to payment service. Please try again.");
+      setIsProcessing(false);
+    }
+  };
+
+  return (
+    <section className="py-10 bg-white">
+      <div className="max-w-2xl mx-auto px-6">
+        {/* Wizard Steps */}
+        <div className="mb-10">
+          <div className="flex items-start justify-between relative">
+            <div className="absolute top-[52px] md:top-[56px] left-[calc(12.5%+20px)] right-[calc(62.5%+20px)] h-0.5 bg-slate-200" />
+            <div className="absolute top-[52px] md:top-[56px] left-[calc(37.5%+20px)] right-[calc(37.5%+20px)] h-0.5 bg-slate-200" />
+            <div className="absolute top-[52px] md:top-[56px] left-[calc(62.5%+20px)] right-[calc(12.5%+20px)] h-0.5 bg-slate-200" />
+
+            {WIZARD_STEPS.map((step, index) => {
+              const stepNum = index + 1;
+              const isActive = stepNum === currentStep;
+              const isCompleted = stepNum < currentStep;
+
+              return (
+                <div key={index} className="flex flex-col items-center flex-1 relative z-10">
+                  <p className="text-[10px] md:text-xs text-slate-400 font-medium mb-1.5">
+                    Step {stepNum}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => handleStepClick(stepNum)}
+                    className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all ${
+                      isActive
+                        ? "bg-primary border-primary text-white cursor-default"
+                        : isCompleted
+                        ? "bg-slate-100 border-primary text-primary cursor-pointer hover:bg-slate-200"
+                        : "bg-white border-slate-200 text-slate-400 cursor-pointer hover:border-slate-300"
+                    }`}
+                  >
+                    {stepNum}
+                  </button>
+                  <p className="text-center mt-1.5 leading-tight">
+                    <span className="hidden md:block text-[11px] text-slate-500">
+                      {step.label}
+                      <br />
+                      {step.sublabel}
+                    </span>
+                    <span className="md:hidden text-[10px] text-slate-500">{step.mobileLabel}</span>
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Step 1: Read Rules */}
+        {currentStep === 1 && (
+          <div className="bg-white border border-slate-200 rounded-xl p-6 md:p-8 shadow-sm">
+            <h2 className="text-lg font-semibold text-slate-900 mb-1">Competition Rules</h2>
+            <p className="text-sm text-slate-500 mb-6">
+              Please review the competition rules before submitting your entry.
+            </p>
+
+            <ol className="list-decimal list-outside pl-5 space-y-3 text-sm text-slate-600">
+              {RULES.map((rule, index) => (
+                <li key={index} className="leading-relaxed">{rule}</li>
+              ))}
+            </ol>
+
+            <button
+              type="button"
+              onClick={() => setCurrentStep(2)}
+              className="w-full mt-6 bg-primary hover:bg-primary-light text-white font-medium py-3 px-4 rounded-lg transition-colors"
+            >
+              I have read the rules — Continue
+            </button>
+          </div>
+        )}
+
+        {/* Step 2: Entry Details */}
+        {currentStep === 2 && (
+          <>
+            <button
+              onClick={() => setCurrentStep(1)}
+              className="text-sm text-slate-500 hover:text-primary mb-4 flex items-center gap-1"
+            >
+              &larr; Back to Rules
+            </button>
+
+            <div className="bg-white border border-slate-200 rounded-xl p-6 md:p-8 shadow-sm">
+              <h2 className="text-lg font-semibold text-slate-900 mb-1">Enter Details</h2>
+              <p className="text-sm text-slate-500 mb-6">
+                Tell us about yourself and how many books you&apos;re entering.
+              </p>
+
+              <form className="space-y-4" onSubmit={handleStep2Submit} noValidate>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1" htmlFor="entry-name">
+                    Name
+                  </label>
+                  <input
+                    id="entry-name"
+                    type="text"
+                    name="name"
+                    autoComplete="name"
+                    required
+                    value={formData.name}
+                    onChange={(e) => {
+                      setFormData({ ...formData, name: e.target.value });
+                      if (errors.name) setErrors({ ...errors, name: "" });
+                    }}
+                    className="w-full px-4 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                  />
+                  {errors.name && (
+                    <p className="text-xs text-red-600 mt-1" role="alert">{errors.name}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1" htmlFor="entry-email">
+                    Email address
+                  </label>
+                  <input
+                    id="entry-email"
+                    type="email"
+                    name="email"
+                    inputMode="email"
+                    autoComplete="email"
+                    required
+                    value={formData.email}
+                    onChange={(e) => {
+                      setFormData({ ...formData, email: e.target.value });
+                      if (errors.email) setErrors({ ...errors, email: "" });
+                    }}
+                    className="w-full px-4 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                  />
+                  {errors.email && (
+                    <p className="text-xs text-red-600 mt-1" role="alert">{errors.email}</p>
+                  )}
+                </div>
+
+                <div>
+                  <p className="text-sm font-medium text-slate-700 mb-2">
+                    Number of books you&apos;d like to enter
+                  </p>
+                  <div className="space-y-2">
+                    {bookOptions.map((option) => (
+                      <label key={option.value} className="flex items-center gap-3 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="bookCount"
+                          value={option.value}
+                          checked={formData.bookCount === option.value}
+                          onChange={() => {
+                            setFormData({ ...formData, bookCount: option.value });
+                            if (errors.bookCount) setErrors({ ...errors, bookCount: "" });
+                          }}
+                          className="w-4 h-4 accent-primary"
+                        />
+                        <span className="text-sm text-slate-700">{option.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                  {errors.bookCount && (
+                    <p className="text-xs text-red-600 mt-1" role="alert">{errors.bookCount}</p>
+                  )}
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-primary hover:bg-primary-light text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                >
+                  Continue to payment
+                </button>
+              </form>
+            </div>
+          </>
+        )}
+
+        {/* Step 3: Payment */}
+        {currentStep === 3 && (
+          <>
+            <button
+              onClick={() => setCurrentStep(2)}
+              className="text-sm text-slate-500 hover:text-primary mb-4 flex items-center gap-1"
+            >
+              &larr; Back to Entry Details
+            </button>
+
+            <div className="bg-white border border-slate-200 rounded-xl p-6 md:p-8 shadow-sm">
+              <h3 className="text-lg font-semibold text-slate-900 mb-1">Payment</h3>
+              <p className="text-sm text-slate-500 mb-4">
+                Total: &pound;{bookPrices[formData.bookCount]} for {formData.bookCount}{" "}
+                {formData.bookCount === 1 ? "book" : "books"}
+              </p>
+
+              <p className="text-xs text-slate-400 mb-6">
+                You will be redirected to Stripe to complete your payment securely.
+              </p>
+
+              {checkoutError && (
+                <p className="text-sm text-red-600 mb-4 bg-red-50 border border-red-200 rounded-lg px-4 py-3" role="alert">
+                  {checkoutError}
+                </p>
+              )}
+
+              <button
+                type="button"
+                onClick={handlePayment}
+                disabled={isProcessing}
+                className="w-full bg-primary hover:bg-primary-light disabled:bg-slate-400 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+              >
+                {isProcessing && (
+                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                )}
+                {isProcessing
+                  ? "Redirecting to payment..."
+                  : `Pay \u00A3${bookPrices[formData.bookCount]} via Stripe`}
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Modal */}
+      {modalMessage && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+          onClick={() => setModalMessage(null)}
+        >
+          <div
+            className="bg-white rounded-xl shadow-lg max-w-md mx-4 p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p className="text-sm text-slate-700 leading-relaxed">{modalMessage}</p>
+            <button
+              type="button"
+              onClick={() => setModalMessage(null)}
+              className="mt-4 w-full bg-primary hover:bg-primary-light text-white font-medium py-2.5 px-4 rounded-lg text-sm transition-colors"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}

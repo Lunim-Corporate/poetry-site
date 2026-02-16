@@ -1,4 +1,4 @@
-import type { ImageField, KeyTextField, RichTextField } from "@prismicio/client";
+import type { ImageField, RichTextField } from "@prismicio/client";
 
 // ---------------------------------------------------------------------------
 // Prismic Slice Component Props
@@ -171,6 +171,20 @@ export interface AboutSectionSliceData extends PrismicSlice {
     sign_off_name?: string;
     sign_off_role?: string;
   };
+}
+
+// ---------------------------------------------------------------------------
+// Enter Page — document-level fields (not slices)
+// ---------------------------------------------------------------------------
+
+export interface EnterPageSettings {
+  price_single_book?: number;
+  price_multiple_books?: number;
+  shipping_name?: string;
+  shipping_street?: string;
+  shipping_town?: string;
+  shipping_postcode?: string;
+  shipping_country?: string;
 }
 
 // ---------------------------------------------------------------------------
