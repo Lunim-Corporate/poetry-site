@@ -1,8 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import type { EnterPageSettings } from "@/types";
 import { WIZARD_STEPS, DEFAULT_PRICE_SINGLE, DEFAULT_PRICE_MULTIPLE } from "./constants";
+
+const PaymentForm = dynamic(() => import("./PaymentForm"), { ssr: false });
 
 type Step = 1 | 2 | 3;
 
@@ -77,13 +80,12 @@ export default function EnterPageClient({
   settings: EnterPageSettings;
   cancelled?: boolean;
 }) {
-  const [currentStep, setCurrentStep] = useState<Step>(cancelled ? 3 : 1);
+  const [currentStep, setCurrentStep] = useState<Step>(1);
   const [formData, setFormData] = useState({ name: "", email: "", bookCount: 0 });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [checkoutError, setCheckoutError] = useState<string | null>(
-    cancelled ? "Payment was cancelled. You can try again when you're ready." : null
-  );
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [isFetchingIntent, setIsFetchingIntent] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [modalMessage, setModalMessage] = useState<string | null>(null);
   const isMobile = useIsMobile();
 
@@ -120,13 +122,11 @@ export default function EnterPageClient({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleStep2Submit = (e: React.FormEvent) => {
+  const handleStep2Submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (validateStep2()) setCurrentStep(3);
-  };
+    if (!validateStep2()) return;
 
-  const handlePayment = async () => {
-    setIsProcessing(true);
+    setIsFetchingIntent(true);
     setCheckoutError(null);
 
     try {
@@ -142,16 +142,18 @@ export default function EnterPageClient({
 
       const data = await res.json();
 
-      if (!res.ok || !data.url) {
+      if (!res.ok || !data.clientSecret) {
         setCheckoutError(data.error || "Something went wrong. Please try again.");
-        setIsProcessing(false);
+        setIsFetchingIntent(false);
         return;
       }
 
-      window.location.href = data.url;
+      setClientSecret(data.clientSecret);
+      setCurrentStep(3);
     } catch {
       setCheckoutError("Could not connect to payment service. Please try again.");
-      setIsProcessing(false);
+    } finally {
+      setIsFetchingIntent(false);
     }
   };
 
@@ -315,11 +317,21 @@ export default function EnterPageClient({
                   )}
                 </div>
 
+                {checkoutError && (
+                  <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3" role="alert">
+                    {checkoutError}
+                  </p>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full bg-primary hover:bg-primary-light text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                  disabled={isFetchingIntent}
+                  className="w-full bg-primary hover:bg-primary-light disabled:bg-slate-400 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
                 >
-                  Continue to payment
+                  {isFetchingIntent && (
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  )}
+                  {isFetchingIntent ? "Preparing payment..." : "Continue to payment"}
                 </button>
               </form>
             </div>
@@ -338,34 +350,23 @@ export default function EnterPageClient({
 
             <div className="bg-white border border-slate-200 rounded-xl p-6 md:p-8 shadow-sm">
               <h3 className="text-lg font-semibold text-slate-900 mb-1">Payment</h3>
-              <p className="text-sm text-slate-500 mb-4">
+              <p className="text-sm text-slate-500 mb-6">
                 Total: &pound;{bookPrices[formData.bookCount]} for {formData.bookCount}{" "}
                 {formData.bookCount === 1 ? "book" : "books"}
               </p>
 
-              <p className="text-xs text-slate-400 mb-6">
-                You will be redirected to Stripe to complete your payment securely.
-              </p>
-
-              {checkoutError && (
-                <p className="text-sm text-red-600 mb-4 bg-red-50 border border-red-200 rounded-lg px-4 py-3" role="alert">
-                  {checkoutError}
-                </p>
+              {clientSecret ? (
+                <PaymentForm
+                  clientSecret={clientSecret}
+                  totalGBP={bookPrices[formData.bookCount]}
+                  bookCount={formData.bookCount}
+                />
+              ) : (
+                <div className="flex items-center justify-center py-8 text-slate-400 text-sm gap-2">
+                  <span className="w-4 h-4 border-2 border-slate-300 border-t-slate-500 rounded-full animate-spin" />
+                  Loading payment form...
+                </div>
               )}
-
-              <button
-                type="button"
-                onClick={handlePayment}
-                disabled={isProcessing}
-                className="w-full bg-primary hover:bg-primary-light disabled:bg-slate-400 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
-              >
-                {isProcessing && (
-                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                )}
-                {isProcessing
-                  ? "Redirecting to payment..."
-                  : `Pay \u00A3${bookPrices[formData.bookCount]} via Stripe`}
-              </button>
             </div>
           </>
         )}

@@ -19,14 +19,20 @@ function getStripe() {
 export default async function SuccessPage({
   searchParams,
 }: {
-  searchParams: Promise<{ session_id?: string }>;
+  searchParams: Promise<{
+    payment_intent_id?: string;
+    // Stripe also appends these on 3DS redirect:
+    payment_intent?: string;
+    redirect_status?: string;
+  }>;
 }) {
-  const { session_id } = await searchParams;
+  const params = await searchParams;
+  const intentId = params.payment_intent_id ?? params.payment_intent;
 
-  if (!session_id) {
+  if (!intentId) {
     return (
       <ErrorState
-        title="No payment session found"
+        title="No payment found"
         message="It looks like you arrived here without completing a payment."
         linkText="Go to Entry Page"
       />
@@ -34,20 +40,20 @@ export default async function SuccessPage({
   }
 
   const stripe = getStripe();
-  let session: Stripe.Checkout.Session;
+  let intent: Stripe.PaymentIntent;
   try {
-    session = await stripe.checkout.sessions.retrieve(session_id);
+    intent = await stripe.paymentIntents.retrieve(intentId);
   } catch {
     return (
       <ErrorState
-        title="Invalid session"
-        message="We couldn&apos;t verify your payment. Please contact us if you believe this is an error."
+        title="Invalid payment"
+        message="We couldn't verify your payment. Please contact us if you believe this is an error."
         linkText="Go to Entry Page"
       />
     );
   }
 
-  if (session.payment_status !== "paid") {
+  if (intent.status !== "succeeded") {
     return (
       <ErrorState
         title="Payment not completed"
@@ -57,9 +63,9 @@ export default async function SuccessPage({
     );
   }
 
-  const entrantName = session.metadata?.entrant_name ?? "Entrant";
-  const bookCount = Number(session.metadata?.book_count ?? 1);
-  const totalGBP = session.metadata?.total_gbp ?? "0";
+  const entrantName = intent.metadata?.entrant_name ?? "Entrant";
+  const bookCount = Number(intent.metadata?.book_count ?? 1);
+  const totalGBP = intent.metadata?.total_gbp ?? "0";
 
   const client = createClient();
   const doc = await client.getSingle("enter_page").catch(() => null);
@@ -73,7 +79,7 @@ export default async function SuccessPage({
     country: (data.shipping_country as string) || DEFAULT_SHIPPING.country,
   };
 
-  const reference = `MAYA-${new Date().getFullYear()}-${session_id.slice(-8).toUpperCase()}`;
+  const reference = `MAYA-${new Date().getFullYear()}-${intentId.slice(-8).toUpperCase()}`;
 
   return (
     <section className="py-10 bg-white">

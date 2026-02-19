@@ -49,41 +49,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const origin = request.nextUrl.origin;
-
     const stripe = getStripe();
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      mode: "payment",
-      customer_email: email,
-      line_items: [
-        {
-          price_data: {
-            currency: "gbp",
-            product_data: {
-              name: `Poetry Book Award Entry (${bookCount} ${bookCount === 1 ? "book" : "books"})`,
-              description: `Competition entry for ${name}`,
-            },
-            unit_amount: totalGBP * 100, // Stripe uses pence
-          },
-          quantity: 1,
-        },
-      ],
+    const intent = await stripe.paymentIntents.create({
+      amount: totalGBP * 100, // Stripe uses pence
+      currency: "gbp",
+      receipt_email: email,
       metadata: {
         entrant_name: name,
         entrant_email: email,
         book_count: String(bookCount),
         total_gbp: String(totalGBP),
       },
-      success_url: `${origin}/enter/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/enter?cancelled=true`,
     });
 
-    return NextResponse.json({ url: session.url });
+    return NextResponse.json({ clientSecret: intent.client_secret });
   } catch (err) {
-    console.error("Stripe checkout error:", err);
+    console.error("Stripe payment intent error:", err);
     return NextResponse.json(
-      { error: "Failed to create checkout session." },
+      { error: "Failed to create payment intent." },
       { status: 500 }
     );
   }
