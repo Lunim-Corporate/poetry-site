@@ -22,6 +22,7 @@ function CheckoutForm({
   const stripe = useStripe();
   const elements = useElements();
   const router = useRouter();
+  const [isReady, setIsReady] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -60,7 +61,19 @@ function CheckoutForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      <PaymentElement />
+      {/* Spinner shown until PaymentElement signals it's fully rendered */}
+      {!isReady && (
+        <div className="flex items-center justify-center py-10 text-slate-400 text-sm gap-2">
+          <span className="w-4 h-4 border-2 border-slate-300 border-t-slate-500 rounded-full animate-spin" />
+          Loading payment form...
+        </div>
+      )}
+
+      {/* PaymentElement is always mounted so Stripe can load in the background;
+          hidden via CSS until onReady fires to avoid showing a half-loaded UI */}
+      <div style={{ display: isReady ? "block" : "none" }}>
+        <PaymentElement onReady={() => setIsReady(true)} />
+      </div>
 
       {error && (
         <p
@@ -71,18 +84,20 @@ function CheckoutForm({
         </p>
       )}
 
-      <button
-        type="submit"
-        disabled={!stripe || isProcessing}
-        className="w-full bg-primary hover:bg-primary-light disabled:bg-slate-400 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
-      >
-        {isProcessing && (
-          <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-        )}
-        {isProcessing
-          ? "Processing payment..."
-          : `Pay \u00A3${totalGBP} securely`}
-      </button>
+      {isReady && (
+        <button
+          type="submit"
+          disabled={isProcessing}
+          className="w-full bg-primary hover:bg-primary-light disabled:bg-slate-400 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+        >
+          {isProcessing && (
+            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+          )}
+          {isProcessing
+            ? "Processing payment..."
+            : `Pay \u00A3${totalGBP} securely`}
+        </button>
+      )}
     </form>
   );
 }

@@ -54,6 +54,7 @@ export async function POST(request: NextRequest) {
       amount: totalGBP * 100, // Stripe uses pence
       currency: "gbp",
       receipt_email: email,
+      automatic_payment_methods: { enabled: true },
       metadata: {
         entrant_name: name,
         entrant_email: email,
