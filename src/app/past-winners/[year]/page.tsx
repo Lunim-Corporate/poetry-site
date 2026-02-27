@@ -28,9 +28,9 @@ export default async function WinnersYearPage({ params }: PageProps) {
 
   if (doc) {
     const data = doc.data as unknown as PastWinnersYearData;
-    const heroSlices = (data.slices ?? []).filter(
-      (s: PrismicSlice) => s.slice_type === "hero"
-    );
+    const allSlices = (data.slices ?? []) as PrismicSlice[];
+    const heroSlices = allSlices.filter((s) => s.slice_type === "hero");
+    const richTextSlices = allSlices.filter((s) => s.slice_type === "rich_text");
 
     const winners: WinnerEntry[] = data.winners ?? [];
     const shortlist: ListEntry[] = data.shortlist ?? [];
@@ -53,7 +53,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
 
         <TwoColumnLayout>
           <div className="space-y-10">
-            {/* Winners Grid */}
+            {/* Winners Grid
             {winners.length > 0 && (
               <div>
                 <h2 className="text-xl font-semibold text-slate-900 mb-6">
@@ -132,54 +132,165 @@ export default async function WinnersYearPage({ params }: PageProps) {
                   })}
                 </div>
               </div>
+            )} */}
+
+            {/* 1st Prize Detail */}
+            {winners.length > 0 && (
+              (() => {
+                const firstPrize = winners.find(
+                  (w) => w.prize_level === "1st Place"
+                );
+
+                if (!firstPrize) return null;
+
+                const authors = [firstPrize.author, firstPrize.author_2]
+                  .filter(Boolean)
+                  .join(" & ");
+
+                return (
+                  <section>
+                    <h2 className="text-2xl font-bold text-[#333333] mb-3 pb-2 border-b border-slate-200">
+                      1st Prize
+                    </h2>
+                    <p className="text-base text-slate-800 mb-5">
+                      <span className="font-semibold">
+                        {firstPrize.book_title}
+                      </span>
+                      {": "}
+                      <span className="italic text-slate-700">
+                        {authors}
+                        {firstPrize.location ? `, ${firstPrize.location}` : ""}
+                      </span>
+                    </p>
+
+                    <div className="grid gap-6 md:grid-cols-[220px,1fr] items-start">
+                      <div className="w-full max-w-[220px]">
+                        <div className="bg-[#F3E7D6] rounded-md border border-slate-200 p-3 flex items-center justify-center">
+                          {firstPrize.cover_image?.url ? (
+                            <PrismicNextImage
+                              field={firstPrize.cover_image}
+                              className="w-full h-auto object-contain shadow-sm"
+                              fallbackAlt=""
+                            />
+                          ) : (
+                            <div className="w-full aspect-[2/3] bg-slate-100 rounded-md flex items-center justify-center text-xs text-slate-400">
+                              Cover coming soon
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        {richTextSlices.length > 0 ? (
+                          <>
+                            {/* Author details - first slice, bolder text */}
+                            <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:font-semibold prose-p:leading-relaxed">
+                              <SliceZone slices={[richTextSlices[0]]} components={components} />
+                            </div>
+
+                            {/* Book details - remaining slices, normal weight */}
+                            {richTextSlices.length > 1 && (
+                              <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:leading-relaxed">
+                                <SliceZone
+                                  slices={richTextSlices.slice(1)}
+                                  components={components}
+                                />
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:leading-relaxed">
+                            <p>
+                              Detailed information about the winning collection will appear here.
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {firstPrize.amazon_url && (
+                      <p className="mt-5 text-sm">
+                        <Link
+                          href={firstPrize.amazon_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-semibold text-primary hover:text-primary-light underline underline-offset-2"
+                        >
+                          Purchase a copy
+                        </Link>
+                      </p>
+                    )}
+                  </section>
+                );
+              })()
             )}
 
             {/* Shortlist */}
             {shortlist.length > 0 && (
-              <div>
-                <h3 className="text-lg font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
-                  Shortlist
+              <section className="bg-[#F9F5EF] border border-[#B7A08F] rounded-2xl p-6 md:p-8 shadow-sm">
+                <h3 className="text-2xl font-semibold text-slate-900">
+                  {(data.year ?? year) as string} Shortlist
                 </h3>
-                <ul className="space-y-2">
-                  {shortlist.map((entry, index) => (
-                    <li key={index} className="text-slate-600">
-                      <strong className="text-slate-900">
-                        {entry.book_title}
-                      </strong>{" "}
-                      — <em>{entry.author}</em>
-                      {entry.location && (
-                        <span className="text-slate-500">
-                          , {entry.location}
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                <p className="text-sm text-slate-600 mt-2 mb-4">
+                  The shortlist celebrates a wide range of voices and styles.
+                </p>
+
+                <div className="mt-1 rounded-xl border border-[#B7A08F] bg-[#F9F5EF] px-4 py-4 md:px-5 md:py-5">
+                  <ul className="space-y-2">
+                    {shortlist.map((entry, index) => (
+                      <li key={index} className="flex items-start gap-2 text-sm">
+                        <span className="mt-1 text-slate-500">•</span>
+                        <p className="text-slate-700">
+                          <strong className="text-slate-900 font-semibold">
+                            {entry.book_title}
+                          </strong>{" "}
+                          —{" "}
+                          <em className="text-slate-700">{entry.author}</em>
+                          {entry.location && (
+                            <span className="text-slate-500">
+                              , {entry.location}
+                            </span>
+                          )}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </section>
             )}
 
             {/* Longlist */}
             {longlist.length > 0 && (
-              <div>
-                <h3 className="text-lg font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
-                  Longlist
+              <section className="bg-[#F9F5EF] border border-[#B7A08F] rounded-2xl p-6 md:p-8 shadow-sm">
+                <h3 className="text-2xl font-semibold text-slate-900">
+                  {(data.year ?? year) as string} Longlist
                 </h3>
-                <ul className="space-y-2">
-                  {longlist.map((entry, index) => (
-                    <li key={index} className="text-slate-600">
-                      <strong className="text-slate-900">
-                        {entry.book_title}
-                      </strong>{" "}
-                      — <em>{entry.author}</em>
-                      {entry.location && (
-                        <span className="text-slate-500">
-                          , {entry.location}
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                <p className="text-sm text-slate-600 mt-2 mb-4">
+                  The shortlist celebrates a wide range of voices and styles.
+                </p>
+
+                <div className="mt-1 rounded-xl border border-[#B7A08F] bg-[#F9F5EF] px-4 py-4 md:px-5 md:py-5">
+                  <ul className="space-y-2">
+                    {longlist.map((entry, index) => (
+                      <li key={index} className="flex items-start gap-2 text-sm">
+                        <span className="mt-1 text-slate-500">•</span>
+                        <p className="text-slate-700">
+                          <strong className="text-slate-900 font-semibold">
+                            {entry.book_title}
+                          </strong>{" "}
+                          —{" "}
+                          <em className="text-slate-700">{entry.author}</em>
+                          {entry.location && (
+                            <span className="text-slate-500">
+                              , {entry.location}
+                            </span>
+                          )}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </section>
             )}
 
             {/* Navigation */}
