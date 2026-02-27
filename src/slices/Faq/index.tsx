@@ -14,17 +14,17 @@ export default function Faq({ slice }: SliceComponentProps<FaqSliceData>) {
   return (
     <section
       id="faq"
-      className="py-12 bg-white"
+      className="py-12"
       data-slice-type={slice.slice_type}
       data-slice-variation={slice.variation}
     >
       <div className="max-w-3xl mx-auto px-6">
-        <div className="bg-white border border-slate-200 rounded-xl p-6 md:p-8 shadow-sm">
-          <h2 className="text-xl font-semibold text-slate-900 mb-6">
+        <div className="bg-[#FFFEFA] border border-slate-200 rounded-xl p-6 md:p-8 shadow-sm">
+          <h2 className="text-xl font-bold text-[#333333] mb-6">
             <PrismicText field={slice.primary.title} />
           </h2>
 
-          <div className="divide-y divide-slate-200 border-t border-slate-200">
+          <div className="divide-y divide-[#CCCCCC] border-t border-slate-200">
             {slice.primary.items?.map((item, index) => (
               <details
                 key={index}

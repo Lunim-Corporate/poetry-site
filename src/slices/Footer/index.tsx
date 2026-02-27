@@ -7,15 +7,15 @@ export default function Footer({ slice }: SliceComponentProps<FooterSliceData>) 
   const deliveredByUrl = slice.primary.delivered_by_url || "https://lunim.io";
 
   return (
-    <footer className="py-8 border-t border-slate-200 bg-slate-50">
+    <footer className="py-8 bg-gradient-to-r from-[#451E10] via-[#7a3520] to-[#451E10]">
       <div className="max-w-6xl mx-auto px-6">
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-white/70">
           © {currentYear} {copyrightText}. Delivered by{" "}
           <a
             href={deliveredByUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-slate-600 underline underline-offset-2 hover:text-primary transition-colors"
+            className="text-white underline underline-offset-2 hover:text-[#FFE169] transition-colors"
           >
             {deliveredByText}
           </a>

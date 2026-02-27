@@ -52,20 +52,29 @@ export default function Sidebar() {
   return (
     <div className="space-y-6 lg:sticky lg:top-24">
       {/* Newsletter Card */}
-      <aside id="newsletter" className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm" aria-label="Newsletter sign-up">
-        <h3 className="text-lg font-semibold text-slate-900 mb-1">Newsletter</h3>
-        <p className="text-sm text-slate-500 mb-4">
+      <aside
+        id="newsletter"
+        className="bg-[#F9F5EF] border border-[#B7A08F] rounded-xl p-6"
+        aria-label="Newsletter sign-up"
+      >
+        <h3 className="text-xl font-bold text-slate-900 mb-4">Newsletter</h3>
+        <p className="text-sm text-[#333333] mb-5">
           Want to be kept informed? No spam - just relevant updates.
         </p>
         {newsletterSuccess ? (
-          <p className="text-sm text-slate-700">
-            <strong>Thank you!</strong> You&apos;ve been added to our mailing list.
+          <p className="text-sm text-[#333333]">
+            <strong>Thank you!</strong> You&apos;ve been added to our mailing
+            list.
           </p>
         ) : (
-          <form className="space-y-3" onSubmit={handleNewsletterSubmit} noValidate>
-            <div>
+          <form
+            className="space-y-3"
+            onSubmit={handleNewsletterSubmit}
+            noValidate
+          >
+            <div className="mb-8">
               <label
-                className="block text-sm font-medium text-slate-700 mb-1"
+                className="block text-md font-bold text-[#333333] mb-3"
                 htmlFor="sidebar-newsletter-email"
               >
                 Email
@@ -83,44 +92,56 @@ export default function Sidebar() {
                   setNewsletterEmail(e.target.value);
                   if (newsletterError) setNewsletterError("");
                 }}
-                className="w-full px-4 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                className="w-full px-4 py-2.5 text-sm border-2 border-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-white"
               />
               {newsletterError && (
-                <p className="text-xs text-red-600 mt-1" role="alert">{newsletterError}</p>
+                <p className="text-xs text-red-600 mt-1" role="alert">
+                  {newsletterError}
+                </p>
               )}
             </div>
             <button
               type="submit"
               disabled={newsletterSubmitting}
-              className="w-full bg-primary hover:bg-primary-light disabled:bg-slate-400 text-white font-medium py-2.5 px-4 rounded-lg text-sm transition-colors flex items-center justify-center gap-2"
+              className="w-full border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] disabled:bg-slate-400 text-[#23100A] font-bold py-2.5 px-4 rounded-lg text-sm transition-colors flex items-center justify-center gap-2"
             >
               {newsletterSubmitting && (
                 <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               )}
               {newsletterSubmitting ? "Signing up..." : "Sign up"}
             </button>
-            <p className="text-[11px] text-slate-400">
-              By signing up, you agree to receive emails. You can unsubscribe at any time.
+            <p className="text-sm text-[#333333]">
+              By signing up, you agree to receive emails. You can unsubscribe at
+              any time.
             </p>
           </form>
         )}
       </aside>
 
       {/* Contact Card */}
-      <aside id="contact-form" className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm" aria-label="Contact form">
-        <h3 className="text-lg font-semibold text-slate-900 mb-1">Contact Us</h3>
-        <p className="text-sm text-slate-500 mb-4">
+      <aside
+        id="contact-form"
+        className="bg-[#F9F5EF] border border-[#B7A08F] rounded-xl p-6"
+        aria-label="Contact form"
+      >
+        <h3 className="text-xl font-bold text-slate-900 mb-4">
+          Contact Us
+        </h3>
+        <p className="text-sm text-[#333333] mb-5">
           Send us a message and we&apos;ll get back to you.
         </p>
         {contactSuccess ? (
-          <p className="text-sm text-slate-700">
-            <strong>Thank you{contactData.name ? `, ${contactData.name}` : ""}!</strong> We&apos;ll be in touch soon.
+          <p className="text-sm text-[#333333]">
+            <strong>
+              Thank you{contactData.name ? `, ${contactData.name}` : ""}!
+            </strong>{" "}
+            We&apos;ll be in touch soon.
           </p>
         ) : (
           <form className="space-y-3" onSubmit={handleContactSubmit} noValidate>
-            <div>
+            <div className="mb-8">
               <label
-                className="block text-sm font-medium text-slate-700 mb-1"
+                className="block text-md font-bold text-[#333333] mb-3"
                 htmlFor="sidebar-contact-name"
               >
                 Name
@@ -134,17 +155,20 @@ export default function Sidebar() {
                 value={contactData.name}
                 onChange={(e) => {
                   setContactData({ ...contactData, name: e.target.value });
-                  if (contactErrors.name) setContactErrors({ ...contactErrors, name: "" });
+                  if (contactErrors.name)
+                    setContactErrors({ ...contactErrors, name: "" });
                 }}
-                className="w-full px-4 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                className="w-full px-4 py-2.5 text-sm border-2 border-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-white"
               />
               {contactErrors.name && (
-                <p className="text-xs text-red-600 mt-1" role="alert">{contactErrors.name}</p>
+                <p className="text-xs text-red-600 mt-1" role="alert">
+                  {contactErrors.name}
+                </p>
               )}
             </div>
-            <div>
+            <div className="mb-8">
               <label
-                className="block text-sm font-medium text-slate-700 mb-1"
+                className="block text-md font-bold text-[#333333] mb-3"
                 htmlFor="sidebar-contact-email"
               >
                 Email
@@ -159,17 +183,20 @@ export default function Sidebar() {
                 value={contactData.email}
                 onChange={(e) => {
                   setContactData({ ...contactData, email: e.target.value });
-                  if (contactErrors.email) setContactErrors({ ...contactErrors, email: "" });
+                  if (contactErrors.email)
+                    setContactErrors({ ...contactErrors, email: "" });
                 }}
-                className="w-full px-4 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                className="w-full px-4 py-2.5 text-sm border-2 border-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-white"
               />
               {contactErrors.email && (
-                <p className="text-xs text-red-600 mt-1" role="alert">{contactErrors.email}</p>
+                <p className="text-xs text-red-600 mt-1" role="alert">
+                  {contactErrors.email}
+                </p>
               )}
             </div>
-            <div>
+            <div className="mb-8">
               <label
-                className="block text-sm font-medium text-slate-700 mb-1"
+                className="block text-md font-bold text-[#333333] mb-3"
                 htmlFor="sidebar-contact-message"
               >
                 Message
@@ -182,31 +209,42 @@ export default function Sidebar() {
                 value={contactData.message}
                 onChange={(e) => {
                   setContactData({ ...contactData, message: e.target.value });
-                  if (contactErrors.message) setContactErrors({ ...contactErrors, message: "" });
+                  if (contactErrors.message)
+                    setContactErrors({ ...contactErrors, message: "" });
                 }}
-                className="w-full px-4 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-y"
+                className="w-full px-4 py-2.5 text-sm border-2 border-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-y bg-white"
               />
               {contactErrors.message && (
-                <p className="text-xs text-red-600 mt-1" role="alert">{contactErrors.message}</p>
+                <p className="text-xs text-red-600 mt-1" role="alert">
+                  {contactErrors.message}
+                </p>
               )}
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 mb-6">
               <input
                 id="sidebar-contact-newsletter"
                 type="checkbox"
                 name="newsletter"
                 checked={contactData.newsletter}
-                onChange={(e) => setContactData({ ...contactData, newsletter: e.target.checked })}
+                onChange={(e) =>
+                  setContactData({
+                    ...contactData,
+                    newsletter: e.target.checked,
+                  })
+                }
                 className="w-4 h-4 accent-primary rounded"
               />
-              <label htmlFor="sidebar-contact-newsletter" className="text-xs text-slate-600">
+              <label
+                htmlFor="sidebar-contact-newsletter"
+                className="text-sm font-bold text-[#333333]"
+              >
                 Sign me up to your newsletter
               </label>
             </div>
             <button
               type="submit"
               disabled={contactSubmitting}
-              className="w-full bg-primary hover:bg-primary-light disabled:bg-slate-400 text-white font-medium py-2.5 px-4 rounded-lg text-sm transition-colors flex items-center justify-center gap-2"
+              className="w-full border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] disabled:bg-slate-400 text-[#23100A] font-bold py-2.5 px-4 rounded-lg text-sm transition-colors flex items-center justify-center gap-2"
             >
               {contactSubmitting && (
                 <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

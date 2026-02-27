@@ -25,6 +25,7 @@
 
 /* Base styles */
 body {
+  background-color: #FFFDF5;
   padding-top: var(--header-height);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

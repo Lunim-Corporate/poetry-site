@@ -1262,6 +1262,16 @@ export interface HeroSliceDefaultPrimary {
   cta_link: prismic.KeyTextField;
 
   /**
+   * Hero Image field in *Hero → Default → Primary*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: hero.default.primary.hero_image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  hero_image: prismic.ImageField<never>;
+
+  /**
    * Variant field in *Hero → Default → Primary*
    *
    * - **Field Type**: Select

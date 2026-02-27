@@ -52,6 +52,7 @@ export interface HeroSliceData extends PrismicSlice {
     secondary_cta_text?: string;
     secondary_cta_link?: string;
     variant?: "default" | "home" | "small";
+    hero_image?: ImageField;
   };
 }
 

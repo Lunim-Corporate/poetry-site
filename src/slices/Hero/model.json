@@ -44,12 +44,24 @@
             "placeholder": "/enter"
           }
         },
+        "hero_image": {
+          "type": "Image",
+          "config": {
+            "label": "Hero Image",
+            "constraint": {},
+            "thumbnails": []
+          }
+        },
         "variant": {
           "type": "Select",
           "config": {
             "label": "Variant",
             "placeholder": "Select variant",
-            "options": ["default", "home", "small"],
+            "options": [
+              "default",
+              "home",
+              "small"
+            ],
             "default_value": "default"
           }
         }

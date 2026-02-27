@@ -55,13 +55,13 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 h-[72px] max-[899px]:h-16 flex items-center border-b border-slate-200 bg-white/95 backdrop-blur-sm">
+      <header className="fixed top-0 left-0 right-0 z-50 h-[72px] max-[899px]:h-16 flex items-center border-b bg-gradient-to-r from-[#451E10] via-[#7a3520] to-[#451E10] backdrop-blur-sm">
         <div className="w-full max-w-6xl mx-auto px-6 flex items-center justify-between gap-8">
           <Link
             href="/"
-            className="flex items-center gap-3 font-bold text-slate-900 hover:text-primary transition-colors"
+            className="flex items-center gap-3 font-bold text-white hover:text-primary transition-colors"
           >
-            <span className="w-10 h-10 flex items-center justify-center bg-primary rounded-lg shadow-sm">
+            <span className="flex items-center justify-center">
               {slice.primary.brand_logo?.url ? (
                 <Image
                   src={slice.primary.brand_logo.url}
@@ -72,7 +72,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                 />
               ) : (
                 <Image
-                  src="/red-raised-fist.png"
+                  src="/logo.png"
                   alt=""
                   width={24}
                   height={24}
@@ -80,7 +80,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                 />
               )}
             </span>
-            <span>{brandName}</span>
+            <span className="text-[#FFE169]">{brandName}</span>
           </Link>
 
           {/* Mobile menu button */}
@@ -105,7 +105,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   isActive(link.url)
                     ? "bg-primary/10 text-primary"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                    : "text-white hover:text-slate-900 hover:bg-slate-100"
                 }`}
               >
                 {link.label}
@@ -120,7 +120,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                   className={`px-4 py-2 rounded-l-lg text-sm font-medium transition-colors ${
                     isPastWinnersActive()
                       ? "bg-primary/10 text-primary"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                      : "text-white hover:text-slate-900 hover:bg-slate-100"
                   }`}
                 >
                   Past Winners
@@ -130,7 +130,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                   className={`px-2 py-2 rounded-r-lg text-sm transition-colors border-l border-slate-200 ${
                     isPastWinnersActive()
                       ? "bg-primary/10 text-primary"
-                      : "text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+                      : "text-white hover:text-slate-600 hover:bg-slate-100"
                   }`}
                 >
                   <span
@@ -161,20 +161,20 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 pathname === "/enter"
                   ? "bg-primary/10 text-primary"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                  : "text-white hover:text-slate-900 hover:bg-slate-100"
               }`}
             >
               The Rules
             </Link>
             <Link
               href="/#faq"
-              className="px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+              className="px-4 py-2 rounded-lg text-sm font-medium text-white hover:text-slate-900 hover:bg-slate-100 transition-colors"
             >
               FAQ
             </Link>
             <Link
               href="/#contact-form"
-              className="px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+              className="px-4 py-2 rounded-lg text-sm font-medium text-white hover:text-slate-900 hover:bg-slate-100 transition-colors"
             >
               Contact Us
             </Link>

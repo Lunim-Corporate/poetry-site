@@ -1,5 +1,6 @@
 import { PrismicRichText } from "@prismicio/react";
 import Link from "next/link";
+import Image from "next/image";
 import type { HeroSliceData, SliceComponentProps } from "@/types";
 
 type HeroVariant = NonNullable<HeroSliceData["primary"]["variant"]>;
@@ -8,9 +9,9 @@ export default function Hero({ slice }: SliceComponentProps<HeroSliceData>) {
   const variant: HeroVariant = slice.primary.variant || "default";
 
   const sectionClasses: Record<HeroVariant, string> = {
-    home: "min-h-[480px] bg-gradient-to-br from-primary to-primary-dark text-white flex items-center",
-    small: "min-h-[140px] bg-slate-50 border-b border-slate-200 flex items-center",
-    default: "min-h-[320px] bg-slate-50 border-b border-slate-200 flex items-center",
+    home: "min-h-[640px] bg-gradient-to-br from-primary to-primary-dark text-white flex items-stretch",
+    small: "min-h-[140px] bg-[#FFFDF5] border-b border-slate-200 flex items-center",
+    default: "min-h-[320px] bg-[#FFFDF5] border-b border-slate-200 flex items-center",
   };
 
   const titleClasses: Record<HeroVariant, string> = {
@@ -25,22 +26,38 @@ export default function Hero({ slice }: SliceComponentProps<HeroSliceData>) {
     default: "text-lg text-slate-600 mt-4 max-w-2xl mx-auto",
   };
 
+  const heroImage = slice.primary.hero_image;
+
   return (
     <section
-      className={sectionClasses[variant]}
+      className={`relative ${sectionClasses[variant]}`}
       data-slice-type={slice.slice_type}
       data-slice-variation={slice.variation}
     >
-      <div className="w-full max-w-6xl mx-auto px-6 py-8">
-        <div className="text-center max-w-3xl mx-auto">
-          <div className={titleClasses[variant]}>
-            <PrismicRichText field={slice.primary.title} />
-          </div>
-          {slice.primary.subtitle && (
-            <div className={subtitleClasses[variant]}>
-              <PrismicRichText field={slice.primary.subtitle} />
+      {heroImage?.url && (
+        <>
+          <Image
+            src={heroImage.url}
+            alt={heroImage.alt ?? ""}
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(to right, #23100A 0%, transparent 30%, transparent 70%, #23100A 100%)" }} />
+        </>
+      )}
+      <div className="relative z-10 w-full max-w-6xl mx-auto px-6 py-8 flex">
+        <div className="text-center max-w-3xl mx-auto flex flex-col w-full">
+          <div>
+            <div className={titleClasses[variant]}>
+              <PrismicRichText field={slice.primary.title} />
             </div>
-          )}
+            {slice.primary.subtitle && (
+              <div className={subtitleClasses[variant]}>
+                <PrismicRichText field={slice.primary.subtitle} />
+              </div>
+            )}
+          </div>
           {(slice.primary.cta_text || slice.primary.secondary_cta_text) && (
             <div className="flex flex-wrap gap-3 justify-center mt-8">
               {slice.primary.cta_text && slice.primary.cta_link && (

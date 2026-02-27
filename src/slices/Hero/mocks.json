@@ -1,0 +1,74 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"title": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "heading1",
+						"content": {
+							"text": "Sheep"
+						}
+					}
+				]
+			},
+			"subtitle": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Sit fugiat ad sunt consectetur tempor qui mollit pariatur tempor. Elit aliqua sit commodo eu cillum commodo aliquip do occaecat in ex. In sunt anim incididunt in officia cupidatat anim cillum sit anim culpa."
+						}
+					}
+				]
+			},
+			"cta_text": {
+				"__TYPE__": "FieldContent",
+				"value": "strength",
+				"type": "Text"
+			},
+			"cta_link": {
+				"__TYPE__": "FieldContent",
+				"value": "arrow",
+				"type": "Text"
+			},
+			"variant": {
+				"__TYPE__": "FieldContent",
+				"value": "default",
+				"type": "Select"
+			},
+			"hero_image": {
+				"origin": {
+					"id": "main",
+					"url": "https://images.unsplash.com/photo-1586952518485-11b180e92764",
+					"width": 4172,
+					"height": 4000
+				},
+				"url": "https://images.unsplash.com/photo-1586952518485-11b180e92764",
+				"width": 4172,
+				"height": 4000,
+				"edit": {
+					"zoom": 1,
+					"crop": {
+						"x": 0,
+						"y": 0
+					},
+					"background": "transparent"
+				},
+				"alt": "negative",
+				"credits": null,
+				"__TYPE__": "ImageContent",
+				"thumbnails": {}
+			}
+		},
+		"items": [
+			{
+				"__TYPE__": "GroupItemContent",
+				"value": []
+			}
+		]
+	}
+]
