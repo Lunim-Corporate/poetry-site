@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type React from "react";
 import { Fragment } from "react";
 import { SliceZone } from "@prismicio/react";
 import Image from "next/image";
@@ -25,7 +26,7 @@ export default async function HomePage() {
       <SliceZone slices={hero} components={components} />
       <TwoColumnLayout>
         {content.map((slice, index) => {
-          const Component = components[slice.slice_type as keyof typeof components];
+          const Component = components[slice.slice_type as keyof typeof components] as React.ComponentType<{ slice: PrismicSlice; index: number; slices: PrismicSlice[]; context: Record<string, unknown> }> | undefined;
           return (
             <Fragment key={slice.id}>
               {index > 0 && (
