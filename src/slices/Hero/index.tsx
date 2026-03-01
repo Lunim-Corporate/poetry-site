@@ -59,7 +59,7 @@ export default function Hero({ slice }: SliceComponentProps<HeroSliceData>) {
             )}
           </div>
           {(slice.primary.cta_text || slice.primary.secondary_cta_text) && (
-            <div className="flex flex-wrap gap-3 justify-center mt-8">
+            <div className="flex flex-wrap gap-3 justify-center mt-auto mb-44">
               {slice.primary.cta_text && slice.primary.cta_link && (
                 <Link
                   href={slice.primary.cta_link}

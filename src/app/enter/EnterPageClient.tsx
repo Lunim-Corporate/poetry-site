@@ -81,6 +81,7 @@ export default function EnterPageClient({
   cancelled?: boolean;
 }) {
   const [currentStep, setCurrentStep] = useState<Step>(1);
+  const [rulesConfirmed, setRulesConfirmed] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", bookCount: 0 });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [clientSecret, setClientSecret] = useState<string | null>(null);
@@ -105,7 +106,7 @@ export default function EnterPageClient({
   const handleStepClick = (stepNum: number) => {
     if (stepNum === currentStep) return;
     if (stepNum < currentStep) {
-      setCurrentStep(stepNum as Step);
+      setModalMessage("You cannot go back once you have progressed to the next step. Please complete the current step to continue.");
       return;
     }
     setModalMessage(getStepMessage(stepNum, action));
@@ -218,26 +219,33 @@ export default function EnterPageClient({
               ))}
             </ol>
 
-            <button
-              type="button"
-              onClick={() => setCurrentStep(2)}
-              className="w-full mt-6 bg-primary hover:bg-primary-light text-white font-medium py-3 px-4 rounded-lg transition-colors"
-            >
-              I have read the rules — Continue
-            </button>
+            <div className="mt-6 space-y-4">
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={rulesConfirmed}
+                  onChange={(e) => setRulesConfirmed(e.target.checked)}
+                  className="mt-0.5 w-4 h-4 accent-primary shrink-0"
+                />
+                <span className="text-sm text-slate-700">
+                  I confirm I have read and understood the rules of the competition
+                </span>
+              </label>
+              <button
+                type="button"
+                onClick={() => setCurrentStep(2)}
+                disabled={!rulesConfirmed}
+                className="w-full bg-primary hover:bg-primary-light disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-medium py-3 px-4 rounded-lg transition-colors"
+              >
+                Continue to enter details
+              </button>
+            </div>
           </div>
         )}
 
         {/* Step 2: Entry Details */}
         {currentStep === 2 && (
           <>
-            <button
-              onClick={() => setCurrentStep(1)}
-              className="text-sm text-slate-500 hover:text-primary mb-4 flex items-center gap-1"
-            >
-              &larr; Back to Rules
-            </button>
-
             <div className="bg-white border border-slate-200 rounded-xl p-6 md:p-8 shadow-sm">
               <h2 className="text-lg font-semibold text-slate-900 mb-1">Enter Details</h2>
               <p className="text-sm text-slate-500 mb-6">
@@ -341,13 +349,6 @@ export default function EnterPageClient({
         {/* Step 3: Payment */}
         {currentStep === 3 && (
           <>
-            <button
-              onClick={() => setCurrentStep(2)}
-              className="text-sm text-slate-500 hover:text-primary mb-4 flex items-center gap-1"
-            >
-              &larr; Back to Entry Details
-            </button>
-
             <div className="bg-white border border-slate-200 rounded-xl p-6 md:p-8 shadow-sm">
               <h3 className="text-lg font-semibold text-slate-900 mb-1">Payment</h3>
               <p className="text-sm text-slate-500 mb-6">

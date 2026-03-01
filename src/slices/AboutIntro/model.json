@@ -1,0 +1,35 @@
+{
+  "id": "about_intro",
+  "type": "SharedSlice",
+  "name": "AboutIntro",
+  "description": "About section title and subtitle",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "About title and subtitle",
+      "imageUrl": "",
+      "primary": {
+        "title": {
+          "type": "Text",
+          "config": {
+            "label": "Title",
+            "placeholder": "About Maya"
+          }
+        },
+        "subtitle": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Subtitle",
+            "allowTargetBlank": true,
+            "single": "paragraph",
+            "placeholder": "Enter subtitle..."
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

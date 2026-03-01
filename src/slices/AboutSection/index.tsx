@@ -1,10 +1,19 @@
 import { PrismicRichText } from "@prismicio/react";
 import type { RichTextField } from "@prismicio/client";
+import Image from "next/image";
 import Link from "next/link";
 import type { AboutSectionSliceData, SliceComponentProps } from "@/types";
 
+function Divider() {
+  return (
+    <div className="flex justify-center py-2">
+      <Image src="/divider.svg" alt="" width={800} height={4} />
+    </div>
+  );
+}
+
 const proseClasses =
-  "prose prose-slate max-w-none prose-p:text-[#333333] prose-p:leading-relaxed prose-strong:text-slate-900 prose-a:text-primary prose-a:underline hover:prose-a:text-primary-light prose-li:text-slate-600";
+  "prose prose-slate max-w-none prose-p:text-[#333333] prose-p:leading-relaxed [&_p+p]:mt-6 prose-strong:text-slate-900 prose-a:text-primary prose-a:underline hover:prose-a:text-primary-light prose-li:text-slate-600";
 
 function hasContent(field: RichTextField | undefined): boolean {
   if (!field || !Array.isArray(field)) return false;
@@ -15,8 +24,6 @@ function hasContent(field: RichTextField | undefined): boolean {
 
 export default function AboutSection({ slice }: SliceComponentProps<AboutSectionSliceData>) {
   const {
-    about_title,
-    about_subtitle,
     intro,
     background,
     funding,
@@ -27,20 +34,6 @@ export default function AboutSection({ slice }: SliceComponentProps<AboutSection
 
   return (
     <div className="space-y-10">
-      {/* Title */}
-      {(about_title || about_subtitle) && (
-        <div>
-          {about_title && (
-            <h2 className="text-3xl font-bold text-slate-900 mb-2">
-              {about_title}
-            </h2>
-          )}
-          {about_subtitle && (
-            <p className="text-md font-semibold text-[#333333]">{about_subtitle}</p>
-          )}
-        </div>
-      )}
-
       {/* Intro - rendered bold to stand out */}
       {hasContent(intro) && (
         <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
@@ -55,7 +48,7 @@ export default function AboutSection({ slice }: SliceComponentProps<AboutSection
       {/* Background */}
       {hasContent(background) && (
         <div>
-          <h3 className="text-2xl font-bold text-[#333333] mb-3 pb-2 border-b border-slate-200">
+          <h3 className="text-2xl font-bold text-[#333333] mb-3">
             Background
           </h3>
           <div className={proseClasses}>
@@ -64,10 +57,12 @@ export default function AboutSection({ slice }: SliceComponentProps<AboutSection
         </div>
       )}
 
+      {hasContent(funding) && <Divider />}
+
       {/* Funding */}
       {hasContent(funding) && (
         <div>
-          <h3 className="text-2xl font-bold text-[#333333] mb-3 pb-2 border-b border-slate-200">
+          <h3 className="text-2xl font-bold text-[#333333] mb-3">
             Funding
           </h3>
           <div className={proseClasses}>
@@ -76,10 +71,12 @@ export default function AboutSection({ slice }: SliceComponentProps<AboutSection
         </div>
       )}
 
+      {hasContent(partnerships) && <Divider />}
+
       {/* Partnerships */}
       {hasContent(partnerships) && (
         <div>
-          <h3 className="text-2xl font-bold text-[#333333] mb-3 pb-2 border-b border-slate-200">
+          <h3 className="text-2xl font-bold text-[#333333] mb-3">
             Partnerships
           </h3>
           <div className={proseClasses}>
@@ -87,6 +84,8 @@ export default function AboutSection({ slice }: SliceComponentProps<AboutSection
           </div>
         </div>
       )}
+
+      {(hasContent(partnerships) || sign_off_name) && <Divider />}
 
       {/* Sign-off */}
       {sign_off_name && (
