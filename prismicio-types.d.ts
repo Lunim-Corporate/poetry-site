@@ -270,7 +270,9 @@ type HomepageDocumentDataSlicesSlice =
   | PrizeTableSlice
   | NewsletterSlice
   | ContactCardSlice
-  | AboutSectionSlice;
+  | AboutIntroSlice
+  | AboutSectionSlice
+  | PrizeSectionSlice;
 
 /**
  * Content for Homepage documents
@@ -771,6 +773,61 @@ export type AllDocumentTypes =
   | PrimaryNavigationDocument;
 
 /**
+ * Primary content in *AboutIntro → Default → Primary*
+ */
+export interface AboutIntroSliceDefaultPrimary {
+  /**
+   * Title field in *AboutIntro → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: About Maya
+   * - **API ID Path**: about_intro.default.primary.title
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  title: prismic.KeyTextField;
+
+  /**
+   * Subtitle field in *AboutIntro → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: Enter subtitle...
+   * - **API ID Path**: about_intro.default.primary.subtitle
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  subtitle: prismic.RichTextField;
+}
+
+/**
+ * Default variation for AboutIntro Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: About title and subtitle
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type AboutIntroSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<AboutIntroSliceDefaultPrimary>,
+  never
+>;
+
+/**
+ * Slice variation for *AboutIntro*
+ */
+type AboutIntroSliceVariation = AboutIntroSliceDefault;
+
+/**
+ * AboutIntro Shared Slice
+ *
+ * - **API ID**: `about_intro`
+ * - **Description**: About section title and subtitle
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type AboutIntroSlice = prismic.SharedSlice<
+  "about_intro",
+  AboutIntroSliceVariation
+>;
+
+/**
  * Primary content in *AboutSection → Default → Primary*
  */
 export interface AboutSectionSliceDefaultPrimary {
@@ -883,144 +940,6 @@ type AboutSectionSliceVariation = AboutSectionSliceDefault;
 export type AboutSectionSlice = prismic.SharedSlice<
   "about_section",
   AboutSectionSliceVariation
->;
-
-/**
- * Primary content in *AboutWithNewsletterAndContact → Default → Primary*
- */
-export interface AboutWithNewsletterAndContactSliceDefaultPrimary {
-  /**
-   * About Title field in *AboutWithNewsletterAndContact → Default → Primary*
-   *
-   * - **Field Type**: Text
-   * - **Placeholder**: About the Awards
-   * - **API ID Path**: about_with_newsletter_and_contact.default.primary.about_title
-   * - **Documentation**: https://prismic.io/docs/fields/text
-   */
-  about_title: prismic.KeyTextField;
-
-  /**
-   * About Subtitle field in *AboutWithNewsletterAndContact → Default → Primary*
-   *
-   * - **Field Type**: Text
-   * - **Placeholder**: Optional subtitle text
-   * - **API ID Path**: about_with_newsletter_and_contact.default.primary.about_subtitle
-   * - **Documentation**: https://prismic.io/docs/fields/text
-   */
-  about_subtitle: prismic.KeyTextField;
-
-  /**
-   * About Description field in *AboutWithNewsletterAndContact → Default → Primary*
-   *
-   * - **Field Type**: Rich Text
-   * - **Placeholder**: Enter the about section content...
-   * - **API ID Path**: about_with_newsletter_and_contact.default.primary.about_description
-   * - **Documentation**: https://prismic.io/docs/fields/rich-text
-   */
-  about_description: prismic.RichTextField;
-
-  /**
-   * Newsletter Heading field in *AboutWithNewsletterAndContact → Default → Primary*
-   *
-   * - **Field Type**: Text
-   * - **Placeholder**: Newsletter
-   * - **API ID Path**: about_with_newsletter_and_contact.default.primary.newsletter_heading
-   * - **Documentation**: https://prismic.io/docs/fields/text
-   */
-  newsletter_heading: prismic.KeyTextField;
-
-  /**
-   * Newsletter Description field in *AboutWithNewsletterAndContact → Default → Primary*
-   *
-   * - **Field Type**: Rich Text
-   * - **Placeholder**: Stay updated with award news...
-   * - **API ID Path**: about_with_newsletter_and_contact.default.primary.newsletter_description
-   * - **Documentation**: https://prismic.io/docs/fields/rich-text
-   */
-  newsletter_description: prismic.RichTextField;
-
-  /**
-   * Newsletter Button Text field in *AboutWithNewsletterAndContact → Default → Primary*
-   *
-   * - **Field Type**: Text
-   * - **Placeholder**: Subscribe
-   * - **API ID Path**: about_with_newsletter_and_contact.default.primary.newsletter_button_text
-   * - **Documentation**: https://prismic.io/docs/fields/text
-   */
-  newsletter_button_text: prismic.KeyTextField;
-
-  /**
-   * Contact Heading field in *AboutWithNewsletterAndContact → Default → Primary*
-   *
-   * - **Field Type**: Text
-   * - **Placeholder**: Contact Us
-   * - **API ID Path**: about_with_newsletter_and_contact.default.primary.contact_heading
-   * - **Documentation**: https://prismic.io/docs/fields/text
-   */
-  contact_heading: prismic.KeyTextField;
-
-  /**
-   * Contact Description field in *AboutWithNewsletterAndContact → Default → Primary*
-   *
-   * - **Field Type**: Rich Text
-   * - **Placeholder**: Have questions? We're here to help.
-   * - **API ID Path**: about_with_newsletter_and_contact.default.primary.contact_description
-   * - **Documentation**: https://prismic.io/docs/fields/rich-text
-   */
-  contact_description: prismic.RichTextField;
-
-  /**
-   * Contact Button Text field in *AboutWithNewsletterAndContact → Default → Primary*
-   *
-   * - **Field Type**: Text
-   * - **Placeholder**: Send Message
-   * - **API ID Path**: about_with_newsletter_and_contact.default.primary.contact_button_text
-   * - **Documentation**: https://prismic.io/docs/fields/text
-   */
-  contact_button_text: prismic.KeyTextField;
-
-  /**
-   * Show Newsletter Checkbox in Contact Form field in *AboutWithNewsletterAndContact → Default → Primary*
-   *
-   * - **Field Type**: Boolean
-   * - **Placeholder**: *None*
-   * - **Default Value**: true
-   * - **API ID Path**: about_with_newsletter_and_contact.default.primary.show_newsletter_checkbox
-   * - **Documentation**: https://prismic.io/docs/fields/boolean
-   */
-  show_newsletter_checkbox: prismic.BooleanField;
-}
-
-/**
- * Default variation for AboutWithNewsletterAndContact Slice
- *
- * - **API ID**: `default`
- * - **Description**: Default variation
- * - **Documentation**: https://prismic.io/docs/slices
- */
-export type AboutWithNewsletterAndContactSliceDefault =
-  prismic.SharedSliceVariation<
-    "default",
-    Simplify<AboutWithNewsletterAndContactSliceDefaultPrimary>,
-    never
-  >;
-
-/**
- * Slice variation for *AboutWithNewsletterAndContact*
- */
-type AboutWithNewsletterAndContactSliceVariation =
-  AboutWithNewsletterAndContactSliceDefault;
-
-/**
- * AboutWithNewsletterAndContact Shared Slice
- *
- * - **API ID**: `about_with_newsletter_and_contact`
- * - **Description**: Two-column layout with About section on left, Newsletter and Contact forms stacked on right
- * - **Documentation**: https://prismic.io/docs/slices
- */
-export type AboutWithNewsletterAndContactSlice = prismic.SharedSlice<
-  "about_with_newsletter_and_contact",
-  AboutWithNewsletterAndContactSliceVariation
 >;
 
 /**
@@ -1645,6 +1564,175 @@ export type NewsletterSlice = prismic.SharedSlice<
 >;
 
 /**
+ * Item in *PrizeSection → Default → Primary → Main Prizes*
+ */
+export interface PrizeSectionSliceDefaultPrimaryPrizesItem {
+  /**
+   * Prize Title field in *PrizeSection → Default → Primary → Main Prizes*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: 1st Prize
+   * - **API ID Path**: prize_section.default.primary.prizes[].prize_title
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  prize_title: prismic.KeyTextField;
+
+  /**
+   * Prize Amount (£) field in *PrizeSection → Default → Primary → Main Prizes*
+   *
+   * - **Field Type**: Number
+   * - **Placeholder**: 800
+   * - **API ID Path**: prize_section.default.primary.prizes[].prize_amount
+   * - **Documentation**: https://prismic.io/docs/fields/number
+   */
+  prize_amount: prismic.NumberField;
+}
+
+/**
+ * Item in *PrizeSection → Default → Primary → Winner Benefits*
+ */
+export interface PrizeSectionSliceDefaultPrimaryBenefitsItem {
+  /**
+   * Benefit field in *PrizeSection → Default → Primary → Winner Benefits*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: prize_section.default.primary.benefits[].benefit
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  benefit: prismic.KeyTextField;
+}
+
+/**
+ * Primary content in *PrizeSection → Default → Primary*
+ */
+export interface PrizeSectionSliceDefaultPrimary {
+  /**
+   * Section Title field in *PrizeSection → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: Prizes
+   * - **API ID Path**: prize_section.default.primary.section_title
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  section_title: prismic.KeyTextField;
+
+  /**
+   * Intro Text field in *PrizeSection → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: We have three main prize categories
+   * - **API ID Path**: prize_section.default.primary.intro_text
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  intro_text: prismic.RichTextField;
+
+  /**
+   * Main Prizes field in *PrizeSection → Default → Primary*
+   *
+   * - **Field Type**: Group
+   * - **Placeholder**: *None*
+   * - **API ID Path**: prize_section.default.primary.prizes[]
+   * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+   */
+  prizes: prismic.GroupField<
+    Simplify<PrizeSectionSliceDefaultPrimaryPrizesItem>
+  >;
+
+  /**
+   * Children's Prize Title field in *PrizeSection → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: Children's Prize
+   * - **API ID Path**: prize_section.default.primary.childrens_prize_title
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  childrens_prize_title: prismic.KeyTextField;
+
+  /**
+   * Children's Prize Amount (£) field in *PrizeSection → Default → Primary*
+   *
+   * - **Field Type**: Number
+   * - **Placeholder**: 200
+   * - **API ID Path**: prize_section.default.primary.childrens_prize_amount
+   * - **Documentation**: https://prismic.io/docs/fields/number
+   */
+  childrens_prize_amount: prismic.NumberField;
+
+  /**
+   * Children's Prize Description field in *PrizeSection → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: prize_section.default.primary.childrens_prize_description
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  childrens_prize_description: prismic.RichTextField;
+
+  /**
+   * Benefits Section Title field in *PrizeSection → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: All winners also get:
+   * - **API ID Path**: prize_section.default.primary.benefits_title
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  benefits_title: prismic.KeyTextField;
+
+  /**
+   * Winner Benefits field in *PrizeSection → Default → Primary*
+   *
+   * - **Field Type**: Group
+   * - **Placeholder**: *None*
+   * - **API ID Path**: prize_section.default.primary.benefits[]
+   * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+   */
+  benefits: prismic.GroupField<
+    Simplify<PrizeSectionSliceDefaultPrimaryBenefitsItem>
+  >;
+
+  /**
+   * Additional Note field in *PrizeSection → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: prize_section.default.primary.note
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  note: prismic.RichTextField;
+}
+
+/**
+ * Default variation for PrizeSection Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Prize section with categories and benefits
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type PrizeSectionSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<PrizeSectionSliceDefaultPrimary>,
+  never
+>;
+
+/**
+ * Slice variation for *PrizeSection*
+ */
+type PrizeSectionSliceVariation = PrizeSectionSliceDefault;
+
+/**
+ * PrizeSection Shared Slice
+ *
+ * - **API ID**: `prize_section`
+ * - **Description**: Prize categories and winner benefits
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type PrizeSectionSlice = prismic.SharedSlice<
+  "prize_section",
+  PrizeSectionSliceVariation
+>;
+
+/**
  * Item in *PrizeTable → Default → Primary → Prize Items*
  */
 export interface PrizeTableSliceDefaultPrimaryItemsItem {
@@ -1946,14 +2034,14 @@ declare module "@prismicio/client" {
       PrimaryNavigationDocumentData,
       PrimaryNavigationDocumentDataSlicesSlice,
       AllDocumentTypes,
+      AboutIntroSlice,
+      AboutIntroSliceDefaultPrimary,
+      AboutIntroSliceVariation,
+      AboutIntroSliceDefault,
       AboutSectionSlice,
       AboutSectionSliceDefaultPrimary,
       AboutSectionSliceVariation,
       AboutSectionSliceDefault,
-      AboutWithNewsletterAndContactSlice,
-      AboutWithNewsletterAndContactSliceDefaultPrimary,
-      AboutWithNewsletterAndContactSliceVariation,
-      AboutWithNewsletterAndContactSliceDefault,
       ContactCardSlice,
       ContactCardSliceDefaultPrimary,
       ContactCardSliceVariation,
@@ -1986,6 +2074,12 @@ declare module "@prismicio/client" {
       NewsletterSliceDefaultPrimary,
       NewsletterSliceVariation,
       NewsletterSliceDefault,
+      PrizeSectionSlice,
+      PrizeSectionSliceDefaultPrimaryPrizesItem,
+      PrizeSectionSliceDefaultPrimaryBenefitsItem,
+      PrizeSectionSliceDefaultPrimary,
+      PrizeSectionSliceVariation,
+      PrizeSectionSliceDefault,
       PrizeTableSlice,
       PrizeTableSliceDefaultPrimaryItemsItem,
       PrizeTableSliceDefaultPrimary,

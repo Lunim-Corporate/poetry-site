@@ -50,7 +50,7 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="space-y-6 lg:sticky lg:top-24">
+    <div className="space-y-6">
       {/* Newsletter Card */}
       <aside
         id="newsletter"
