@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { SliceZone } from "@prismicio/react";
+import { SliceZone, PrismicRichText } from "@prismicio/react";
 import { PrismicNextImage } from "@prismicio/next";
 import { createClient } from "@/prismicio";
 import { components } from "@/slices";
@@ -133,6 +133,44 @@ export default async function WinnersYearPage({ params }: PageProps) {
                 </div>
               </div>
             )}
+
+            {/* 1st Place Winner Spotlight */}
+            {(() => {
+              const first = winners.find(w => w.prize_level === "1st Place");
+              if (!first || (!first.winner_details && !first.literary_history)) return null;
+              const proseClasses = "prose prose-slate max-w-none prose-p:text-slate-600 prose-p:leading-relaxed prose-strong:text-slate-900 prose-a:text-primary prose-a:underline hover:prose-a:text-primary-light";
+              return (
+                <div>
+                  {first.winner_details && (
+                    <div className={proseClasses}>
+                      <PrismicRichText field={first.winner_details} />
+                    </div>
+                  )}
+                  {first.literary_history && (
+                    <div className={`${proseClasses} prose-em:text-slate-700 mt-6`}>
+                      <h3 className="not-prose text-lg font-semibold text-slate-900 mb-3 pb-2 border-b border-slate-200">
+                        Literary History
+                      </h3>
+                      <PrismicRichText field={first.literary_history} />
+                    </div>
+                  )}
+                  {first.amazon_url && (
+                    <p className="mt-4">
+                      <strong>
+                        <a
+                          href={first.amazon_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary underline hover:text-primary-light"
+                        >
+                          Purchase a copy
+                        </a>
+                      </strong>
+                    </p>
+                  )}
+                </div>
+              );
+            })()}
 
             {/* Shortlist */}
             {shortlist.length > 0 && (

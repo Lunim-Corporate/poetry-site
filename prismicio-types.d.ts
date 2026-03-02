@@ -550,6 +550,26 @@ export interface PastWinnersYearDocumentDataWinnersItem {
    * - **Documentation**: https://prismic.io/docs/fields/text
    */
   amazon_url: prismic.KeyTextField;
+
+  /**
+   * Winner Bio field in *Past Winners Year → Winners*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: Bio and background about the winner (shown in left column of spotlight)
+   * - **API ID Path**: past_winners_year.winners[].winner_details
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  winner_details: prismic.RichTextField;
+
+  /**
+   * Literary History field in *Past Winners Year → Winners*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: Literary history and previous works (shown in right column of spotlight)
+   * - **API ID Path**: past_winners_year.winners[].literary_history
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  literary_history: prismic.RichTextField;
 }
 
 /**
@@ -1932,6 +1952,36 @@ export interface WinnersGridSliceDefaultPrimaryItemsItem {
    * - **Documentation**: https://prismic.io/docs/fields/text
    */
   amazon_url: prismic.KeyTextField;
+
+  /**
+   * Winner Bio field in *WinnersGrid → Default → Primary → Winners*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: Bio and background about the winner (shown in left column of spotlight)
+   * - **API ID Path**: winners_grid.default.primary.items[].winner_details
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  winner_details: prismic.RichTextField;
+
+  /**
+   * Portrait Image field in *WinnersGrid → Default → Primary → Winners*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: winners_grid.default.primary.items[].portrait_image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  portrait_image: prismic.ImageField<never>;
+
+  /**
+   * Literary History field in *WinnersGrid → Default → Primary → Winners*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: Literary history and previous works (shown in right column of spotlight)
+   * - **API ID Path**: winners_grid.default.primary.items[].literary_history
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  literary_history: prismic.RichTextField;
 }
 
 /**

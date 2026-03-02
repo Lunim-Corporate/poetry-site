@@ -105,6 +105,9 @@ export interface WinnersGridSliceData extends PrismicSlice {
       location?: string;
       cover_image?: ImageField;
       amazon_url?: string;
+      winner_details?: RichTextField;
+      portrait_image?: ImageField;
+      literary_history?: RichTextField;
     }>;
   };
 }
@@ -236,6 +239,8 @@ export interface WinnerEntry {
   location?: string;
   cover_image?: ImageField;
   amazon_url?: string;
+  winner_details?: RichTextField;
+  literary_history?: RichTextField;
 }
 
 export interface ListEntry {

@@ -29,7 +29,12 @@
                 "config": {
                   "label": "Prize Level",
                   "placeholder": "Select prize level",
-                  "options": ["1st Place", "2nd Place", "3rd Place", "Children's"]
+                  "options": [
+                    "1st Place",
+                    "2nd Place",
+                    "3rd Place",
+                    "Children's"
+                  ]
                 }
               },
               "book_title": {
@@ -76,6 +81,35 @@
                 "config": {
                   "label": "Amazon URL",
                   "placeholder": "https://amazon.com/..."
+                }
+              },
+              "winner_details": {
+                "type": "StructuredText",
+                "config": {
+                  "label": "Winner Bio",
+                  "placeholder": "Bio and background about the winner (shown in left column of spotlight)",
+                  "allowTargetBlank": true,
+                  "multi": "heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl,paragraph,preformatted"
+                }
+              },
+              "portrait_image": {
+                "type": "Image",
+                "config": {
+                  "label": "Portrait Image",
+                  "constraint": {
+                    "width": 400,
+                    "height": 400
+                  },
+                  "thumbnails": []
+                }
+              },
+              "literary_history": {
+                "type": "StructuredText",
+                "config": {
+                  "label": "Literary History",
+                  "placeholder": "Literary history and previous works (shown in right column of spotlight)",
+                  "allowTargetBlank": true,
+                  "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
                 }
               }
             }

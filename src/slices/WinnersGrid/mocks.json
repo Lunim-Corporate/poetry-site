@@ -1,0 +1,131 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"year": {
+				"__TYPE__": "FieldContent",
+				"value": "49",
+				"type": "Number"
+			},
+			"items": {
+				"__TYPE__": "GroupContentType",
+				"value": [
+					{
+						"__TYPE__": "GroupItemContent",
+						"value": [
+							[
+								"prize_level",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "2nd Place",
+									"type": "Select"
+								}
+							],
+							[
+								"book_title",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "page",
+									"type": "Text"
+								}
+							],
+							[
+								"author",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "potatoes",
+									"type": "Text"
+								}
+							],
+							[
+								"author_2",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "eleven",
+									"type": "Text"
+								}
+							],
+							[
+								"location",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "combination",
+									"type": "Text"
+								}
+							],
+							[
+								"cover_image",
+								{
+									"origin": {
+										"id": "main",
+										"url": "https://images.unsplash.com/photo-1593642633279-1796119d5482",
+										"width": 4016,
+										"height": 6016
+									},
+									"url": "https://images.unsplash.com/photo-1593642633279-1796119d5482?rect=3%2C0%2C4011%2C6016&w=400&h=600",
+									"width": 400,
+									"height": 600,
+									"edit": {
+										"zoom": 1,
+										"crop": {
+											"x": 3,
+											"y": 0
+										},
+										"background": "transparent"
+									},
+									"alt": "ship",
+									"credits": null,
+									"__TYPE__": "ImageContent",
+									"thumbnails": {}
+								}
+							],
+							[
+								"amazon_url",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "to",
+									"type": "Text"
+								}
+							],
+							[
+								"winner_details",
+								{
+									"__TYPE__": "StructuredTextContent",
+									"value": [
+										{
+											"type": "paragraph",
+											"content": {
+												"text": "Ea duis tempor occaecat occaecat sint id."
+											}
+										}
+									]
+								}
+							],
+							[
+								"literary_history",
+								{
+									"__TYPE__": "StructuredTextContent",
+									"value": [
+										{
+											"type": "paragraph",
+											"content": {
+												"text": "Sint commodo velit et ut mollit cillum pariatur consequat. Veniam dolor esse deserunt Lorem cupidatat magna aliquip voluptate ad ipsum nulla. Elit anim esse pariatur fugiat do."
+											}
+										}
+									]
+								}
+							]
+						]
+					}
+				]
+			}
+		},
+		"items": [
+			{
+				"__TYPE__": "GroupItemContent",
+				"value": []
+			}
+		]
+	}
+]
