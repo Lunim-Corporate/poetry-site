@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { SliceZone } from "@prismicio/react";
+import { SliceZone, PrismicRichText } from "@prismicio/react";
 import { PrismicNextImage } from "@prismicio/next";
 import { createClient } from "@/prismicio";
 import { components } from "@/slices";
@@ -147,10 +147,14 @@ export default async function WinnersYearPage({ params }: PageProps) {
                   .filter(Boolean)
                   .join(" & ");
 
+                // Use either winner_bio (new field) or winner_details (existing rich text)
+                const winnerBio = firstPrize.winner_bio ?? (firstPrize as any).winner_details;
+
                 return (
                   <section>
                     <h2 className="text-2xl font-bold text-[#333333] mb-3 pb-2 border-b border-slate-200">
                       1st Prize
+           
                     </h2>
                     <p className="text-base text-slate-800 mb-5">
                       <span className="font-semibold">
@@ -181,24 +185,33 @@ export default async function WinnersYearPage({ params }: PageProps) {
                       </div>
 
                       <div className="space-y-4">
-                        {richTextSlices.length > 0 ? (
-                          <>
-                            {/* Author details - first slice, bolder text */}
-                            <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:font-semibold prose-p:leading-relaxed">
-                              <SliceZone slices={[richTextSlices[0]]} components={components} />
-                            </div>
-
-                            {/* Book details - remaining slices, normal weight */}
-                            {richTextSlices.length > 1 && (
-                              <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:leading-relaxed">
-                                <SliceZone
-                                  slices={richTextSlices.slice(1)}
-                                  components={components}
-                                />
-                              </div>
+                        {/* Author details - bold / introductory text */}
+                        {winnerBio && (
+                          <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:font-semibold prose-p:leading-relaxed">
+                            {Array.isArray(winnerBio) ? (
+                              <PrismicRichText field={winnerBio as any} />
+                            ) : typeof winnerBio === "object" ? (
+                              <PrismicRichText field={[winnerBio] as any} />
+                            ) : (
+                              <p>{winnerBio}</p>
                             )}
-                          </>
-                        ) : (
+                          </div>
+                        )}
+
+                        {/* Book details - normal body text */}
+                        {firstPrize.literary_history && (
+                          <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:leading-relaxed">
+                            {Array.isArray(firstPrize.literary_history) ? (
+                              <PrismicRichText field={firstPrize.literary_history} />
+                            ) : typeof firstPrize.literary_history === "object" ? (
+                              <PrismicRichText field={[firstPrize.literary_history] as any} />
+                            ) : (
+                              <p>{firstPrize.literary_history}</p>
+                            )}
+                          </div>
+                        )}
+
+                        {!winnerBio && !firstPrize.literary_history && (
                           <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:leading-relaxed">
                             <p>
                               Detailed information about the winning collection will appear here.

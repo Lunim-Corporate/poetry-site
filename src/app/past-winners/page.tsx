@@ -83,15 +83,15 @@ export default async function PastWinnersPage() {
               return (
                 <section
                   key={yearNumber}
-                  className="bg-[#F9F5EF] border border-slate-300 rounded-2xl p-6 md:p-8 shadow-sm"
+                  className="bg-[#F9F5EF] border border-[#B7A08F] rounded-2xl p-6 md:p-8 shadow-sm"
                 >
                   <h2 className="text-2xl font-semibold text-slate-900 mb-4">
                     {yearNumber} Winners
                   </h2>
 
-                  <div className="border border-slate-300 rounded-2xl overflow-hidden bg-[#F9F5EF]">
+                  <div className="border border-[#B7A08F] rounded-2xl overflow-hidden bg-[#F9F5EF]">
                     {/* Header row */}
-                    <div className="grid grid-cols-4 border-b border-slate-300 text-center text-sm font-semibold text-slate-800 bg-[#FFFEFA]">
+                    <div className="grid grid-cols-4 border-b border-[#B7A08F] text-center text-sm font-semibold text-slate-800 bg-[#FFFEFA]">
                       {PRIZE_ORDER.map((level) => (
                         <div key={level} className="py-3">
                           {level}

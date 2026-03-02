@@ -98,6 +98,20 @@
                 "label": "Amazon URL",
                 "placeholder": ""
               }
+            },
+            "winner_bio": {
+              "type": "Text",
+              "config": {
+                "label": "Winner Bio",
+                "placeholder": ""
+              }
+            },
+            "literary_history": {
+              "type": "Text",
+              "config": {
+                "label": "Literary History",
+                "placeholder": ""
+              }
             }
           }
         }
