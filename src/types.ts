@@ -109,6 +109,8 @@ export interface WinnersGridSliceData extends PrismicSlice {
       winner_bio?: string;
       winner_details?: string;
       literary_history?: string;
+      winner_bio? :string;
+      literary_history? :string;
     }>;
   };
 }
