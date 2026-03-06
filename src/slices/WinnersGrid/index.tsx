@@ -68,7 +68,7 @@ export default function WinnersGrid({ slice }: SliceComponentProps<WinnersGridSl
 
           {firstPlace.winner_details && (
             <div className={proseClasses}>
-              <PrismicRichText field={firstPlace.winner_details} />
+              <p>{firstPlace.winner_details}</p>
             </div>
           )}
 
@@ -77,7 +77,7 @@ export default function WinnersGrid({ slice }: SliceComponentProps<WinnersGridSl
               <h3 className="text-lg font-semibold text-slate-900 mb-3 pb-2 border-b border-slate-200 not-prose">
                 Literary History
               </h3>
-              <PrismicRichText field={firstPlace.literary_history} />
+              <p>{firstPlace.literary_history}</p>
             </div>
           )}
 

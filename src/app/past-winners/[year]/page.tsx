@@ -247,7 +247,11 @@ export default async function WinnersYearPage({ params }: PageProps) {
                 <div>
                   {first.winner_details && (
                     <div className={proseClasses}>
-                      <PrismicRichText field={first.winner_details} />
+                      {Array.isArray(first.winner_details) ? (
+                        <PrismicRichText field={first.winner_details} />
+                      ) : (
+                        <p>{first.winner_details}</p>
+                      )}
                     </div>
                   )}
                   {first.literary_history && (
@@ -255,7 +259,11 @@ export default async function WinnersYearPage({ params }: PageProps) {
                       <h3 className="not-prose text-lg font-semibold text-slate-900 mb-3 pb-2 border-b border-slate-200">
                         Literary History
                       </h3>
-                      <PrismicRichText field={first.literary_history} />
+                      {Array.isArray(first.literary_history) ? (
+                        <PrismicRichText field={first.literary_history} />
+                      ) : (
+                        <p>{first.literary_history}</p>
+                      )}
                     </div>
                   )}
                   {first.amazon_url && (
