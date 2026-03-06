@@ -14,7 +14,7 @@ export default function Faq({ slice }: SliceComponentProps<FaqSliceData>) {
   return (
     <section
       id="faq"
-      className="py-12"
+      className="py-12 scroll-mt-[72px] max-[899px]:scroll-mt-16"
       data-slice-type={slice.slice_type}
       data-slice-variation={slice.variation}
     >

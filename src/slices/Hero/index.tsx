@@ -15,15 +15,15 @@ export default function Hero({ slice }: SliceComponentProps<HeroSliceData>) {
   };
 
   const titleClasses: Record<HeroVariant, string> = {
-    home: "text-3xl md:text-4xl lg:text-5xl font-bold leading-tight",
-    small: "text-2xl md:text-3xl font-bold text-slate-900",
-    default: "text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900",
+    home: "font-sans text-3xl md:text-4xl lg:text-5xl font-bold leading-tight [text-shadow:0_2px_12px_rgba(0,0,0,0.6)]",
+    small: "font-sans text-2xl md:text-3xl font-bold text-slate-900",
+    default: "font-sans text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900",
   };
 
   const subtitleClasses: Record<HeroVariant, string> = {
-    home: "text-lg text-white/85 mt-4 max-w-2xl mx-auto",
-    small: "text-slate-600 mt-2",
-    default: "text-lg text-slate-600 mt-4 max-w-2xl mx-auto",
+    home: "font-sans font-semibold text-lg text-white/85 mt-4 max-w-2xl mx-auto [text-shadow:0_1px_8px_rgba(0,0,0,0.5)]",
+    small: "font-sans text-slate-600 mt-2",
+    default: "font-sans text-lg text-slate-600 mt-4 max-w-2xl mx-auto",
   };
 
   const heroImage = slice.primary.hero_image;
@@ -48,34 +48,32 @@ export default function Hero({ slice }: SliceComponentProps<HeroSliceData>) {
       )}
       <div className="relative z-10 w-full max-w-6xl mx-auto px-6 py-8 flex">
         <div className="text-center max-w-3xl mx-auto flex flex-col w-full">
-          <div>
-            <div className={titleClasses[variant]}>
-              <PrismicRichText field={slice.primary.title} />
-            </div>
-            {slice.primary.subtitle && (
-              <div className={subtitleClasses[variant]}>
-                <PrismicRichText field={slice.primary.subtitle} />
-              </div>
-            )}
+          <div className={titleClasses[variant]}>
+            <PrismicRichText field={slice.primary.title} />
           </div>
+          {slice.primary.subtitle && (
+            <div className={subtitleClasses[variant]}>
+              <PrismicRichText field={slice.primary.subtitle} />
+            </div>
+          )}
           {(slice.primary.cta_text || slice.primary.secondary_cta_text) && (
-            <div className="flex flex-wrap gap-3 justify-center mt-auto mb-44">
-              {slice.primary.cta_text && slice.primary.cta_link && (
+            <div className="flex flex-wrap gap-3 justify-center mt-auto mb-30">
+              {slice.primary.cta_text && (
                 <Link
-                  href={slice.primary.cta_link}
-                  className={`inline-flex items-center justify-center px-6 py-3 rounded-lg font-semibold text-sm transition-colors ${
+                  href={slice.primary.cta_link || (variant === "home" ? "/enter" : "#")}
+                  className={`font-sans inline-flex items-center justify-center px-6 py-3 rounded-lg font-bold text-sm transition-colors ${
                     variant === "home"
-                      ? "bg-accent hover:bg-accent-light text-slate-900"
+                      ? "bg-[#FFE169] hover:bg-[#FFE169]/90 text-slate-900"
                       : "bg-primary hover:bg-primary-light text-white"
                   }`}
                 >
                   {slice.primary.cta_text}
                 </Link>
               )}
-              {slice.primary.secondary_cta_text && slice.primary.secondary_cta_link && (
+              {slice.primary.secondary_cta_text && (
                 <Link
-                  href={slice.primary.secondary_cta_link}
-                  className={`inline-flex items-center justify-center px-6 py-3 rounded-lg font-semibold text-sm border transition-colors ${
+                  href={slice.primary.secondary_cta_link || "#"}
+                  className={`font-sans inline-flex items-center justify-center px-6 py-3 rounded-lg font-semibold text-sm border transition-colors ${
                     variant === "home"
                       ? "border-white/30 text-white hover:bg-white/10"
                       : "border-slate-300 text-slate-700 hover:bg-slate-100"

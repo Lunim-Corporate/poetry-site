@@ -4,6 +4,7 @@ import Stripe from "stripe";
 import { createClient } from "@/prismicio";
 import { WIZARD_STEPS, DEFAULT_SHIPPING } from "../constants";
 import PrintButton from "./PrintButton";
+import { appendEntryToSheet } from "@/lib/googleSheets";
 
 export const metadata: Metadata = {
   title: "Entry Confirmed - Maya Poetry Book Awards",
@@ -64,8 +65,20 @@ export default async function SuccessPage({
   }
 
   const entrantName = intent.metadata?.entrant_name ?? "Entrant";
+  const entrantEmail = intent.metadata?.entrant_email ?? "";
   const bookCount = Number(intent.metadata?.book_count ?? 1);
   const totalGBP = intent.metadata?.total_gbp ?? "0";
+
+  // Append to Google Sheets — fire-and-forget, never blocks the success page
+  appendEntryToSheet({
+    name: entrantName,
+    email: entrantEmail,
+    quantity: bookCount,
+    priceGBP: Number(totalGBP),
+    paymentId: intentId,
+  }).catch((err) => {
+    console.error("Failed to log entry to Google Sheets:", err);
+  });
 
   const client = createClient();
   const doc = await client.getSingle("enter_page").catch(() => null);

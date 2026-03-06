@@ -121,7 +121,7 @@ export default function Sidebar() {
       {/* Contact Card */}
       <aside
         id="contact-form"
-        className="bg-[#F9F5EF] border border-[#B7A08F] rounded-xl p-6"
+        className="bg-[#F9F5EF] border border-[#B7A08F] rounded-xl p-6 scroll-mt-[72px] max-[899px]:scroll-mt-16"
         aria-label="Contact form"
       >
         <h3 className="text-xl font-bold text-slate-900 mb-4">
