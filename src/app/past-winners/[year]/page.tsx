@@ -153,8 +153,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
                 return (
                   <section>
                     <h2 className="text-2xl font-bold text-[#333333] mb-3 pb-2 border-b border-slate-200">
-                      1st Prize
-           
+                      {firstPrize.prize_level || "1st Prize"}
                     </h2>
                     <p className="text-base text-slate-800 mb-5">
                       <span className="font-semibold">
@@ -167,21 +166,35 @@ export default async function WinnersYearPage({ params }: PageProps) {
                       </span>
                     </p>
 
-                    <div className="grid gap-6 md:grid-cols-[220px,1fr] items-start">
-                      <div className="w-full max-w-[220px]">
-                        <div className="bg-[#F3E7D6] rounded-md border border-slate-200 p-3 flex items-center justify-center">
+                    <div className="grid gap-6 md:grid-cols-[260px,1fr] items-start">
+                      <div className="w-full max-w-[260px] flex gap-4 items-center">
+                        {/* Book cover in cream panel */}
+                        <div className="flex-shrink-0 bg-[#F3E7D6] rounded-md border border-slate-200 p-3 flex items-center justify-center">
                           {firstPrize.cover_image?.url ? (
-                            <PrismicNextImage
-                              field={firstPrize.cover_image}
-                              className="w-full h-auto object-contain shadow-sm"
-                              fallbackAlt=""
-                            />
+                            <div className="w-[120px] md:w-[140px]">
+                              <PrismicNextImage
+                                field={firstPrize.cover_image}
+                                className="w-full h-auto object-contain shadow-sm"
+                                fallbackAlt=""
+                              />
+                            </div>
                           ) : (
-                            <div className="w-full aspect-[2/3] bg-slate-100 rounded-md flex items-center justify-center text-xs text-slate-400">
+                            <div className="w-[120px] md:w-[140px] aspect-[2/3] bg-slate-100 rounded-md flex items-center justify-center text-xs text-slate-400">
                               Cover coming soon
                             </div>
                           )}
                         </div>
+
+                        {/* Author image as separate round avatar (match cover width) */}
+                        {firstPrize.author_image?.url && (
+                          <div className="flex-shrink-0 w-[120px] md:w-[140px] aspect-square rounded-full overflow-hidden border border-slate-200 bg-white">
+                            <PrismicNextImage
+                              field={firstPrize.author_image}  //author_image
+                              className="w-full h-full object-cover"
+                              fallbackAlt=""
+                            />
+                          </div>
+                        )}
                       </div>
 
                       <div className="space-y-4">
@@ -236,6 +249,124 @@ export default async function WinnersYearPage({ params }: PageProps) {
                   </section>
                 );
               })()
+            )}
+
+            {/* 2nd, 3rd & Children's Prize detail sections (same format as 1st) */}
+            {winners.length > 0 && (
+              <div className="space-y-8">
+                {["2nd Place", "3rd Place", "Children's"].map((level) => {
+                  const prizeWinner = winners.find((w) => w.prize_level === level);
+
+                  if (!prizeWinner) return null;
+
+                  const authors = [prizeWinner.author, prizeWinner.author_2]
+                    .filter(Boolean)
+                    .join(" & ");
+
+                  const prizeBio =
+                    (prizeWinner as any).winner_bio ??
+                    (prizeWinner as any).winner_details ??
+                    prizeWinner.literary_history;
+
+                  return (
+                    <section key={level}>
+                      <h3 className="text-2xl font-bold text-[#333333] mb-3 pb-2 border-b border-slate-200">
+                        {prizeWinner.prize_level || level}
+                      </h3>
+                      <p className="text-base text-slate-800 mb-5">
+                        <span className="font-semibold">{prizeWinner.book_title}</span>
+                        {": "}
+                        <span className="italic text-slate-700">
+                          {authors}
+                          {prizeWinner.location ? `, ${prizeWinner.location}` : ""}
+                        </span>
+                      </p>
+
+                      <div className="grid gap-6 md:grid-cols-[260px,1fr] items-start">
+                        <div className="w-full max-w-[260px] flex items-center gap-4">
+                          {/* Book cover in cream panel */}
+                          <div className="flex-shrink-0 bg-[#F3E7D6] rounded-md border border-slate-200 p-3 flex items-center justify-center">
+                            {prizeWinner.cover_image?.url ? (
+                              <div className="w-[120px] md:w-[140px]">
+                                <PrismicNextImage
+                                  field={prizeWinner.cover_image}
+                                  className="w-full h-auto object-contain shadow-sm"
+                                  fallbackAlt=""
+                                />
+                              </div>
+                            ) : (
+                              <div className="w-[120px] md:w-[140px] aspect-[2/3] bg-slate-100 rounded-md flex items-center justify-center text-xs text-slate-400">
+                                Cover coming soon
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Author image as separate round avatar (match cover width) */}
+                          {prizeWinner.author_image?.url && (
+                            <div className="flex-shrink-0 w-[120px] md:w-[140px] aspect-square rounded-full overflow-hidden border border-slate-200 bg-white">
+                              <PrismicNextImage
+                                field={prizeWinner.author_image}
+                                className="w-full h-full object-cover"
+                                fallbackAlt=""
+                              />
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="space-y-4">
+                          {/* Prize winner bio / details */}
+                          {prizeBio && (
+                            <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:font-semibold prose-p:leading-relaxed">
+                              {Array.isArray(prizeBio) ? (
+                                <PrismicRichText field={prizeBio as any} />
+                              ) : typeof prizeBio === "object" ? (
+                                <PrismicRichText field={[prizeBio] as any} />
+                              ) : (
+                                <p>{prizeBio}</p>
+                              )}
+                            </div>
+                          )}
+
+                          {/* Book details - normal body text */}
+                          {prizeWinner.literary_history && (
+                            <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:leading-relaxed">
+                              {Array.isArray(prizeWinner.literary_history) ? (
+                                <PrismicRichText field={prizeWinner.literary_history} />
+                              ) : typeof prizeWinner.literary_history === "object" ? (
+                                <PrismicRichText field={[prizeWinner.literary_history] as any} />
+                              ) : (
+                                <p>{prizeWinner.literary_history}</p>
+                              )}
+                            </div>
+                          )}
+
+                          {!prizeBio && !prizeWinner.literary_history && (
+                            <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:leading-relaxed">
+                              <p>
+                                Detailed information about this prize-winning collection will
+                                appear here.
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {prizeWinner.amazon_url && (
+                        <p className="mt-5 text-sm">
+                          <Link
+                            href={prizeWinner.amazon_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-semibold text-primary hover:text-primary-light underline underline-offset-2"
+                          >
+                            Purchase a copy
+                          </Link>
+                        </p>
+                      )}
+                    </section>
+                  );
+                })}
+              </div>
             )}
 
             {/* Shortlist */}

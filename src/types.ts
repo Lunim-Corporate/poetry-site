@@ -209,6 +209,7 @@ export interface WinnerEntry {
   author_2?: string;
   location?: string;
   cover_image?: ImageField;
+  author_image?: ImageField;
   amazon_url?: string;
   // Winner details can come from either winner_bio (new text field)
   // or winner_details (rich text, legacy / different API ID)
