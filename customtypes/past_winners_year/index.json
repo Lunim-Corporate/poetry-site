@@ -50,7 +50,7 @@
               "config": {
                 "label": "Prize Level",
                 "placeholder": "Select prize level",
-                "options": ["1st Place", "2nd Place", "3rd Place", "Children's"]
+                "options": ["1st Prize", "2nd Prize", "3rd Prize", "Children's Prize"]
               }
             },
             "book_title": {
@@ -88,6 +88,17 @@
                 "constraint": {
                   "width": 400,
                   "height": 600
+                },
+                "thumbnails": []
+              }
+            },
+            "author_image": {
+              "type": "Image",
+              "config": {
+                "label": "Author Image",
+                "constraint": {
+                  "width": 300,
+                  "height": 300
                 },
                 "thumbnails": []
               }
