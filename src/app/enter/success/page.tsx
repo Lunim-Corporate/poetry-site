@@ -5,6 +5,7 @@ import { createClient } from "@/prismicio";
 import { WIZARD_STEPS, DEFAULT_SHIPPING } from "../constants";
 import PrintButton from "./PrintButton";
 import { appendEntryToSheet } from "@/lib/googleSheets";
+import { sendEntrantConfirmation, sendAdminNotification } from "@/lib/email";
 
 export const metadata: Metadata = {
   title: "Entry Confirmed - Maya Poetry Book Awards",
@@ -69,16 +70,7 @@ export default async function SuccessPage({
   const bookCount = Number(intent.metadata?.book_count ?? 1);
   const totalGBP = intent.metadata?.total_gbp ?? "0";
 
-  // Append to Google Sheets — fire-and-forget, never blocks the success page
-  appendEntryToSheet({
-    name: entrantName,
-    email: entrantEmail,
-    quantity: bookCount,
-    priceGBP: Number(totalGBP),
-    paymentId: intentId,
-  }).catch((err) => {
-    console.error("Failed to log entry to Google Sheets:", err);
-  });
+  const reference = `MAYA-${new Date().getFullYear()}-${intentId.slice(-8).toUpperCase()}`;
 
   const client = createClient();
   const doc = await client.getSingle("enter_page").catch(() => null);
@@ -92,7 +84,32 @@ export default async function SuccessPage({
     country: (data.shipping_country as string) || DEFAULT_SHIPPING.country,
   };
 
-  const reference = `MAYA-${new Date().getFullYear()}-${intentId.slice(-8).toUpperCase()}`;
+  // Fire-and-forget: log to Google Sheets + send emails — never blocks the page
+  const emailEntry = {
+    name: entrantName,
+    email: entrantEmail,
+    quantity: bookCount,
+    priceGBP: Number(totalGBP),
+    paymentId: intentId,
+    reference,
+    shipping,
+  };
+
+  appendEntryToSheet({
+    name: entrantName,
+    email: entrantEmail,
+    quantity: bookCount,
+    priceGBP: Number(totalGBP),
+    paymentId: intentId,
+  }).catch((err) => console.error("Failed to log entry to Google Sheets:", err));
+
+  sendEntrantConfirmation(emailEntry).catch((err) =>
+    console.error("Failed to send entrant confirmation email:", err)
+  );
+
+  sendAdminNotification(emailEntry).catch((err) =>
+    console.error("Failed to send admin notification email:", err)
+  );
 
   return (
     <section className="py-10 bg-white">
