@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import type React from "react";
+import { Fragment } from "react";
 import { SliceZone } from "@prismicio/react";
+import Image from "next/image";
 import { createClient } from "@/prismicio";
 import { components } from "@/slices";
 import TwoColumnLayout from "@/components/TwoColumnLayout";
@@ -22,7 +25,21 @@ export default async function HomePage() {
     <>
       <SliceZone slices={hero} components={components} />
       <TwoColumnLayout>
-        <SliceZone slices={content} components={components} />
+        {content.map((slice, index) => {
+          const Component = components[slice.slice_type as keyof typeof components] as React.ComponentType<{ slice: PrismicSlice; index: number; slices: PrismicSlice[]; context: Record<string, unknown> }> | undefined;
+          return (
+            <Fragment key={slice.id}>
+              {index > 0 && (
+                <div className="flex justify-center py-2">
+                  <Image src="/divider.svg" alt="" width={800} height={4} />
+                </div>
+              )}
+              {Component && (
+                <Component slice={slice} index={index} slices={content} context={{}} />
+              )}
+            </Fragment>
+          );
+        })}
       </TwoColumnLayout>
       <SliceZone slices={faq} components={components} />
     </>

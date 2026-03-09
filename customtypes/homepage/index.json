@@ -36,7 +36,13 @@
             "contact_card": {
               "type": "SharedSlice"
             },
+            "about_intro": {
+              "type": "SharedSlice"
+            },
             "about_section": {
+              "type": "SharedSlice"
+            },
+            "prize_section": {
               "type": "SharedSlice"
             }
           }

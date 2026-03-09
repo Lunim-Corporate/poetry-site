@@ -1,0 +1,78 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"about_title": {
+				"__TYPE__": "FieldContent",
+				"value": "box",
+				"type": "Text"
+			},
+			"about_subtitle": {
+				"__TYPE__": "FieldContent",
+				"value": "beauty",
+				"type": "Text"
+			},
+			"intro": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Mollit aliqua aute consequat nostrud ad aliqua amet eiusmod magna. Minim tempor eu duis laborum consequat laborum ex eu."
+						}
+					}
+				]
+			},
+			"background": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Laboris eu laborum occaecat laboris proident. Labore sunt in consectetur laborum quis ad sit id labore enim amet tempor ipsum eu eu."
+						}
+					}
+				]
+			},
+			"funding": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Laborum ullamco voluptate cillum non cupidatat sint labore qui consectetur. Magna esse laboris aute eiusmod in est deserunt esse."
+						}
+					}
+				]
+			},
+			"partnerships": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Culpa incididunt adipisicing non do labore id ad consequat sunt proident esse."
+						}
+					}
+				]
+			},
+			"sign_off_name": {
+				"__TYPE__": "FieldContent",
+				"value": "adult",
+				"type": "Text"
+			},
+			"sign_off_role": {
+				"__TYPE__": "FieldContent",
+				"value": "broken",
+				"type": "Text"
+			}
+		},
+		"items": [
+			{
+				"__TYPE__": "GroupItemContent",
+				"value": []
+			}
+		]
+	}
+]

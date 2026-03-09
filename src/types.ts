@@ -42,6 +42,14 @@ export interface PrismicMetaFields {
 // Slice Types — one per slice component
 // ---------------------------------------------------------------------------
 
+export interface AboutIntroSliceData extends PrismicSlice {
+  slice_type: "about_intro";
+  primary: {
+    title?: string;
+    subtitle?: RichTextField;
+  };
+}
+
 export interface HeroSliceData extends PrismicSlice {
   slice_type: "hero";
   primary: {
@@ -159,6 +167,26 @@ export interface FooterSliceData extends PrismicSlice {
     copyright_text?: string;
     delivered_by_text?: string;
     delivered_by_url?: string;
+  };
+}
+
+export interface PrizeSectionSliceData extends PrismicSlice {
+  slice_type: "prize_section";
+  primary: {
+    section_title?: string;
+    intro_text?: RichTextField;
+    prizes?: Array<{
+      prize_title?: string;
+      prize_amount?: number;
+    }>;
+    childrens_prize_title?: string;
+    childrens_prize_amount?: number;
+    childrens_prize_description?: RichTextField;
+    benefits_title?: string;
+    benefits?: Array<{
+      benefit?: string;
+    }>;
+    note?: RichTextField;
   };
 }
 

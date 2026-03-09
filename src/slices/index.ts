@@ -13,5 +13,7 @@ export const components = {
   contact_card: dynamic(() => import("./ContactCard")),
   navigation_menu: dynamic(() => import("./NavigationMenu")),
   footer: dynamic(() => import("./Footer")),
+  about_intro: dynamic(() => import("./AboutIntro")),
   about_section: dynamic(() => import("./AboutSection")),
+  prize_section: dynamic(() => import("./PrizeSection")),
 };

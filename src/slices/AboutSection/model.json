@@ -50,7 +50,7 @@
             "label": "Funding",
             "placeholder": "How the awards are funded...",
             "allowTargetBlank": true,
-            "multi": "paragraph,strong,em,hyperlink"
+            "multi": "paragraph,strong,em,hyperlink,list-item,o-list-item"
           }
         },
         "partnerships": {
@@ -59,7 +59,7 @@
             "label": "Partnerships",
             "placeholder": "Partnership and sponsorship information...",
             "allowTargetBlank": true,
-            "multi": "paragraph,strong,em,hyperlink"
+            "multi": "paragraph,strong,em,hyperlink,list-item,o-list-item"
           }
         },
         "sign_off_name": {

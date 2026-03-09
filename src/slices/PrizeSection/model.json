@@ -1,0 +1,108 @@
+{
+  "id": "prize_section",
+  "type": "SharedSlice",
+  "name": "PrizeSection",
+  "description": "Prize categories and winner benefits",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Prize section with categories and benefits",
+      "imageUrl": "",
+      "primary": {
+        "section_title": {
+          "type": "Text",
+          "config": {
+            "label": "Section Title",
+            "placeholder": "Prizes"
+          }
+        },
+        "intro_text": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Intro Text",
+            "allowTargetBlank": true,
+            "single": "paragraph",
+            "placeholder": "We have three main prize categories"
+          }
+        },
+        "prizes": {
+          "type": "Group",
+          "config": {
+            "label": "Main Prizes",
+            "fields": {
+              "prize_title": {
+                "type": "Text",
+                "config": {
+                  "label": "Prize Title",
+                  "placeholder": "1st Prize"
+                }
+              },
+              "prize_amount": {
+                "type": "Number",
+                "config": {
+                  "label": "Prize Amount (£)",
+                  "placeholder": "800"
+                }
+              }
+            }
+          }
+        },
+        "childrens_prize_title": {
+          "type": "Text",
+          "config": {
+            "label": "Children's Prize Title",
+            "placeholder": "Children's Prize"
+          }
+        },
+        "childrens_prize_amount": {
+          "type": "Number",
+          "config": {
+            "label": "Children's Prize Amount (£)",
+            "placeholder": "200"
+          }
+        },
+        "childrens_prize_description": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Children's Prize Description",
+            "allowTargetBlank": true,
+            "multi": "paragraph"
+          }
+        },
+        "benefits_title": {
+          "type": "Text",
+          "config": {
+            "label": "Benefits Section Title",
+            "placeholder": "All winners also get:"
+          }
+        },
+        "benefits": {
+          "type": "Group",
+          "config": {
+            "label": "Winner Benefits",
+            "fields": {
+              "benefit": {
+                "type": "Text",
+                "config": {
+                  "label": "Benefit"
+                }
+              }
+            }
+          }
+        },
+        "note": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Additional Note",
+            "allowTargetBlank": true,
+            "single": "paragraph"
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

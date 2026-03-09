@@ -102,10 +102,10 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
               <Link
                 key={index}
                 href={link.url}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-4 py-2 text-sm font-medium transition-colors ${
                   isActive(link.url)
-                    ? "bg-primary/10 text-primary"
-                    : "text-white hover:text-slate-900 hover:bg-slate-100"
+                    ? "text-[#FFE169] underline underline-offset-4 decoration-[#FFE169]"
+                    : "text-white hover:text-[#FFE169] hover:underline hover:underline-offset-4 hover:decoration-[#FFE169]"
                 }`}
               >
                 {link.label}
@@ -117,20 +117,20 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
               <div className="flex items-center">
                 <Link
                   href="/past-winners"
-                  className={`px-4 py-2 rounded-l-lg text-sm font-medium transition-colors ${
+                  className={`px-4 py-2 text-sm font-medium transition-colors ${
                     isPastWinnersActive()
-                      ? "bg-primary/10 text-primary"
-                      : "text-white hover:text-slate-900 hover:bg-slate-100"
+                      ? "text-[#FFE169] underline underline-offset-4 decoration-[#FFE169]"
+                      : "text-white hover:text-[#FFE169] hover:underline hover:underline-offset-4 hover:decoration-[#FFE169]"
                   }`}
                 >
                   Past Winners
                 </Link>
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className={`px-2 py-2 rounded-r-lg text-sm transition-colors border-l border-slate-200 ${
+                  className={`px-2 py-2 text-sm transition-colors border-l border-white/20 ${
                     isPastWinnersActive()
-                      ? "bg-primary/10 text-primary"
-                      : "text-white hover:text-slate-600 hover:bg-slate-100"
+                      ? "text-[#FFE169]"
+                      : "text-white hover:text-[#FFE169]"
                   }`}
                 >
                   <span
@@ -158,23 +158,23 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
 
             <Link
               href="/enter"
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`px-4 py-2 text-sm font-medium transition-colors ${
                 pathname === "/enter"
-                  ? "bg-primary/10 text-primary"
-                  : "text-white hover:text-slate-900 hover:bg-slate-100"
+                  ? "text-[#FFE169] underline underline-offset-4 decoration-[#FFE169]"
+                  : "text-white hover:text-[#FFE169] hover:underline hover:underline-offset-4 hover:decoration-[#FFE169]"
               }`}
             >
               The Rules
             </Link>
             <Link
               href="/#faq"
-              className="px-4 py-2 rounded-lg text-sm font-medium text-white hover:text-slate-900 hover:bg-slate-100 transition-colors"
+              className="px-4 py-2 text-sm font-medium text-white hover:text-[#FFE169] hover:underline hover:underline-offset-4 hover:decoration-[#FFE169] transition-colors"
             >
               FAQ
             </Link>
             <Link
               href="/#contact-form"
-              className="px-4 py-2 rounded-lg text-sm font-medium text-white hover:text-slate-900 hover:bg-slate-100 transition-colors"
+              className="px-4 py-2 text-sm font-medium text-white hover:text-[#FFE169] hover:underline hover:underline-offset-4 hover:decoration-[#FFE169] transition-colors"
             >
               Contact Us
             </Link>
@@ -201,10 +201,10 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                 <Link
                   href="/"
                   onClick={() => setMobileNavOpen(false)}
-                  className={`px-4 py-3 rounded-lg font-medium transition-colors ${
+                  className={`px-4 py-3 font-medium transition-colors ${
                     isActive("/")
-                      ? "bg-primary/10 text-primary"
-                      : "text-slate-600 hover:bg-slate-100"
+                      ? "text-primary underline underline-offset-4"
+                      : "text-slate-600 hover:text-primary hover:underline hover:underline-offset-4"
                   }`}
                 >
                   Home
@@ -215,10 +215,10 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                     key={index}
                     href={link.url}
                     onClick={() => setMobileNavOpen(false)}
-                    className={`px-4 py-3 rounded-lg font-medium transition-colors ${
+                    className={`px-4 py-3 font-medium transition-colors ${
                       isActive(link.url)
-                        ? "bg-primary/10 text-primary"
-                        : "text-slate-600 hover:bg-slate-100"
+                        ? "text-primary underline underline-offset-4"
+                        : "text-slate-600 hover:text-primary hover:underline hover:underline-offset-4"
                     }`}
                   >
                     {link.label}
@@ -230,10 +230,10 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                     <Link
                       href="/past-winners"
                       onClick={() => setMobileNavOpen(false)}
-                      className={`flex-1 px-4 py-3 rounded-l-lg font-medium transition-colors ${
+                      className={`flex-1 px-4 py-3 font-medium transition-colors ${
                         isPastWinnersActive()
-                          ? "bg-primary/10 text-primary"
-                          : "text-slate-600 hover:bg-slate-100"
+                          ? "text-primary underline underline-offset-4"
+                          : "text-slate-600 hover:text-primary hover:underline hover:underline-offset-4"
                       }`}
                     >
                       Past Winners
@@ -271,10 +271,10 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                 <Link
                   href="/enter"
                   onClick={() => setMobileNavOpen(false)}
-                  className={`px-4 py-3 rounded-lg font-medium transition-colors ${
+                  className={`px-4 py-3 font-medium transition-colors ${
                     pathname === "/enter"
-                      ? "bg-primary/10 text-primary"
-                      : "text-slate-600 hover:bg-slate-100"
+                      ? "text-primary underline underline-offset-4"
+                      : "text-slate-600 hover:text-primary hover:underline hover:underline-offset-4"
                   }`}
                 >
                   The Rules
@@ -282,14 +282,14 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                 <Link
                   href="/#faq"
                   onClick={() => setMobileNavOpen(false)}
-                  className="px-4 py-3 rounded-lg font-medium text-slate-600 hover:bg-slate-100 transition-colors"
+                  className="px-4 py-3 font-medium text-slate-600 hover:text-primary hover:underline hover:underline-offset-4 transition-colors"
                 >
                   FAQ
                 </Link>
                 <Link
                   href="/#contact-form"
                   onClick={() => setMobileNavOpen(false)}
-                  className="px-4 py-3 rounded-lg font-medium text-slate-600 hover:bg-slate-100 transition-colors"
+                  className="px-4 py-3 font-medium text-slate-600 hover:text-primary hover:underline hover:underline-offset-4 transition-colors"
                 >
                   Contact Us
                 </Link>
