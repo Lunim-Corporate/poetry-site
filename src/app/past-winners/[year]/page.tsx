@@ -369,6 +369,91 @@ export default async function WinnersYearPage({ params }: PageProps) {
               </div>
             )}
 
+            {/* For press and media */}
+            {data.press_media_heading && data.press_media_link_url && (
+              <section className="mt-10 pt-6 border-t border-slate-200">
+                <h3 className="text-lg font-semibold text-[#333333] mb-2">
+                  {data.press_media_heading}
+                </h3>
+                <p className="text-sm text-slate-800">
+                  Press release –{" "}
+                  <Link
+                    href={data.press_media_link_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary font-semibold underline underline-offset-2"
+                  >
+                    click here
+                  </Link>{" "}
+                  <span className="text-slate-600">(For immediate release)</span>
+                </p>
+              </section>
+            )}
+
+            {/* Judge (our YYYY Judge) */}
+            {(data.judge_section_heading || data.judge_name) && (
+              <section className="mt-10 pt-6 border-t border-slate-200">
+                <h3 className="text-xl font-semibold text-[#333333]">
+                  {data.judge_section_heading
+                    ? data.judge_section_heading
+                    : `Judge (our ${data.year ?? year} Judge)`}
+                </h3>
+                {data.judge_name && (
+                  <p className="mt-2 text-base text-slate-800">
+                    {data.judge_name}
+                  </p>
+                )}
+              </section>
+            )}
+
+            {/* Judges comments */}
+            {data.judges_comments_heading && data.judges_comments_overview && (
+              <section className="mt-10 pt-6 space-y-6 border-t border-slate-200">
+                <div>
+                  <h3 className="text-2xl font-bold text-[#333333] mb-3 pb-2">
+                    {data.judges_comments_heading}
+                  </h3>
+                  <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:leading-relaxed">
+                    <PrismicRichText field={data.judges_comments_overview} />
+                  </div>
+                </div>
+
+                <div className="space-y-6  pt-6 border-t border-slate-200">
+                  {data.judges_comments_first_prize && (
+                    <div>
+                      <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:leading-relaxed">
+                        <PrismicRichText field={data.judges_comments_first_prize} />
+                      </div>
+                    </div>
+                  )}
+
+                  {data.judges_comments_second_prize && (
+                    <div className="border-t pt-6 border-slate-200">
+                      <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:leading-relaxed">
+                        <PrismicRichText field={data.judges_comments_second_prize} />
+                      </div>
+                    </div>
+                  )}
+
+                  {data.judges_comments_third_prize && (
+                    <div className="border-t pt-6 border-slate-200">
+                      <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:leading-relaxed">
+                        <PrismicRichText field={data.judges_comments_third_prize} />
+                      </div>
+                    </div>
+                  )}
+
+                  {data.judges_comments_children_prize && (
+                    <div className="border-t pt-6 border-slate-200">
+                      <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:leading-relaxed">
+                        <PrismicRichText field={data.judges_comments_children_prize} />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </section>
+            )}
+
             {/* Shortlist */}
             {shortlist.length > 0 && (
               <section className="bg-[#F9F5EF] border border-[#B7A08F] rounded-2xl p-6 md:p-8 shadow-sm">
@@ -434,6 +519,32 @@ export default async function WinnersYearPage({ params }: PageProps) {
                     ))}
                   </ul>
                 </div>
+              </section>
+            )}
+
+            {/* Results were announced... paragraph */}
+            {data.results_paragraph && (
+              <section className="mt-10 border-t border-slate-200">
+                <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:leading-relaxed">
+                  <PrismicRichText field={data.results_paragraph} />
+                </div>
+              </section>
+            )}
+
+            {/* Enter your book – click here. */}
+            {(data.enter_cta_label || data.enter_cta_url) && (
+              <section className="mt-6 border-t border-slate-200 pt-4">
+                <p className="text-sm pt-6 text-slate-800">
+                  {data.enter_cta_label || "Enter your book"}{" "}
+                  <Link
+                    href={data.enter_cta_url || "/enter"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary font-semibold underline underline-offset-2"
+                  >
+                    click here.
+                  </Link>
+                </p>
               </section>
             )}
 
