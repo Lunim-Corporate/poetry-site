@@ -91,16 +91,23 @@ export default async function PastWinnersPage() {
 
                   <div className="border border-[#B7A08F] rounded-2xl overflow-hidden bg-[#F9F5EF]">
                     {/* Header row */}
-                    <div className="grid grid-cols-4 border-b border-[#B7A08F] text-center text-sm font-semibold text-slate-800 bg-[#FFFEFA]">
-                      {PRIZE_ORDER.map((level) => (
-                        <div key={level} className="py-3">
+                    <div className="grid grid-cols-4 lg:[grid-template-columns:1.6fr,1fr,1fr,1fr] border-b border-[#B7A08F] text-center text-sm bg-[#FFFEFA]">
+                      {PRIZE_ORDER.map((level, index) => (
+                        <div
+                          key={level}
+                          className={`py-3 ${
+                            index === 0
+                              ? "font-bold text-slate-900"
+                              : "font-semibold text-slate-700"
+                          }`}
+                        >
                           {level}
                         </div>
                       ))}
                     </div>
 
                     {/* Winners row */}
-                    <div className="grid grid-cols-4 divide-x divide-dashed divide-slate-300 bg-[#F9F5EF]">
+                    <div className="grid grid-cols-4 lg:[grid-template-columns:1.6fr,1fr,1fr,1fr] divide-x divide-dashed divide-slate-300 bg-[#F9F5EF]">
                       {PRIZE_ORDER.map((level, index) => {
                         const winner = winners.find(
                           (w) => w.prize_level === level
@@ -120,19 +127,31 @@ export default async function PastWinnersPage() {
                             className="px-4 py-4 flex flex-col items-center"
                           >
                             {winner?.cover_image?.url ? (
-                              <div
-                                className={`w-full max-w-[170px] aspect-[2/3] mb-3 rounded-md overflow-hidden shadow-md border border-slate-200 ${
-                                  isFirst ? "bg-[#f5e9d4]" : "bg-white"
-                                }`}
-                              >
-                                <PrismicNextImage
-                                  field={winner.cover_image}
-                                  className="w-full h-full object-cover"
-                                  fallbackAlt=""
-                                />
+                              isFirst ? (
+                                // 1st Prize: wider and taller cream panel with centered cover
+                                <div className="w-full max-w-[280px] h-[340px] mb-3 rounded-md bg-[#f5e9d4] border border-slate-200 flex items-center justify-center overflow-hidden shadow-md">
+                                  <PrismicNextImage
+                                    field={winner.cover_image}
+                                    className="h-full w-auto object-contain"
+                                    fallbackAlt=""
+                                  />
+                                </div>
+                              ) : (
+                                // Other prizes: smaller standard cover cards
+                                <div className="w-full max-w-[140px] h-[220px] mb-3 rounded-md overflow-hidden shadow-md border border-slate-200 bg-white">
+                                  <PrismicNextImage
+                                    field={winner.cover_image}
+                                    className="h-full w-auto object-contain"
+                                    fallbackAlt=""
+                                  />
+                                </div>
+                              )
+                            ) : isFirst ? (
+                              <div className="w-full max-w-[280px] h-[340px] mb-3 rounded-md bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center text-xs text-slate-400">
+                                TBD
                               </div>
                             ) : (
-                              <div className="w-full max-w-[170px] aspect-[2/3] mb-3 rounded-md bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center text-xs text-slate-400">
+                              <div className="w-full max-w-[140px] h-[220px] mb-3 rounded-md bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center text-xs text-slate-400">
                                 TBD
                               </div>
                             )}
@@ -167,7 +186,7 @@ export default async function PastWinnersPage() {
                   <div className="mt-4 text-right">
                     <Link
                       href={`/past-winners/${yearNumber}`}
-                      className="text-sm font-medium text-slate-700 hover:text-primary transition-colors"
+                      className="text-sm font-medium text-slate-700 hover:text-primary transition-colors underline underline-offset-2"
                     >
                       More details plus the {yearNumber} shortlist &raquo;
                     </Link>
