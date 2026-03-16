@@ -254,11 +254,9 @@ export interface WinnerEntry {
   cover_image?: ImageField;
   author_image?: ImageField;
   amazon_url?: string;
-  // Winner details can come from either winner_bio (new text field)
-  // or winner_details (rich text, legacy / different API ID)
-  winner_bio?: RichTextField | string;
-  winner_details?: RichTextField | string;
-  literary_history?: RichTextField | string;
+  winner_bio?: RichTextField;
+  winner_details?: RichTextField; // legacy field, prefer winner_bio
+  literary_history?: RichTextField;
 }
 
 export interface ListEntry {

@@ -39,10 +39,10 @@ export default function PrizeSection({ slice }: SliceComponentProps<PrizeSection
             <tbody>
               {prizes.map((prize, i) => (
                 <tr key={i} className="bg-[#23100A] border-b border-[#FFE169]">
-                  <td className={`px-5 py-3 text-base font-bold w-1/2 border-r border-[#FFE169] ${i === 0 ? "text-[#FFE169]" : "text-white"}`}>
+                  <td className={`px-5 py-3 text-base font-bold w-1/2 border-r border-[#FFE169] ${i === 0 ? "text-[#FFE169]" : "text-[#FFF0DD]"}`}>
                     {prize.prize_title}
                   </td>
-                  <td className={`px-5 py-3 text-base font-bold w-1/2 text-left ${i === 0 ? "text-[#FFE169]" : "text-white"}`}>
+                  <td className={`font-sans px-5 py-3 text-base font-bold w-1/2 text-left ${i === 0 ? "text-[#FFE169]" : "text-[#FFF0DD]"}`}>
                     £{prize.prize_amount}
                   </td>
                 </tr>
@@ -65,10 +65,10 @@ export default function PrizeSection({ slice }: SliceComponentProps<PrizeSection
           <table className="w-full border-collapse">
             <tbody>
               <tr className="bg-[#23100A]">
-                <td className="px-5 py-3 text-base font-bold text-[#FFE169] w-1/2 border-r border-[#FFE169]">
+                <td className="px-5 py-3 text-base font-bold text-[#FFF0DD] w-1/2 border-r border-[#FFE169]">
                   {childrens_prize_title}
                 </td>
-                <td className="px-5 py-3 text-base font-bold text-[#FFE169] w-1/2 text-left">
+                <td className="font-sans px-5 py-3 text-base font-bold text-[#FFF0DD] w-1/2 text-left">
                   {childrens_prize_amount != null ? `£${childrens_prize_amount}` : ""}
                 </td>
               </tr>

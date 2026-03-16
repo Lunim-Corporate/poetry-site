@@ -61,10 +61,10 @@ export default function Hero({ slice }: SliceComponentProps<HeroSliceData>) {
               {slice.primary.cta_text && (
                 <Link
                   href={slice.primary.cta_link || (variant === "home" ? "/enter" : "#")}
-                  className={`font-sans inline-flex items-center justify-center px-6 py-3 rounded-lg font-bold text-sm transition-colors ${
+                  className={`font-sans inline-flex items-center justify-center rounded-lg font-bold transition-colors ${
                     variant === "home"
-                      ? "bg-[#FFE169] hover:bg-[#FFE169]/90 text-slate-900"
-                      : "bg-primary hover:bg-primary-light text-white"
+                      ? "px-8 py-4 text-base bg-[#FFE169] hover:bg-[#FFE169]/90 text-slate-900"
+                      : "px-6 py-3 text-sm bg-primary hover:bg-primary-light text-white"
                   }`}
                 >
                   {slice.primary.cta_text}

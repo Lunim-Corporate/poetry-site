@@ -6,13 +6,17 @@ import { components } from "@/slices";
 import Link from "next/link";
 import TwoColumnLayout from "@/components/TwoColumnLayout";
 import { generateMetaDataInfo } from "@/utils/generateMetaDataInfo";
+import type { RichTextField } from "@prismicio/client";
 import type {
   PrismicSlice,
   PastWinnersYearData,
   WinnerEntry,
   ListEntry,
 } from "@/types";
-import { PRIZE_ORDER, DEFAULT_YEARS } from "@/types";
+import { DEFAULT_YEARS } from "@/types";
+
+const proseClasses =
+  "prose prose-slate max-w-none prose-p:text-[#333333] prose-p:leading-relaxed [&_p+p]:mt-6 prose-strong:text-slate-900 prose-a:text-primary prose-a:underline hover:prose-a:text-primary-light prose-li:text-slate-600";
 
 interface PageProps {
   params: Promise<{ year: string }>;
@@ -30,7 +34,6 @@ export default async function WinnersYearPage({ params }: PageProps) {
     const data = doc.data as unknown as PastWinnersYearData;
     const allSlices = (data.slices ?? []) as PrismicSlice[];
     const heroSlices = allSlices.filter((s) => s.slice_type === "hero");
-    const richTextSlices = allSlices.filter((s) => s.slice_type === "rich_text");
 
     const winners: WinnerEntry[] = data.winners ?? [];
     const shortlist: ListEntry[] = data.shortlist ?? [];
@@ -148,7 +151,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
                   .join(" & ");
 
                 // Use either winner_bio (new field) or winner_details (existing rich text)
-                const winnerBio = firstPrize.winner_bio ?? (firstPrize as any).winner_details;
+                const winnerBio = firstPrize.winner_bio ?? firstPrize.winner_details;
 
                 return (
                   <section>
@@ -201,32 +204,28 @@ export default async function WinnersYearPage({ params }: PageProps) {
                       <div className="space-y-4">
                         {/* Author details - bold / introductory text */}
                         {winnerBio && (
-                          <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:font-semibold prose-p:leading-relaxed">
+                          <div className={`${proseClasses} prose-p:font-semibold`}>
                             {Array.isArray(winnerBio) ? (
-                              <PrismicRichText field={winnerBio as any} />
-                            ) : typeof winnerBio === "object" ? (
-                              <PrismicRichText field={[winnerBio] as any} />
+                              <PrismicRichText field={winnerBio as RichTextField} />
                             ) : (
-                              <p>{winnerBio}</p>
+                              <p>{String(winnerBio)}</p>
                             )}
                           </div>
                         )}
 
                         {/* Book details - normal body text */}
                         {firstPrize.literary_history && (
-                          <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:leading-relaxed">
+                          <div className={proseClasses}>
                             {Array.isArray(firstPrize.literary_history) ? (
                               <PrismicRichText field={firstPrize.literary_history} />
-                            ) : typeof firstPrize.literary_history === "object" ? (
-                              <PrismicRichText field={[firstPrize.literary_history] as any} />
                             ) : (
-                              <p>{firstPrize.literary_history}</p>
+                              <p>{String(firstPrize.literary_history)}</p>
                             )}
                           </div>
                         )}
 
                         {!winnerBio && !firstPrize.literary_history && (
-                          <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:leading-relaxed">
+                          <div className={proseClasses}>
                             <p>
                               Detailed information about the winning collection will appear here.
                             </p>
@@ -265,8 +264,8 @@ export default async function WinnersYearPage({ params }: PageProps) {
                     .join(" & ");
 
                   const prizeBio =
-                    (prizeWinner as any).winner_bio ??
-                    (prizeWinner as any).winner_details ??
+                    prizeWinner.winner_bio ??
+                    prizeWinner.winner_details ??
                     prizeWinner.literary_history;
 
                   return (
@@ -318,32 +317,28 @@ export default async function WinnersYearPage({ params }: PageProps) {
                         <div className="space-y-4">
                           {/* Prize winner bio / details */}
                           {prizeBio && (
-                            <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:font-semibold prose-p:leading-relaxed">
+                            <div className={`${proseClasses} prose-p:font-semibold`}>
                               {Array.isArray(prizeBio) ? (
-                                <PrismicRichText field={prizeBio as any} />
-                              ) : typeof prizeBio === "object" ? (
-                                <PrismicRichText field={[prizeBio] as any} />
+                                <PrismicRichText field={prizeBio as RichTextField} />
                               ) : (
-                                <p>{prizeBio}</p>
+                                <p>{String(prizeBio)}</p>
                               )}
                             </div>
                           )}
 
                           {/* Book details - normal body text */}
                           {prizeWinner.literary_history && (
-                            <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:leading-relaxed">
+                            <div className={proseClasses}>
                               {Array.isArray(prizeWinner.literary_history) ? (
                                 <PrismicRichText field={prizeWinner.literary_history} />
-                              ) : typeof prizeWinner.literary_history === "object" ? (
-                                <PrismicRichText field={[prizeWinner.literary_history] as any} />
                               ) : (
-                                <p>{prizeWinner.literary_history}</p>
+                                <p>{String(prizeWinner.literary_history)}</p>
                               )}
                             </div>
                           )}
 
                           {!prizeBio && !prizeWinner.literary_history && (
-                            <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:leading-relaxed">
+                            <div className={proseClasses}>
                               <p>
                                 Detailed information about this prize-winning collection will
                                 appear here.
@@ -415,7 +410,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
                   <h3 className="text-2xl font-bold text-[#333333] mb-3 pb-2">
                     {data.judges_comments_heading}
                   </h3>
-                  <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:leading-relaxed">
+                  <div className={proseClasses}>
                     <PrismicRichText field={data.judges_comments_overview} />
                   </div>
                 </div>
@@ -423,7 +418,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
                 <div className="space-y-6  pt-6 border-t border-slate-200">
                   {data.judges_comments_first_prize && (
                     <div>
-                      <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:leading-relaxed">
+                      <div className={proseClasses}>
                         <PrismicRichText field={data.judges_comments_first_prize} />
                       </div>
                     </div>
@@ -431,7 +426,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
 
                   {data.judges_comments_second_prize && (
                     <div className="border-t pt-6 border-slate-200">
-                      <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:leading-relaxed">
+                      <div className={proseClasses}>
                         <PrismicRichText field={data.judges_comments_second_prize} />
                       </div>
                     </div>
@@ -439,7 +434,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
 
                   {data.judges_comments_third_prize && (
                     <div className="border-t pt-6 border-slate-200">
-                      <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:leading-relaxed">
+                      <div className={proseClasses}>
                         <PrismicRichText field={data.judges_comments_third_prize} />
                       </div>
                     </div>
@@ -447,7 +442,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
 
                   {data.judges_comments_children_prize && (
                     <div className="border-t pt-6 border-slate-200">
-                      <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:leading-relaxed">
+                      <div className={proseClasses}>
                         <PrismicRichText field={data.judges_comments_children_prize} />
                       </div>
                     </div>
@@ -527,7 +522,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
             {/* Results were announced... paragraph */}
             {data.results_paragraph && (
               <section className="mt-10 border-t border-slate-200">
-                <div className="prose prose-sm max-w-none prose-p:text-slate-800 prose-p:leading-relaxed">
+                <div className={proseClasses}>
                   <PrismicRichText field={data.results_paragraph} />
                 </div>
               </section>
