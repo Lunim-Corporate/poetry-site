@@ -155,23 +155,24 @@ export default async function WinnersYearPage({ params }: PageProps) {
                     <h2 className="text-2xl font-bold text-[#333333] mb-3 pb-2 border-b border-slate-200">
                       {firstPrize.prize_level || "1st Prize"}
                     </h2>
-                    <p className="text-base text-slate-800 mb-5">
+                    <h3 className="text-xl text-slate-800 mb-5">
                       <span className="font-semibold">
                         {firstPrize.book_title}
                       </span>
                       {": "}
+                      <br className="md:hidden" />
                       <span className="italic text-slate-700">
                         {authors}
                         {firstPrize.location ? `, ${firstPrize.location}` : ""}
                       </span>
-                    </p>
+                    </h3>
 
                     <div className="grid gap-6 md:grid-cols-[260px,1fr] items-start">
-                      <div className="w-full max-w-[260px] flex gap-4 items-center">
+                      <div className="w-full max-w-[260px] flex gap-4 items-top">
                         {/* Book cover in cream panel */}
                         <div className="flex-shrink-0 bg-[#F3E7D6] rounded-md border border-slate-200 p-3 flex items-center justify-center">
                           {firstPrize.cover_image?.url ? (
-                            <div className="w-[120px] md:w-[140px]">
+                            <div className="w-[140px] md:w-[180px]">
                               <PrismicNextImage
                                 field={firstPrize.cover_image}
                                 className="w-full h-auto object-contain shadow-sm"
@@ -179,7 +180,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
                               />
                             </div>
                           ) : (
-                            <div className="w-[120px] md:w-[140px] aspect-[2/3] bg-slate-100 rounded-md flex items-center justify-center text-xs text-slate-400">
+                            <div className="w-[140px] md:w-[180px] aspect-[2/3] bg-slate-100 rounded-md flex items-center justify-center text-xs text-slate-400">
                               Cover coming soon
                             </div>
                           )}
@@ -187,7 +188,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
 
                         {/* Author image as separate round avatar (match cover width) */}
                         {firstPrize.author_image?.url && (
-                          <div className="flex-shrink-0 w-[120px] md:w-[140px] aspect-square rounded-full overflow-hidden border border-slate-200 bg-white">
+                          <div className="flex-shrink-0 w-[120px] h-[120px] md:w-[140px] md:h-[140px] aspect-square rounded-full overflow-hidden border border-slate-200 bg-white ml-[-52px] mt-[12px]">
                             <PrismicNextImage
                               field={firstPrize.author_image}  //author_image
                               className="w-full h-full object-cover"
@@ -235,12 +236,12 @@ export default async function WinnersYearPage({ params }: PageProps) {
                     </div>
 
                     {firstPrize.amazon_url && (
-                      <p className="mt-5 text-sm">
+                      <p className="mt-4">
                         <Link
                           href={firstPrize.amazon_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="font-semibold text-primary hover:text-primary-light underline underline-offset-2"
+                          className="font-semibold text-primary hover:text-primary-light underline hover:no-underline underline-offset-2"
                         >
                           Purchase a copy
                         </Link>
@@ -270,24 +271,25 @@ export default async function WinnersYearPage({ params }: PageProps) {
 
                   return (
                     <section key={level}>
-                      <h3 className="text-2xl font-bold text-[#333333] mb-3 pb-2 border-b border-slate-200">
+                      <h2 className="text-2xl font-bold text-[#333333] mb-3 pb-2 border-b border-slate-200">
                         {prizeWinner.prize_level || level}
-                      </h3>
-                      <p className="text-base text-slate-800 mb-5">
+                      </h2>
+                      <h3 className="text-xl text-slate-800 mb-5">
                         <span className="font-semibold">{prizeWinner.book_title}</span>
                         {": "}
+                        <br className="md:hidden" />
                         <span className="italic text-slate-700">
                           {authors}
                           {prizeWinner.location ? `, ${prizeWinner.location}` : ""}
                         </span>
-                      </p>
+                      </h3>
 
                       <div className="grid gap-6 md:grid-cols-[260px,1fr] items-start">
-                        <div className="w-full max-w-[260px] flex items-center gap-4">
+                        <div className="w-full max-w-[260px] flex items-top gap-4">
                           {/* Book cover in cream panel */}
                           <div className="flex-shrink-0 bg-[#F3E7D6] rounded-md border border-slate-200 p-3 flex items-center justify-center">
                             {prizeWinner.cover_image?.url ? (
-                              <div className="w-[120px] md:w-[140px]">
+                              <div className="w-[140px] md:w-[180px]">
                                 <PrismicNextImage
                                   field={prizeWinner.cover_image}
                                   className="w-full h-auto object-contain shadow-sm"
@@ -295,7 +297,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
                                 />
                               </div>
                             ) : (
-                              <div className="w-[120px] md:w-[140px] aspect-[2/3] bg-slate-100 rounded-md flex items-center justify-center text-xs text-slate-400">
+                              <div className="w-[140px] md:w-[180px] aspect-[2/3] bg-slate-100 rounded-md flex items-center justify-center text-xs text-slate-400">
                                 Cover coming soon
                               </div>
                             )}
@@ -303,7 +305,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
 
                           {/* Author image as separate round avatar (match cover width) */}
                           {prizeWinner.author_image?.url && (
-                            <div className="flex-shrink-0 w-[120px] md:w-[140px] aspect-square rounded-full overflow-hidden border border-slate-200 bg-white">
+                            <div className="flex-shrink-0 w-[120px] h-[120px] md:w-[140px] md:h-[140px] aspect-square rounded-full overflow-hidden border border-slate-200 bg-white ml-[-52px] mt-[12px]">
                               <PrismicNextImage
                                 field={prizeWinner.author_image}
                                 className="w-full h-full object-cover"
@@ -352,12 +354,12 @@ export default async function WinnersYearPage({ params }: PageProps) {
                       </div>
 
                       {prizeWinner.amazon_url && (
-                        <p className="mt-5 text-sm">
+                        <p className="mt-4 font-semibold">
                           <Link
                             href={prizeWinner.amazon_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="font-semibold text-primary hover:text-primary-light underline underline-offset-2"
+                            className="text-primary hover:text-primary-light underline hover:no-underline underline-offset-2"
                           >
                             Purchase a copy
                           </Link>
