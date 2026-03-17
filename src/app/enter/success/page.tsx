@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import Stripe from "stripe";
 import { createClient } from "@/prismicio";
-import { WIZARD_STEPS, DEFAULT_SHIPPING } from "../constants";
+import { DEFAULT_SHIPPING } from "../constants";
 import PrintButton from "./PrintButton";
+import MarkEntryComplete from "./MarkEntryComplete";
+import SuccessStepper from "./SuccessStepper";
 import { appendEntryToSheet } from "@/lib/googleSheets";
 import { sendEntrantConfirmation, sendAdminNotification } from "@/lib/email";
 
@@ -23,7 +26,6 @@ export default async function SuccessPage({
 }: {
   searchParams: Promise<{
     payment_intent_id?: string;
-    // Stripe also appends these on 3DS redirect:
     payment_intent?: string;
     redirect_status?: string;
   }>;
@@ -69,6 +71,7 @@ export default async function SuccessPage({
   const entrantEmail = intent.metadata?.entrant_email ?? "";
   const bookCount = Number(intent.metadata?.book_count ?? 1);
   const totalGBP = intent.metadata?.total_gbp ?? "0";
+  const bookLabel = bookCount === 1 ? "book" : "books";
 
   const reference = `MAYA-${new Date().getFullYear()}-${intentId.slice(-8).toUpperCase()}`;
 
@@ -84,7 +87,6 @@ export default async function SuccessPage({
     country: (data.shipping_country as string) || DEFAULT_SHIPPING.country,
   };
 
-  // Fire-and-forget: log to Google Sheets + send emails — never blocks the page
   const emailEntry = {
     name: entrantName,
     email: entrantEmail,
@@ -95,82 +97,58 @@ export default async function SuccessPage({
     shipping,
   };
 
-  appendEntryToSheet({
-    name: entrantName,
-    email: entrantEmail,
-    quantity: bookCount,
-    priceGBP: Number(totalGBP),
-    paymentId: intentId,
-  }).catch((err) => console.error("Failed to log entry to Google Sheets:", err));
+  // Only run side effects once — guard against re-runs on page refresh.
+  // We mark the payment intent in Stripe metadata after the first processing.
+  if (!intent.metadata?.entry_processed) {
+    await stripe.paymentIntents.update(intentId, {
+      metadata: { ...intent.metadata, entry_processed: "true" },
+    });
 
-  sendEntrantConfirmation(emailEntry).catch((err) =>
-    console.error("Failed to send entrant confirmation email:", err)
-  );
+    appendEntryToSheet({
+      name: entrantName,
+      email: entrantEmail,
+      quantity: bookCount,
+      priceGBP: Number(totalGBP),
+      paymentId: intentId,
+    }).catch((err) => console.error("Failed to log entry to Google Sheets:", err));
 
-  sendAdminNotification(emailEntry).catch((err) =>
-    console.error("Failed to send admin notification email:", err)
-  );
+    sendEntrantConfirmation(emailEntry).catch((err) =>
+      console.error("Failed to send entrant confirmation email:", err)
+    );
+
+    sendAdminNotification(emailEntry).catch((err) =>
+      console.error("Failed to send admin notification email:", err)
+    );
+  }
 
   return (
-    <section className="py-10 bg-white">
+    <section className="py-10 bg-white font-sans">
+      <MarkEntryComplete />
       <div className="max-w-2xl mx-auto px-6">
-        {/* Step indicator — all complete */}
-        <div className="mb-10">
-          <div className="flex items-start justify-between relative">
-            <div className="absolute top-[52px] md:top-[56px] left-[calc(12.5%+20px)] right-[calc(62.5%+20px)] h-0.5 bg-slate-200" />
-            <div className="absolute top-[52px] md:top-[56px] left-[calc(37.5%+20px)] right-[calc(37.5%+20px)] h-0.5 bg-slate-200" />
-            <div className="absolute top-[52px] md:top-[56px] left-[calc(62.5%+20px)] right-[calc(12.5%+20px)] h-0.5 bg-slate-200" />
+        <SuccessStepper />
 
-            {WIZARD_STEPS.map((step, index) => {
-              const stepNum = index + 1;
-              const isActive = stepNum === 4;
-              return (
-                <div key={index} className="flex flex-col items-center flex-1 relative z-10">
-                  <p className="text-[10px] md:text-xs text-slate-400 font-medium mb-1.5">
-                    Step {stepNum}
-                  </p>
-                  <div
-                    className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-sm font-bold border-2 ${
-                      isActive
-                        ? "bg-primary border-primary text-white"
-                        : "bg-slate-100 border-primary text-primary"
-                    }`}
-                  >
-                    {stepNum}
-                  </div>
-                  <p className="text-center mt-1.5 leading-tight">
-                    <span className="hidden md:block text-[11px] text-slate-500">
-                      {step.label}
-                      <br />
-                      {step.sublabel}
-                    </span>
-                    <span className="md:hidden text-[10px] text-slate-500">
-                      {step.mobileLabel}
-                    </span>
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Success card */}
+        {/* Step 4 card */}
         <div className="bg-white border border-slate-200 rounded-xl p-6 md:p-8 shadow-sm">
-          <h3 className="text-lg font-semibold text-slate-900 mb-1">
-            Payment Successful!
-          </h3>
-          <p className="text-sm text-slate-500 mb-6">
-            Thank you {entrantName} for your entry (&pound;{totalGBP}). Please
-            send your {bookCount === 1 ? "book" : `${bookCount} books`} to the
-            address below.
+          {/* Status banner */}
+          <div className="border-2 border-emerald-400 rounded-xl bg-emerald-50 px-4 py-3 font-bold text-sm text-emerald-800 mb-4" role="status">
+            Thank you, payment of &pound;{totalGBP} was made successfully.
+          </div>
+
+          <h2 className="text-lg font-semibold text-slate-900 mb-1">
+            Print label and send your {bookLabel}
+          </h2>
+          <p className="text-sm text-slate-500 mb-4">
+            Click the &ldquo;Print label&rdquo; button to print out the details shown
+            below, then stick this on the parcel for the {bookLabel} you&apos;re
+            sending. Or, if you prefer, copy the details by hand &mdash; make sure to
+            include the proof of payment reference.
           </p>
 
-          <div className="flex flex-col md:flex-row gap-6 items-start">
-            <div className="flex-1">
-              <h4 className="text-sm font-semibold text-slate-700 mb-2">
-                Shipping Address
-              </h4>
-              <p className="text-slate-600 leading-relaxed">
+          {/* Label grid */}
+          <div id="print-label" className="grid grid-cols-1 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] gap-6 mt-2 mb-5 p-4 border-2 border-dashed border-slate-400/60 rounded-lg">
+            <div>
+              <h3 className="text-sm font-semibold text-slate-700 mt-0 mb-2">Address</h3>
+              <p className="text-sm text-slate-600 leading-relaxed">
                 <strong>{shipping.name}</strong>
                 <br />
                 {shipping.street.split("\n").map((line, i) => (
@@ -186,20 +164,43 @@ export default async function SuccessPage({
                 {shipping.country}
               </p>
             </div>
-            <div className="w-28 h-28 bg-slate-100 border border-slate-200 rounded-lg flex items-center justify-center text-xs text-slate-500 shrink-0">
-              QR Code
+            <div>
+              <h3 className="text-sm font-semibold text-slate-700 mt-0 mb-3">Reference</h3>
+              <Image
+                src="/qr-code.png"
+                alt="QR code"
+                width={112}
+                height={112}
+                className="rounded"
+              />
+              <p className="text-sm font-extrabold text-slate-900 mt-3">{reference}</p>
             </div>
           </div>
 
-          <p className="text-xs text-slate-500 mt-4">Reference: {reference}</p>
+          <PrintButton />
 
-          <div className="flex flex-wrap gap-3 mt-6">
-            <PrintButton />
+          <p className="text-xs text-slate-500 mt-4 leading-relaxed">
+            The reference QR code and number are for the organiser&apos;s use only. If
+            printing the label, please keep these elements visible. If manually copying
+            the details, just be sure to write out the reference number.
+          </p>
+          <p className="text-xs text-slate-500 mt-3 leading-relaxed">
+            It is your responsibility to ensure the correct postage is applied to your
+            parcel and to pay for it. Incorrect postage could result in your package
+            being returned to you and possibly in you missing the deadline.
+          </p>
+          <p className="text-xs text-slate-500 mt-3 leading-relaxed">
+            If posting from overseas (outside the UK), it is exclusively your
+            responsibility to fill out any customs forms and declarations that may be
+            needed.
+          </p>
+
+          <div className="mt-5">
             <Link
               href="/"
-              className="border border-slate-200 hover:border-slate-300 text-slate-700 font-medium py-2.5 px-5 rounded-lg text-sm transition-colors"
+              className="text-sm text-slate-500 underline hover:text-slate-700"
             >
-              Return Home
+              Return to home page
             </Link>
           </div>
         </div>
@@ -224,7 +225,7 @@ function ErrorState({
         <p className="text-slate-600 mb-6">{message}</p>
         <Link
           href="/enter"
-          className="inline-block bg-primary hover:bg-primary-light text-white font-medium py-2.5 px-5 rounded-lg text-sm transition-colors"
+          className="inline-block border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] text-[#23100A] font-bold py-2.5 px-5 rounded-lg text-sm transition-colors"
         >
           {linkText}
         </Link>

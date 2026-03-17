@@ -35,8 +35,15 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6,
-header, header a, header button, header nav {
+header, header a, header button, header nav,
+button, [type="button"], [type="submit"], [type="reset"] {
   font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+@layer base {
+  button, [type="button"], [type="submit"], [type="reset"] {
+    cursor: pointer;
+  }
 }
 
 body.nav-open {
@@ -46,5 +53,22 @@ body.nav-open {
 @media (max-width: 899px) {
   :root {
     --header-height: 64px;
+  }
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #print-label,
+  #print-label * {
+    visibility: visible;
+  }
+  #print-label {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border: 2px solid #000 !important;
   }
 }

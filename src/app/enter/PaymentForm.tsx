@@ -55,6 +55,7 @@ function CheckoutForm({
     }
 
     if (paymentIntent?.status === "succeeded") {
+      sessionStorage.setItem("maya_entry_complete", "true");
       router.push(`/enter/success?payment_intent_id=${paymentIntent.id}`);
     }
   };
@@ -88,7 +89,7 @@ function CheckoutForm({
         <button
           type="submit"
           disabled={isProcessing}
-          className="w-full bg-primary hover:bg-primary-light disabled:bg-slate-400 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+          className="w-full border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] disabled:bg-slate-300 disabled:border-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed text-[#23100A] font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
         >
           {isProcessing && (
             <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
