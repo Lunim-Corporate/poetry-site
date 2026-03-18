@@ -1,5 +1,6 @@
 import { PrismicRichText } from "@prismicio/react";
 import type { PrizeSectionSliceData, SliceComponentProps } from "@/types";
+import FadeIn from "@/components/FadeIn";
 
 export default function PrizeSection({ slice }: SliceComponentProps<PrizeSectionSliceData>) {
   const {
@@ -22,83 +23,97 @@ export default function PrizeSection({ slice }: SliceComponentProps<PrizeSection
     >
       {/* Section Title */}
       {section_title && (
-        <h2 className="text-3xl font-bold text-slate-900">{section_title}</h2>
+        <FadeIn>
+          <h2 className="text-3xl font-bold text-slate-900">{section_title}</h2>
+        </FadeIn>
       )}
 
       {/* Intro */}
       {intro_text && (
-        <div className="prose prose-base max-w-none text-[#333333]">
-          <PrismicRichText field={intro_text} />
-        </div>
+        <FadeIn delay={100}>
+          <div className="prose prose-base max-w-none text-[#333333]">
+            <PrismicRichText field={intro_text} />
+          </div>
+        </FadeIn>
       )}
 
       {/* Main Prizes */}
       {prizes && prizes.length > 0 && (
-        <div className="rounded-lg overflow-hidden border border-[#FFE169]">
-          <table className="w-full border-collapse">
-            <tbody>
-              {prizes.map((prize, i) => (
-                <tr key={i} className="bg-[#23100A] border-b border-[#FFE169]">
-                  <td className={`px-5 py-3 text-base font-bold w-1/2 border-r border-[#FFE169] ${i === 0 ? "text-[#FFE169]" : "text-[#FFF0DD]"}`}>
-                    {prize.prize_title}
-                  </td>
-                  <td className={`font-sans px-5 py-3 text-base font-bold w-1/2 text-left ${i === 0 ? "text-[#FFE169]" : "text-[#FFF0DD]"}`}>
-                    £{prize.prize_amount}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <FadeIn delay={200}>
+          <div className="rounded-lg overflow-hidden border border-[#FFE169]">
+            <table className="w-full border-collapse">
+              <tbody>
+                {prizes.map((prize, i) => (
+                  <tr key={i} className="bg-[#23100A] border-b border-[#FFE169]">
+                    <td className={`px-5 py-3 text-base font-bold w-1/2 border-r border-[#FFE169] ${i === 0 ? "text-[#FFE169]" : "text-[#FFF0DD]"}`}>
+                      {prize.prize_title}
+                    </td>
+                    <td className={`font-sans px-5 py-3 text-base font-bold w-1/2 text-left ${i === 0 ? "text-[#FFE169]" : "text-[#FFF0DD]"}`}>
+                      £{prize.prize_amount}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </FadeIn>
       )}
 
       {/* Children's Prize Description */}
       {childrens_prize_description && (
-        <div className="prose prose-base max-w-none text-[#333333]">
-          <PrismicRichText field={childrens_prize_description} />
-        </div>
+        <FadeIn>
+          <div className="prose prose-base max-w-none text-[#333333]">
+            <PrismicRichText field={childrens_prize_description} />
+          </div>
+        </FadeIn>
       )}
 
       {/* Children's Prize Row */}
       {childrens_prize_title && (
-        <div className="rounded-lg overflow-hidden border border-[#FFE169]">
-          <table className="w-full border-collapse">
-            <tbody>
-              <tr className="bg-[#23100A]">
-                <td className="px-5 py-3 text-base font-bold text-[#FFF0DD] w-1/2 border-r border-[#FFE169]">
-                  {childrens_prize_title}
-                </td>
-                <td className="font-sans px-5 py-3 text-base font-bold text-[#FFF0DD] w-1/2 text-left">
-                  {childrens_prize_amount != null ? `£${childrens_prize_amount}` : ""}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <FadeIn>
+          <div className="rounded-lg overflow-hidden border border-[#FFE169]">
+            <table className="w-full border-collapse">
+              <tbody>
+                <tr className="bg-[#23100A]">
+                  <td className="px-5 py-3 text-base font-bold text-[#FFF0DD] w-1/2 border-r border-[#FFE169]">
+                    {childrens_prize_title}
+                  </td>
+                  <td className="font-sans px-5 py-3 text-base font-bold text-[#FFF0DD] w-1/2 text-left">
+                    {childrens_prize_amount != null ? `£${childrens_prize_amount}` : ""}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </FadeIn>
       )}
 
       {/* Winner Benefits */}
       {benefits && benefits.length > 0 && (
-        <div>
-          {benefits_title && (
-            <p className="text-base text-[#333333] mb-3">{benefits_title}</p>
-          )}
-          <ul className="space-y-2">
-            {benefits.map((item, i) => (
-              <li key={i} className="flex items-start gap-2 text-base text-[#333333]">
-                <span className="mt-0.5 shrink-0">•</span>
-                <span>{item.benefit}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <FadeIn>
+          <div>
+            {benefits_title && (
+              <p className="text-base text-[#333333] mb-3">{benefits_title}</p>
+            )}
+            <ul className="space-y-2">
+              {benefits.map((item, i) => (
+                <li key={i} className="flex items-start gap-2 text-base text-[#333333]">
+                  <span className="mt-0.5 shrink-0">•</span>
+                  <span>{item.benefit}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </FadeIn>
       )}
 
       {/* Additional Note */}
       {note && (
-        <div className="prose prose-base max-w-none text-[#333333]">
-          <PrismicRichText field={note} />
-        </div>
+        <FadeIn>
+          <div className="prose prose-base max-w-none text-[#333333]">
+            <PrismicRichText field={note} />
+          </div>
+        </FadeIn>
       )}
     </div>
   );

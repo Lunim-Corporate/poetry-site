@@ -3,6 +3,7 @@ import type { RichTextField } from "@prismicio/client";
 import Image from "next/image";
 import Link from "next/link";
 import type { AboutSectionSliceData, SliceComponentProps } from "@/types";
+import FadeIn from "@/components/FadeIn";
 
 function Divider() {
   return (
@@ -36,53 +37,61 @@ export default function AboutSection({ slice }: SliceComponentProps<AboutSection
     <div className="space-y-10">
       {/* Intro - rendered bold to stand out */}
       {hasContent(intro) && (
-        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-          <div
-            className={`${proseClasses} prose-p:text-slate-700 prose-p:font-medium`}
-          >
-            <PrismicRichText field={intro} />
+        <FadeIn>
+          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+            <div
+              className={`${proseClasses} prose-p:text-slate-700 prose-p:font-medium`}
+            >
+              <PrismicRichText field={intro} />
+            </div>
           </div>
-        </div>
+        </FadeIn>
       )}
 
       {/* Background */}
       {hasContent(background) && (
-        <div>
-          <h3 className="text-2xl font-bold text-[#333333] mb-3">
-            Background
-          </h3>
-          <div className={proseClasses}>
-            <PrismicRichText field={background} />
+        <FadeIn>
+          <div>
+            <h3 className="text-2xl font-bold text-[#333333] mb-3">
+              Background
+            </h3>
+            <div className={proseClasses}>
+              <PrismicRichText field={background} />
+            </div>
           </div>
-        </div>
+        </FadeIn>
       )}
 
       {hasContent(funding) && <Divider />}
 
       {/* Funding */}
       {hasContent(funding) && (
-        <div>
-          <h3 className="text-2xl font-bold text-[#333333] mb-3">
-            Funding
-          </h3>
-          <div className={proseClasses}>
-            <PrismicRichText field={funding} />
+        <FadeIn>
+          <div>
+            <h3 className="text-2xl font-bold text-[#333333] mb-3">
+              Funding
+            </h3>
+            <div className={proseClasses}>
+              <PrismicRichText field={funding} />
+            </div>
           </div>
-        </div>
+        </FadeIn>
       )}
 
       {hasContent(partnerships) && <Divider />}
 
       {/* Partnerships */}
       {hasContent(partnerships) && (
-        <div>
-          <h3 className="text-2xl font-bold text-[#333333] mb-3">
-            Partnerships
-          </h3>
-          <div className={proseClasses}>
-            <PrismicRichText field={partnerships} />
+        <FadeIn>
+          <div>
+            <h3 className="text-2xl font-bold text-[#333333] mb-3">
+              Partnerships
+            </h3>
+            <div className={proseClasses}>
+              <PrismicRichText field={partnerships} />
+            </div>
           </div>
-        </div>
+        </FadeIn>
       )}
 
       {(hasContent(partnerships) || sign_off_name) && <Divider />}
@@ -106,7 +115,7 @@ export default function AboutSection({ slice }: SliceComponentProps<AboutSection
       <div>
         <Link
           href="/enter"
-          className="inline-flex items-center justify-center px-6 py-3 rounded-lg font-bold text-sm border-2 border-[#23100A] bg-[#FFE169] text-[#23100A] hover:bg-[#23100A] hover:text-[#FFE169] transition-colors"
+          className="inline-flex items-center justify-center px-6 py-3 rounded-lg font-bold text-sm border-2 border-[#23100A] bg-[#FFE169] text-[#23100A] hover:bg-[#23100A] hover:text-[#FFE169] transition-all duration-300"
         >
           Enter Your Book
         </Link>

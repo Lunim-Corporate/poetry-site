@@ -103,7 +103,7 @@ export default function Sidebar() {
             <button
               type="submit"
               disabled={newsletterSubmitting}
-              className="w-full border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] disabled:bg-slate-400 text-[#23100A] font-bold py-2.5 px-4 rounded-lg text-sm transition-colors flex items-center justify-center gap-2"
+              className="w-full border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] disabled:bg-slate-400 text-[#23100A] font-bold py-2.5 px-4 rounded-lg text-sm transition-all duration-300 flex items-center justify-center gap-2"
             >
               {newsletterSubmitting && (
                 <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -244,7 +244,7 @@ export default function Sidebar() {
             <button
               type="submit"
               disabled={contactSubmitting}
-              className="w-full border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] disabled:bg-slate-400 text-[#23100A] font-bold py-2.5 px-4 rounded-lg text-sm transition-colors flex items-center justify-center gap-2"
+              className="w-full border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] disabled:bg-slate-400 text-[#23100A] font-bold py-2.5 px-4 rounded-lg text-sm transition-all duration-300 flex items-center justify-center gap-2"
             >
               {contactSubmitting && (
                 <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

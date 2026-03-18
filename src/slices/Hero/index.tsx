@@ -49,20 +49,26 @@ export default function Hero({ slice }: SliceComponentProps<HeroSliceData>) {
       }} />
       <div className="relative z-10 w-full max-w-6xl mx-auto px-6 py-8 flex">
         <div className="text-center max-w-3xl mx-auto flex flex-col w-full">
-          <div className={titleClasses[variant]}>
+          <div className={`${titleClasses[variant]} animate-fade-in-up`}>
             <PrismicRichText field={slice.primary.title} />
           </div>
           {slice.primary.subtitle && (
-            <div className={subtitleClasses[variant]}>
+            <div
+              className={`${subtitleClasses[variant]} animate-fade-in-up`}
+              style={{ animationDelay: "150ms" }}
+            >
               <PrismicRichText field={slice.primary.subtitle} />
             </div>
           )}
           {(slice.primary.cta_text || slice.primary.secondary_cta_text) && (
-            <div className="flex flex-wrap gap-3 justify-center mt-auto mb-30">
+            <div
+              className="flex flex-wrap gap-3 justify-center mt-auto mb-30 animate-fade-in-up"
+              style={{ animationDelay: "300ms" }}
+            >
               {slice.primary.cta_text && (
                 <Link
                   href={slice.primary.cta_link || (variant === "home" ? "/enter" : "#")}
-                  className={`font-sans inline-flex items-center justify-center rounded-lg font-bold transition-colors ${
+                  className={`font-sans inline-flex items-center justify-center rounded-lg font-bold transition-all duration-300 ${
                     variant === "home"
                       ? "px-8 py-4 text-base bg-[#FFE169] hover:bg-[#FFE169]/90 text-slate-900"
                       : "px-6 py-3 text-sm border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] text-[#23100A]"
@@ -74,7 +80,7 @@ export default function Hero({ slice }: SliceComponentProps<HeroSliceData>) {
               {slice.primary.secondary_cta_text && (
                 <Link
                   href={slice.primary.secondary_cta_link || "#"}
-                  className="font-sans inline-flex items-center justify-center px-6 py-3 rounded-lg font-semibold text-sm border border-white/30 text-white hover:bg-white/10 transition-colors"
+                  className="font-sans inline-flex items-center justify-center px-6 py-3 rounded-lg font-semibold text-sm border border-white/30 text-white hover:bg-white/10 transition-all duration-300"
                 >
                   {slice.primary.secondary_cta_text}
                 </Link>

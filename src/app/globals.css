@@ -25,7 +25,27 @@
   --font-family-sans: var(--font-sans), system-ui, sans-serif;
 }
 
+/* Animations */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@theme inline {
+  --animate-fade-in-up: fade-in-up 0.65s ease-out both;
+}
+
 /* Base styles */
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: var(--font-serif), Georgia, serif;
   background-color: #FFFDF5;
