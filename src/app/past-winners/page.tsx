@@ -91,23 +91,23 @@ export default async function PastWinnersPage() {
 
                   <div className="border border-[#B7A08F] rounded-2xl overflow-hidden bg-[#F9F5EF]">
                     {/* Header row */}
-                    <div className="grid grid-cols-4 lg:[grid-template-columns:1.4fr_1fr_1fr_1fr] border-b border-[#B7A08F] text-center text-sm bg-[#FFFEFA]">
-                      {PRIZE_ORDER.map((level, index) => (
-                        <div
-                          key={level}
-                          className={`py-3 ${
-                            index === 0
-                              ? "font-bold text-slate-900"
-                              : "font-semibold text-slate-700"
-                          }`}
-                        >
-                          {level}
-                        </div>
-                      ))}
-                    </div>
+                      <div className="hidden md:grid md:grid-cols-4 lg:[grid-template-columns:1.4fr_1fr_1fr_1fr] border-b border-[#B7A08F] text-center text-sm bg-[#FFFEFA]">
+                        {PRIZE_ORDER.map((level, index) => (
+                          <div
+                            key={level}
+                            className={`py-3 ${
+                              index === 0
+                                ? "font-bold text-slate-900"
+                                : "font-semibold text-slate-700"
+                            }`}
+                          >
+                            {level}
+                          </div>
+                        ))}
+                      </div>
 
                     {/* Winners row */}
-                    <div className="grid grid-cols-4 lg:[grid-template-columns:1.4fr_1fr_1fr_1fr] divide-x divide-dashed divide-slate-300 bg-[#F9F5EF]">
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:[grid-template-columns:1.4fr_1fr_1fr_1fr] divide-x divide-dashed divide-slate-300 bg-[#F9F5EF]">
                       {PRIZE_ORDER.map((level, index) => {
                         const winner = winners.find(
                           (w) => w.prize_level === level
@@ -126,10 +126,21 @@ export default async function PastWinnersPage() {
                             key={level}
                             className="px-4 py-4 flex flex-col items-center"
                           >
+                            {/* Mobile-only: keep heading directly above cover */}
+                            <p
+                              className={`md:hidden mb-3 text-center text-sm ${
+                                isFirst
+                                  ? "font-bold text-slate-900"
+                                  : "font-semibold text-slate-700"
+                              }`}
+                            >
+                              {level}
+                            </p>
+
                             {winner?.cover_image?.url ? (
                               isFirst ? (
                                 // 1st Prize: wider and taller cream panel with centered cover
-                                <div className="w-full max-w-[280px] mb-3 rounded-md bg-[#f5e9d4] border border-slate-200 flex items-center justify-center overflow-hidden shadow-md">
+                                <div className="w-full max-w-[140px] md:max-w-[280px] mb-3 rounded-md bg-[#f5e9d4] border border-slate-200 flex items-center justify-center overflow-hidden shadow-md">
                                   <PrismicNextImage
                                     field={winner.cover_image}
                                     className="h-full w-auto object-contain"
@@ -147,7 +158,7 @@ export default async function PastWinnersPage() {
                                 </div>
                               )
                             ) : isFirst ? (
-                              <div className="w-full max-w-[280px] mb-3 rounded-md bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center text-xs text-slate-400">
+                              <div className="w-full max-w-[140px] md:max-w-[280px] mb-3 rounded-md bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center text-xs text-slate-400">
                                 TBD
                               </div>
                             ) : (
