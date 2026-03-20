@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import QRCode from "qrcode";
 import Link from "next/link";
 import Stripe from "stripe";
 import { createClient } from "@/prismicio";
@@ -98,19 +98,26 @@ export default async function SuccessPage({
   };
 
   // Only run side effects once — guard against re-runs on page refresh.
-  // We mark the payment intent in Stripe metadata after the first processing.
-  if (!intent.metadata?.entry_processed) {
-    await stripe.paymentIntents.update(intentId, {
-      metadata: { ...intent.metadata, entry_processed: "true" },
-    });
+  // We store the sheet row URL in Stripe metadata after the first processing.
+  let sheetRowUrl =
+    `https://docs.google.com/spreadsheets/d/${process.env.GOOGLE_SHEETS_SPREADSHEET_ID}/edit`;
 
-    appendEntryToSheet({
-      name: entrantName,
-      email: entrantEmail,
-      quantity: bookCount,
-      priceGBP: Number(totalGBP),
-      paymentId: intentId,
-    }).catch((err) => console.error("Failed to log entry to Google Sheets:", err));
+  if (!intent.metadata?.entry_processed) {
+    try {
+      sheetRowUrl = await appendEntryToSheet({
+        name: entrantName,
+        email: entrantEmail,
+        quantity: bookCount,
+        priceGBP: Number(totalGBP),
+        paymentId: intentId,
+      });
+    } catch (err) {
+      console.error("Failed to log entry to Google Sheets:", err);
+    }
+
+    await stripe.paymentIntents.update(intentId, {
+      metadata: { ...intent.metadata, entry_processed: "true", sheet_row_url: sheetRowUrl },
+    });
 
     sendEntrantConfirmation(emailEntry).catch((err) =>
       console.error("Failed to send entrant confirmation email:", err)
@@ -119,7 +126,15 @@ export default async function SuccessPage({
     sendAdminNotification(emailEntry).catch((err) =>
       console.error("Failed to send admin notification email:", err)
     );
+  } else if (intent.metadata?.sheet_row_url) {
+    sheetRowUrl = intent.metadata.sheet_row_url;
   }
+
+  const qrDataUrl = await QRCode.toDataURL(sheetRowUrl, {
+    width: 224,
+    margin: 1,
+    color: { dark: "#0f172a", light: "#ffffff" },
+  });
 
   return (
     <section className="py-10 bg-white font-sans">
@@ -166,9 +181,10 @@ export default async function SuccessPage({
             </div>
             <div>
               <h3 className="text-sm font-semibold text-slate-700 mt-0 mb-3">Reference</h3>
-              <Image
-                src="/qr-code.png"
-                alt="QR code"
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={qrDataUrl}
+                alt="QR code linking to this entry in Google Sheets"
                 width={112}
                 height={112}
                 className="rounded"

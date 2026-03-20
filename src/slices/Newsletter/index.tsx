@@ -8,13 +8,30 @@ export default function Newsletter({ slice }: SliceComponentProps<NewsletterSlic
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setIsLoading(false);
-    setIsSuccess(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setIsSuccess(true);
+      } else {
+        setError(data.error ?? "Something went wrong. Please try again.");
+      }
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -46,6 +63,7 @@ export default function Newsletter({ slice }: SliceComponentProps<NewsletterSlic
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
+          {error && <p className="text-red-600 text-sm mt-1">{error}</p>}
           <button
             type="submit"
             className={`btn btn--full ${isLoading ? "is-loading" : ""}`}
