@@ -83,13 +83,13 @@ export default async function PastWinnersPage() {
               return (
                 <section
                   key={yearNumber}
-                  className="bg-[#F9F5EF] border border-[#B7A08F] rounded-2xl p-6 md:p-8 shadow-sm"
+                  className="bg-[#F9F5EF] border border-[#B7A08F] rounded-2xl p-4 md:p-8 shadow-sm"
                 >
-                  <h2 className="text-2xl font-semibold text-slate-900 mb-4">
+                  <h2 className="text-2xl font-semibold text-slate-900 mb-0 md:mb-4 text-left">
                     {yearNumber} Winners
                   </h2>
 
-                  <div className="border border-[#B7A08F] rounded-2xl overflow-hidden bg-[#F9F5EF]">
+                  <div className="md:border md:border-[#B7A08F] rounded-2xl overflow-hidden bg-[#F9F5EF]">
                     {/* Header row */}
                       <div className="hidden md:grid md:grid-cols-4 lg:[grid-template-columns:1.4fr_1fr_1fr_1fr] border-b border-[#B7A08F] text-center text-sm bg-[#FFFEFA]">
                         {PRIZE_ORDER.map((level, index) => (
@@ -107,7 +107,7 @@ export default async function PastWinnersPage() {
                       </div>
 
                     {/* Winners row */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:[grid-template-columns:1.4fr_1fr_1fr_1fr] divide-x divide-dashed divide-slate-300 bg-[#F9F5EF]">
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:[grid-template-columns:1.4fr_1fr_1fr_1fr] md:divide-x md:divide-dashed md:divide-slate-300 bg-[#F9F5EF]">
                       {PRIZE_ORDER.map((level, index) => {
                         const winner = winners.find(
                           (w) => w.prize_level === level
@@ -122,13 +122,13 @@ export default async function PastWinnersPage() {
                         const isFirst = index === 0;
 
                         return (
-                          <div
-                            key={level}
-                            className="px-4 py-4 flex flex-col items-center"
-                          >
+                          <div key={level} className="contents">
+                            <div
+                              className="px-2 py-3 md:px-4 md:py-4 flex flex-col items-center md:pt-4"
+                            >
                             {/* Mobile-only: keep heading directly above cover */}
                             <p
-                              className={`md:hidden mb-3 text-center text-sm ${
+                              className={`md:hidden mb-2 text-left w-full text-base sm:text-lg ${
                                 isFirst
                                   ? "font-bold text-slate-900"
                                   : "font-semibold text-slate-700"
@@ -140,7 +140,7 @@ export default async function PastWinnersPage() {
                             {winner?.cover_image?.url ? (
                               isFirst ? (
                                 // 1st Prize: wider and taller cream panel with centered cover
-                                <div className="w-full max-w-[140px] md:max-w-[280px] mb-3 rounded-md bg-[#f5e9d4] border border-slate-200 flex items-center justify-center overflow-hidden shadow-md">
+                                <div className="w-full md:max-w-[280px] mb-2 md:mb-3 rounded-md bg-[#f5e9d4] border border-slate-200 flex items-center justify-center overflow-hidden shadow-md">
                                   <PrismicNextImage
                                     field={winner.cover_image}
                                     className="h-full w-auto object-contain"
@@ -149,7 +149,7 @@ export default async function PastWinnersPage() {
                                 </div>
                               ) : (
                                 // Other prizes: smaller standard cover cards
-                                <div className="w-full max-w-[140px] mb-3 rounded-md overflow-hidden shadow-md border border-slate-200 bg-white">
+                                <div className="w-full md:max-w-[140px] mb-2 md:mb-3 rounded-md overflow-hidden shadow-md border border-slate-200 bg-white">
                                   <PrismicNextImage
                                     field={winner.cover_image}
                                     className="h-full w-auto object-contain"
@@ -158,35 +158,50 @@ export default async function PastWinnersPage() {
                                 </div>
                               )
                             ) : isFirst ? (
-                              <div className="w-full max-w-[140px] md:max-w-[280px] mb-3 rounded-md bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center text-xs text-slate-400">
+                              <div className="w-full md:max-w-[280px] mb-2 md:mb-3 rounded-md bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center text-xs text-slate-400">
                                 TBD
                               </div>
                             ) : (
-                              <div className="w-full max-w-[140px] mb-3 rounded-md bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center text-xs text-slate-400">
+                              <div className="w-full md:max-w-[140px] mb-2 md:mb-3 rounded-md bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center text-xs text-slate-400">
                                 TBD
                               </div>
                             )}
 
                             {winner ? (
-                              <p className="text-sm text-center leading-snug">
-                                <span className="font-semibold text-slate-900 block">
+                              <p className="text-[15px] md:text-sm text-left md:text-center leading-snug w-full">
+                                <span className="font-semibold text-slate-900 block text-base md:text-sm">
                                   {winner.book_title}
                                 </span>
                                 {authors && (
-                                  <em className="text-slate-600 block">
+                                  <em className="text-slate-600 block text-[15px] md:text-sm">
                                     {authors}
                                   </em>
                                 )}
                                 {winner.location && (
-                                  <span className="text-slate-500 block">
+                                  <span className="text-slate-500 block text-[15px] md:text-sm">
                                     {winner.location}
                                   </span>
                                 )}
                               </p>
                             ) : (
-                              <p className="text-sm text-slate-400 text-center">
+                              <p className="text-[15px] text-slate-400 text-left md:text-center w-full">
                                 Winner to be announced
                               </p>
+                            )}
+
+                            </div>
+
+                            {index === 1 && (
+                              <div className="col-span-2 md:hidden my-1 grid grid-cols-2 gap-4 px-4">
+                                <div className="border-t border-dashed border-slate-300" />
+                                <div className="border-t border-dashed border-slate-300" />
+                              </div>
+                            )}
+                            {index === 3 && (
+                              <div className="col-span-2 md:hidden my-1 grid grid-cols-2 gap-4 px-4">
+                                <div className="border-t border-dashed border-slate-300" />
+                                <div className="border-t border-dashed border-slate-300" />
+                              </div>
                             )}
                           </div>
                         );
