@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import { PrismicPreview } from "@prismicio/next";
 import { createClient, repositoryName } from "@/prismicio";
 import NavigationMenu from "@/slices/NavigationMenu";
@@ -6,6 +7,30 @@ import FooterSlice from "@/slices/Footer";
 import type { NavigationMenuSliceData, FooterSliceData, PrismicSlice } from "@/types";
 import { DEFAULT_YEARS } from "@/types";
 import "./globals.css";
+
+const sourceSerifPro = localFont({
+  src: [
+    { path: "../../public/fonts/SourceSerifPro-Light.ttf", weight: "300", style: "normal" },
+    { path: "../../public/fonts/SourceSerifPro-LightItalic.ttf", weight: "300", style: "italic" },
+    { path: "../../public/fonts/SourceSerifPro-Regular.ttf", weight: "400", style: "normal" },
+    { path: "../../public/fonts/SourceSerifPro-Italic.ttf", weight: "400", style: "italic" },
+    { path: "../../public/fonts/SourceSerifPro-SemiBold.ttf", weight: "600", style: "normal" },
+    { path: "../../public/fonts/SourceSerifPro-SemiBoldItalic.ttf", weight: "600", style: "italic" },
+    { path: "../../public/fonts/SourceSerifPro-Bold.ttf", weight: "700", style: "normal" },
+    { path: "../../public/fonts/SourceSerifPro-BoldItalic.ttf", weight: "700", style: "italic" },
+  ],
+  variable: "--font-serif",
+  display: "swap",
+});
+
+const workSans = localFont({
+  src: [
+    { path: "../../public/fonts/WorkSans-VariableFont_wght.ttf", weight: "100 900", style: "normal" },
+    { path: "../../public/fonts/WorkSans-Italic-VariableFont_wght.ttf", weight: "100 900", style: "italic" },
+  ],
+  variable: "--font-sans",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -68,7 +93,7 @@ export default async function RootLayout({
   ) as FooterSliceData | undefined;
 
   return (
-    <html lang="en">
+    <html lang="en" className={`${sourceSerifPro.variable} ${workSans.variable}`}>
       <body>
         <PrismicPreview repositoryName={repositoryName}>
           <NavigationMenu

@@ -67,7 +67,7 @@ function getStepMessage(targetStep: number, action: string): string {
     case 3:
       return `To continue to step 3, please first enter your personal details and the number of books you're entering, then ${action} "Continue to payment" at the bottom of Step 2.`;
     case 4:
-      return `To continue to step 4, please complete your payment via Stripe in Step 3. You will be redirected back here automatically.`;
+      return `To continue to step 4, please enter your card details in Step 3, then ${action} "Pay securely" to complete your payment.`;
     default:
       return "";
   }
@@ -88,7 +88,14 @@ export default function EnterPageClient({
   const [isFetchingIntent, setIsFetchingIntent] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [modalMessage, setModalMessage] = useState<string | null>(null);
+  const [isWizardLocked, setIsWizardLocked] = useState(false);
   const isMobile = useIsMobile();
+
+  useEffect(() => {
+    if (sessionStorage.getItem("maya_entry_complete") === "true") {
+      setIsWizardLocked(true);
+    }
+  }, []);
 
   const priceSingle = settings.price_single_book ?? DEFAULT_PRICE_SINGLE;
   const priceMultiple = settings.price_multiple_books ?? DEFAULT_PRICE_MULTIPLE;
@@ -106,9 +113,17 @@ export default function EnterPageClient({
   const handleStepClick = (stepNum: number) => {
     if (stepNum === currentStep) return;
     if (stepNum < currentStep) {
-      setModalMessage("You cannot go back once you have progressed to the next step. Please complete the current step to continue.");
+      if (isWizardLocked) {
+        setModalMessage("The competition entry process is now complete. You can no longer change any details.");
+        return;
+      }
+      setCurrentStep(stepNum as Step);
       return;
     }
+    // Going forward — navigate directly if prerequisites already met
+    if (stepNum === 2 && rulesConfirmed) { setCurrentStep(2); return; }
+    if (stepNum === 3 && clientSecret) { setCurrentStep(3); return; }
+    // Otherwise show instructional modal
     setModalMessage(getStepMessage(stepNum, action));
   };
 
@@ -159,14 +174,25 @@ export default function EnterPageClient({
   };
 
   return (
-    <section className="py-10 bg-white">
+    <section className="py-10 bg-white font-sans">
       <div className="max-w-2xl mx-auto px-6">
         {/* Wizard Steps */}
         <div className="mb-10">
           <div className="flex items-start justify-between relative">
-            <div className="absolute top-[52px] md:top-[56px] left-[calc(12.5%+20px)] right-[calc(62.5%+20px)] h-0.5 bg-slate-200" />
-            <div className="absolute top-[52px] md:top-[56px] left-[calc(37.5%+20px)] right-[calc(37.5%+20px)] h-0.5 bg-slate-200" />
-            <div className="absolute top-[52px] md:top-[56px] left-[calc(62.5%+20px)] right-[calc(12.5%+20px)] h-0.5 bg-slate-200" />
+            {[1, 2, 3].map((connectorAfterStep) => (
+              <div
+                key={connectorAfterStep}
+                className={`absolute top-[46px] md:top-[50px] border-t-2 transition-all ${
+                  currentStep > connectorAfterStep
+                    ? "border-solid border-[#23100A]"
+                    : "border-dashed border-slate-300"
+                }`}
+                style={{
+                  left: `calc(${(connectorAfterStep - 1) * 25 + 12.5}% + 20px)`,
+                  right: `calc(${(4 - connectorAfterStep) * 25 - 12.5}% + 20px)`,
+                }}
+              />
+            ))}
 
             {WIZARD_STEPS.map((step, index) => {
               const stepNum = index + 1;
@@ -175,7 +201,7 @@ export default function EnterPageClient({
 
               return (
                 <div key={index} className="flex flex-col items-center flex-1 relative z-10">
-                  <p className="text-[10px] md:text-xs text-slate-400 font-medium mb-1.5">
+                  <p className="text-sm text-slate-400 font-medium mb-1.5">
                     Step {stepNum}
                   </p>
                   <button
@@ -183,21 +209,21 @@ export default function EnterPageClient({
                     onClick={() => handleStepClick(stepNum)}
                     className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all ${
                       isActive
-                        ? "bg-primary border-primary text-white cursor-default"
+                        ? "bg-[#23100A] border-[#23100A] text-[#FFE169] cursor-default"
                         : isCompleted
-                        ? "bg-slate-100 border-primary text-primary cursor-pointer hover:bg-slate-200"
+                        ? "bg-slate-100 border-[#23100A] text-[#23100A] cursor-pointer hover:bg-slate-200"
                         : "bg-white border-slate-200 text-slate-400 cursor-pointer hover:border-slate-300"
                     }`}
                   >
                     {stepNum}
                   </button>
                   <p className="text-center mt-1.5 leading-tight">
-                    <span className="hidden md:block text-[11px] text-slate-500">
+                    <span className="hidden md:block text-sm text-slate-500">
                       {step.label}
                       <br />
                       {step.sublabel}
                     </span>
-                    <span className="md:hidden text-[10px] text-slate-500">{step.mobileLabel}</span>
+                    <span className="md:hidden text-sm text-slate-500">{step.mobileLabel}</span>
                   </p>
                 </div>
               );
@@ -213,7 +239,7 @@ export default function EnterPageClient({
               Please review the competition rules before submitting your entry.
             </p>
 
-            <ol className="list-decimal list-outside pl-5 space-y-3 text-sm text-slate-600">
+            <ol className="list-decimal list-outside pl-5 space-y-3 text-sm text-slate-600 font-normal">
               {RULES.map((rule, index) => (
                 <li key={index} className="leading-relaxed">{rule}</li>
               ))}
@@ -233,9 +259,16 @@ export default function EnterPageClient({
               </label>
               <button
                 type="button"
-                onClick={() => setCurrentStep(2)}
+                onClick={() => {
+                  setCurrentStep(2);
+                  // User is starting a new entry — release any post-payment lock
+                  if (isWizardLocked) {
+                    setIsWizardLocked(false);
+                    sessionStorage.removeItem("maya_entry_complete");
+                  }
+                }}
                 disabled={!rulesConfirmed}
-                className="w-full bg-primary hover:bg-primary-light disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-medium py-3 px-4 rounded-lg transition-colors"
+                className="w-full border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] disabled:bg-slate-300 disabled:border-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed text-[#23100A] font-bold py-3 px-4 rounded-lg transition-colors"
               >
                 Continue to enter details
               </button>
@@ -248,6 +281,13 @@ export default function EnterPageClient({
           <>
             <div className="bg-white border border-slate-200 rounded-xl p-6 md:p-8 shadow-sm">
               <h2 className="text-lg font-semibold text-slate-900 mb-1">Enter Details</h2>
+              <button
+                type="button"
+                onClick={() => setCurrentStep(1)}
+                className="text-sm text-slate-700 underline inline-block mb-4 mt-1 hover:text-slate-900 cursor-pointer"
+              >
+                &laquo; Back to step 1
+              </button>
               <p className="text-sm text-slate-500 mb-6">
                 Tell us about yourself and how many books you&apos;re entering.
               </p>
@@ -334,7 +374,7 @@ export default function EnterPageClient({
                 <button
                   type="submit"
                   disabled={isFetchingIntent}
-                  className="w-full bg-primary hover:bg-primary-light disabled:bg-slate-400 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                  className="w-full border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] disabled:bg-slate-300 disabled:border-slate-300 disabled:text-slate-500 text-[#23100A] font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
                 >
                   {isFetchingIntent && (
                     <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -351,6 +391,13 @@ export default function EnterPageClient({
           <>
             <div className="bg-white border border-slate-200 rounded-xl p-6 md:p-8 shadow-sm">
               <h3 className="text-lg font-semibold text-slate-900 mb-1">Payment</h3>
+              <button
+                type="button"
+                onClick={() => setCurrentStep(2)}
+                className="text-sm text-slate-700 underline inline-block mb-4 mt-1 hover:text-slate-900 cursor-pointer"
+              >
+                &laquo; Back to step 2
+              </button>
               <p className="text-sm text-slate-500 mb-6">
                 Total: &pound;{bookPrices[formData.bookCount]} for {formData.bookCount}{" "}
                 {formData.bookCount === 1 ? "book" : "books"}
@@ -387,7 +434,7 @@ export default function EnterPageClient({
             <button
               type="button"
               onClick={() => setModalMessage(null)}
-              className="mt-4 w-full bg-primary hover:bg-primary-light text-white font-medium py-2.5 px-4 rounded-lg text-sm transition-colors"
+              className="mt-4 w-full border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] text-[#23100A] font-bold py-2.5 px-4 rounded-lg text-sm transition-colors"
             >
               OK
             </button>

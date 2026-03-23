@@ -50,7 +50,7 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-sans">
       {/* Newsletter Card */}
       <aside
         id="newsletter"
@@ -92,7 +92,7 @@ export default function Sidebar() {
                   setNewsletterEmail(e.target.value);
                   if (newsletterError) setNewsletterError("");
                 }}
-                className="w-full px-4 py-2.5 text-sm border-2 border-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-white"
+                className="w-full px-4 py-2.5 text-sm border-2 border-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-white placeholder:font-sans"
               />
               {newsletterError && (
                 <p className="text-xs text-red-600 mt-1" role="alert">
@@ -103,7 +103,7 @@ export default function Sidebar() {
             <button
               type="submit"
               disabled={newsletterSubmitting}
-              className="w-full border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] disabled:bg-slate-400 text-[#23100A] font-bold py-2.5 px-4 rounded-lg text-sm transition-colors flex items-center justify-center gap-2"
+              className="w-full border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] disabled:bg-slate-400 text-[#23100A] font-bold py-2.5 px-4 rounded-lg text-sm transition-all duration-300 flex items-center justify-center gap-2"
             >
               {newsletterSubmitting && (
                 <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -121,7 +121,7 @@ export default function Sidebar() {
       {/* Contact Card */}
       <aside
         id="contact-form"
-        className="bg-[#F9F5EF] border border-[#B7A08F] rounded-xl p-6"
+        className="bg-[#F9F5EF] border border-[#B7A08F] rounded-xl p-6 scroll-mt-[72px] max-[899px]:scroll-mt-16"
         aria-label="Contact form"
       >
         <h3 className="text-xl font-bold text-slate-900 mb-4">
@@ -158,7 +158,7 @@ export default function Sidebar() {
                   if (contactErrors.name)
                     setContactErrors({ ...contactErrors, name: "" });
                 }}
-                className="w-full px-4 py-2.5 text-sm border-2 border-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-white"
+                className="w-full px-4 py-2.5 text-sm border-2 border-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-white placeholder:font-sans"
               />
               {contactErrors.name && (
                 <p className="text-xs text-red-600 mt-1" role="alert">
@@ -186,7 +186,7 @@ export default function Sidebar() {
                   if (contactErrors.email)
                     setContactErrors({ ...contactErrors, email: "" });
                 }}
-                className="w-full px-4 py-2.5 text-sm border-2 border-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-white"
+                className="w-full px-4 py-2.5 text-sm border-2 border-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-white placeholder:font-sans"
               />
               {contactErrors.email && (
                 <p className="text-xs text-red-600 mt-1" role="alert">
@@ -244,7 +244,7 @@ export default function Sidebar() {
             <button
               type="submit"
               disabled={contactSubmitting}
-              className="w-full border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] disabled:bg-slate-400 text-[#23100A] font-bold py-2.5 px-4 rounded-lg text-sm transition-colors flex items-center justify-center gap-2"
+              className="w-full border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] disabled:bg-slate-400 text-[#23100A] font-bold py-2.5 px-4 rounded-lg text-sm transition-all duration-300 flex items-center justify-center gap-2"
             >
               {contactSubmitting && (
                 <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

@@ -50,7 +50,12 @@
               "config": {
                 "label": "Prize Level",
                 "placeholder": "Select prize level",
-                "options": ["1st Place", "2nd Place", "3rd Place", "Children's"]
+                "options": [
+                  "1st Prize",
+                  "2nd Prize",
+                  "3rd Prize",
+                  "Children's Prize"
+                ]
               }
             },
             "book_title": {
@@ -92,6 +97,17 @@
                 "thumbnails": []
               }
             },
+            "author_image": {
+              "type": "Image",
+              "config": {
+                "label": "Author Image",
+                "constraint": {
+                  "width": 300,
+                  "height": 300
+                },
+                "thumbnails": []
+              }
+            },
             "amazon_url": {
               "type": "Text",
               "config": {
@@ -100,20 +116,31 @@
               }
             },
             "winner_bio": {
-              "type": "Text",
+              "type": "StructuredText",
               "config": {
-                "label": "Winner Bio",
-                "placeholder": ""
+                "label": "Winner bio",
+                "placeholder": "",
+                "allowTargetBlank": true,
+                "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
               }
             },
             "literary_history": {
-              "type": "Text",
+              "type": "StructuredText",
               "config": {
                 "label": "Literary History",
-                "placeholder": ""
+                "placeholder": "",
+                "allowTargetBlank": true,
+                "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
               }
             }
           }
+        }
+      },
+      "slices1": {
+        "type": "Slices",
+        "fieldset": "Slice Zone",
+        "config": {
+          "choices": {}
         }
       }
     },
@@ -178,6 +205,111 @@
               }
             }
           }
+        }
+      }
+    },
+    "Press & Media": {
+      "press_media_heading": {
+        "type": "Text",
+        "config": {
+          "label": "Press & media heading",
+          "placeholder": "For press and media:"
+        }
+      },
+      "press_media_link_url": {
+        "type": "Text",
+        "config": {
+          "label": "Press link URL",
+          "placeholder": "https://example.com/press-release"
+        }
+      }
+    },
+    "Judge": {
+      "judge_section_heading": {
+        "type": "Text",
+        "config": {
+          "label": "Judge section heading",
+          "placeholder": "Judge (our 2025 Judge)"
+        }
+      },
+      "judge_name": {
+        "type": "Text",
+        "config": {
+          "label": "Judge name",
+          "placeholder": "Judge full name"
+        }
+      }
+    },
+    "Judges Comments": {
+      "judges_comments_heading": {
+        "type": "Text",
+        "config": {
+          "label": "Judges comments heading",
+          "placeholder": "Judges Comments:"
+        }
+      },
+      "judges_comments_overview": {
+        "type": "StructuredText",
+        "config": {
+          "label": "Judges comments overview",
+          "placeholder": "Overall judges comments...",
+          "multi": "paragraph,heading2,heading3,strong,em,hyperlink,list-item,o-list-item"
+        }
+      },
+      "judges_comments_first_prize": {
+        "type": "StructuredText",
+        "config": {
+          "label": "1st prize comments",
+          "placeholder": "Comments for the 1st prize book...",
+          "multi": "paragraph,strong,em,hyperlink,list-item,o-list-item"
+        }
+      },
+      "judges_comments_second_prize": {
+        "type": "StructuredText",
+        "config": {
+          "label": "2nd prize comments",
+          "placeholder": "Comments for the 2nd prize book...",
+          "multi": "paragraph,strong,em,hyperlink,list-item,o-list-item"
+        }
+      },
+      "judges_comments_third_prize": {
+        "type": "StructuredText",
+        "config": {
+          "label": "3rd prize comments",
+          "placeholder": "Comments for the 3rd prize book...",
+          "multi": "paragraph,strong,em,hyperlink,list-item,o-list-item"
+        }
+      },
+      "judges_comments_children_prize": {
+        "type": "StructuredText",
+        "config": {
+          "label": "Children's prize comments",
+          "placeholder": "Comments for the children's prize book...",
+          "multi": "paragraph,strong,em,hyperlink,list-item,o-list-item"
+        }
+      }
+    },
+    "Results & CTA": {
+      "results_paragraph": {
+        "type": "StructuredText",
+        "config": {
+          "label": "Results paragraph",
+          "placeholder": "Results were announced...",
+          "multi": "paragraph,strong,em,hyperlink"
+        }
+      },
+      "enter_cta_label": {
+        "type": "Text",
+        "config": {
+          "label": "Enter CTA label",
+          "placeholder": "Enter your book"
+        }
+      },
+      "enter_cta_url": {
+        "type": "Text",
+        "config": {
+          "label": "Enter CTA URL",
+          "placeholder": "/enter"
         }
       }
     },

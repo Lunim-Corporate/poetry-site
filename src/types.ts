@@ -104,9 +104,11 @@ export interface WinnersGridSliceData extends PrismicSlice {
       author_2?: string;
       location?: string;
       cover_image?: ImageField;
+      portrait_image?: ImageField;
       amazon_url?: string;
-      winner_bio? :string;
-      literary_history? :string;
+      winner_bio?: string;
+      winner_details?: string;
+      literary_history?: string;
     }>;
   };
 }
@@ -228,6 +230,19 @@ export interface PastWinnersYearData extends PrismicMetaFields {
   winners?: WinnerEntry[];
   shortlist?: ListEntry[];
   longlist?: ListEntry[];
+  press_media_heading?: string;
+  press_media_link_url?: string;
+  judge_section_heading?: string;
+  judge_name?: string;
+  judges_comments_heading?: string;
+  judges_comments_overview?: RichTextField;
+  judges_comments_first_prize?: RichTextField;
+  judges_comments_second_prize?: RichTextField;
+  judges_comments_third_prize?: RichTextField;
+  judges_comments_children_prize?: RichTextField;
+   results_paragraph?: RichTextField;
+   enter_cta_label?: string;
+   enter_cta_url?: string;
 }
 
 export interface WinnerEntry {
@@ -237,12 +252,11 @@ export interface WinnerEntry {
   author_2?: string;
   location?: string;
   cover_image?: ImageField;
+  author_image?: ImageField;
   amazon_url?: string;
-  // Winner details can come from either winner_bio (new text field)
-  // or winner_details (rich text, legacy / different API ID)
-  winner_bio?: RichTextField | string;
-  winner_details?: RichTextField | string;
-  literary_history?: RichTextField | string;
+  winner_bio?: RichTextField;
+  winner_details?: RichTextField; // legacy field, prefer winner_bio
+  literary_history?: RichTextField;
 }
 
 export interface ListEntry {

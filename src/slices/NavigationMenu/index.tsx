@@ -11,6 +11,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
   const pathname = usePathname();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const brandName = slice.primary.brand_name || "Maya";
@@ -51,6 +52,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
 
   useEffect(() => {
     document.body.classList.toggle("nav-open", mobileNavOpen);
+    if (!mobileNavOpen) setMobileDropdownOpen(false);
   }, [mobileNavOpen]);
 
   return (
@@ -83,18 +85,25 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
             <span className="text-[#FFE169]">{brandName}</span>
           </Link>
 
-          {/* Mobile menu button */}
-          <button
-            className="max-[899px]:flex hidden items-center gap-2 px-3 py-2 border border-slate-200 rounded-lg text-sm font-semibold hover:border-slate-300 transition-colors ml-auto"
-            onClick={() => setMobileNavOpen(true)}
-          >
-            <span className="w-4 h-3 flex flex-col justify-between">
-              <span className="w-full h-0.5 bg-current rounded" />
-              <span className="w-full h-0.5 bg-current rounded" />
-              <span className="w-full h-0.5 bg-current rounded" />
-            </span>
-            Menu
-          </button>
+          {/* Mobile menu button + Contact Us */}
+          <div className="max-[899px]:flex hidden items-center gap-4 ml-auto">
+            <Link
+              href="/#contact-form"
+              className="text-sm font-medium text-white hover:text-white/80 transition-colors"
+            >
+              Contact Us
+            </Link>
+            <button
+              className="flex items-center p-1 text-white transition-colors"
+              onClick={() => setMobileNavOpen(true)}
+            >
+              <span className="w-5 h-4 flex flex-col justify-between">
+                <span className="w-full h-0.5 bg-white rounded" />
+                <span className="w-full h-0.5 bg-white rounded" />
+                <span className="w-full h-0.5 bg-white rounded" />
+              </span>
+            </button>
+          </div>
 
           {/* Desktop nav */}
           <nav className="hidden min-[900px]:flex items-center gap-1">
@@ -105,7 +114,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                 className={`px-4 py-2 text-sm font-medium transition-colors ${
                   isActive(link.url)
                     ? "text-[#FFE169] underline underline-offset-4 decoration-[#FFE169]"
-                    : "text-white hover:text-[#FFE169] hover:underline hover:underline-offset-4 hover:decoration-[#FFE169]"
+                    : "text-white hover:underline hover:underline-offset-4 hover:decoration-white"
                 }`}
               >
                 {link.label}
@@ -120,21 +129,19 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                   className={`px-4 py-2 text-sm font-medium transition-colors ${
                     isPastWinnersActive()
                       ? "text-[#FFE169] underline underline-offset-4 decoration-[#FFE169]"
-                      : "text-white hover:text-[#FFE169] hover:underline hover:underline-offset-4 hover:decoration-[#FFE169]"
+                      : "text-white hover:underline hover:underline-offset-4 hover:decoration-white"
                   }`}
                 >
                   Past Winners
                 </Link>
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className={`px-2 py-2 text-sm transition-colors border-l border-white/20 ${
-                    isPastWinnersActive()
-                      ? "text-[#FFE169]"
-                      : "text-white hover:text-[#FFE169]"
+                  className={`px-2 py-2 transition-colors border-l border-white/20 ${
+                    isPastWinnersActive() ? "text-[#FFE169]" : "text-white"
                   }`}
                 >
                   <span
-                    className={`inline-block transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
+                    className={`inline-block text-xl leading-none transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
                   >
                     ▾
                   </span>
@@ -161,20 +168,20 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
               className={`px-4 py-2 text-sm font-medium transition-colors ${
                 pathname === "/enter"
                   ? "text-[#FFE169] underline underline-offset-4 decoration-[#FFE169]"
-                  : "text-white hover:text-[#FFE169] hover:underline hover:underline-offset-4 hover:decoration-[#FFE169]"
+                  : "text-white hover:underline hover:underline-offset-4 hover:decoration-white"
               }`}
             >
               The Rules
             </Link>
             <Link
               href="/#faq"
-              className="px-4 py-2 text-sm font-medium text-white hover:text-[#FFE169] hover:underline hover:underline-offset-4 hover:decoration-[#FFE169] transition-colors"
+              className="px-4 py-2 text-sm font-medium text-white hover:underline hover:underline-offset-4 hover:decoration-white transition-colors"
             >
               FAQ
             </Link>
             <Link
               href="/#contact-form"
-              className="px-4 py-2 text-sm font-medium text-white hover:text-[#FFE169] hover:underline hover:underline-offset-4 hover:decoration-[#FFE169] transition-colors"
+              className="px-4 py-2 text-sm font-medium text-white hover:underline hover:underline-offset-4 hover:decoration-white transition-colors"
             >
               Contact Us
             </Link>
@@ -188,14 +195,14 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                 onClick={() => setMobileNavOpen(false)}
               />
               <nav className="fixed top-4 right-4 w-[min(360px,calc(100vw-2rem))] max-h-[calc(100vh-2rem)] p-5 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 flex flex-col gap-2 overflow-y-auto">
-                <div className="flex items-center justify-between pb-4 border-b border-slate-200 mb-2">
+                <button
+                  onClick={() => setMobileNavOpen(false)}
+                  className="absolute top-2.5 right-2.5 px-3 py-1.5 text-sm font-semibold border border-slate-200 rounded-lg hover:border-slate-300 transition-colors"
+                >
+                  Close
+                </button>
+                <div className="pb-4 border-b border-slate-200 mb-2">
                   <span className="font-bold text-slate-900">Menu</span>
-                  <button
-                    onClick={() => setMobileNavOpen(false)}
-                    className="px-3 py-1.5 text-sm font-semibold border border-slate-200 rounded-lg hover:border-slate-300 transition-colors"
-                  >
-                    Close
-                  </button>
                 </div>
 
                 <Link
@@ -239,24 +246,24 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                       Past Winners
                     </Link>
                     <button
-                      onClick={() => setDropdownOpen(!dropdownOpen)}
+                      onClick={() => setMobileDropdownOpen(!mobileDropdownOpen)}
                       className="px-4 py-3 rounded-r-lg border-l border-slate-200 text-slate-400 hover:bg-slate-100 transition-colors"
                     >
                       <span
-                        className={`inline-block transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
+                        className={`inline-block transition-transform ${mobileDropdownOpen ? "rotate-180" : ""}`}
                       >
                         ▾
                       </span>
                     </button>
                   </div>
-                  {dropdownOpen && (
+                  {mobileDropdownOpen && (
                     <div className="ml-4 p-2 border border-slate-200 rounded-lg space-y-1">
                       {pastWinnersYears.map((year) => (
                         <Link
                           key={year}
                           href={`/past-winners/${year}`}
                           onClick={() => {
-                            setDropdownOpen(false);
+                            setMobileDropdownOpen(false);
                             setMobileNavOpen(false);
                           }}
                           className="block px-3 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"

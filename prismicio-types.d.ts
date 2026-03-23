@@ -488,7 +488,7 @@ export interface PastWinnersYearDocumentDataWinnersItem {
    * - **Documentation**: https://prismic.io/docs/fields/select
    */
   prize_level: prismic.SelectField<
-    "1st Place" | "2nd Place" | "3rd Place" | "Children's"
+    "1st Prize" | "2nd Prize" | "3rd Prize" | "Children's Prize"
   >;
 
   /**
@@ -542,6 +542,16 @@ export interface PastWinnersYearDocumentDataWinnersItem {
   cover_image: prismic.ImageField<never>;
 
   /**
+   * Author Image field in *Past Winners Year → Winners*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: past_winners_year.winners[].author_image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  author_image: prismic.ImageField<never>;
+
+  /**
    * Amazon URL field in *Past Winners Year → Winners*
    *
    * - **Field Type**: Text
@@ -550,7 +560,29 @@ export interface PastWinnersYearDocumentDataWinnersItem {
    * - **Documentation**: https://prismic.io/docs/fields/text
    */
   amazon_url: prismic.KeyTextField;
+
+  /**
+   * Winner bio field in *Past Winners Year → Winners*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: past_winners_year.winners[].winner_bio
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  winner_bio: prismic.RichTextField;
+
+  /**
+   * Literary History field in *Past Winners Year → Winners*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: past_winners_year.winners[].literary_history
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  literary_history: prismic.RichTextField;
 }
+
+type PastWinnersYearDocumentDataSlices1Slice = never;
 
 /**
  * Item in *Past Winners Year → Shortlist*
@@ -655,9 +687,18 @@ interface PastWinnersYearDocumentData {
    * - **Tab**: Winners
    * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
    */
-  winners: prismic.GroupField<
-    Simplify<PastWinnersYearDocumentDataWinnersItem>
-  >; /**
+  winners: prismic.GroupField<Simplify<PastWinnersYearDocumentDataWinnersItem>>;
+
+  /**
+   * Slice Zone field in *Past Winners Year*
+   *
+   * - **Field Type**: Slice Zone
+   * - **Placeholder**: *None*
+   * - **API ID Path**: past_winners_year.slices1[]
+   * - **Tab**: Winners
+   * - **Documentation**: https://prismic.io/docs/slices
+   */
+  slices1: prismic.SliceZone<PastWinnersYearDocumentDataSlices1Slice>; /**
    * Shortlist field in *Past Winners Year*
    *
    * - **Field Type**: Group
@@ -680,6 +721,141 @@ interface PastWinnersYearDocumentData {
   longlist: prismic.GroupField<
     Simplify<PastWinnersYearDocumentDataLonglistItem>
   >; /**
+   * Press & media heading field in *Past Winners Year*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: For press and media:
+   * - **API ID Path**: past_winners_year.press_media_heading
+   * - **Tab**: Press & Media
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  press_media_heading: prismic.KeyTextField;
+
+  /**
+   * Press link URL field in *Past Winners Year*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: https://example.com/press-release
+   * - **API ID Path**: past_winners_year.press_media_link_url
+   * - **Tab**: Press & Media
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  press_media_link_url: prismic.KeyTextField; /**
+   * Judge section heading field in *Past Winners Year*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: Judge (our 2025 Judge)
+   * - **API ID Path**: past_winners_year.judge_section_heading
+   * - **Tab**: Judge
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  judge_section_heading: prismic.KeyTextField;
+
+  /**
+   * Judge name field in *Past Winners Year*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: Judge full name
+   * - **API ID Path**: past_winners_year.judge_name
+   * - **Tab**: Judge
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  judge_name: prismic.KeyTextField; /**
+   * Judges comments heading field in *Past Winners Year*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: Judges Comments:
+   * - **API ID Path**: past_winners_year.judges_comments_heading
+   * - **Tab**: Judges Comments
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  judges_comments_heading: prismic.KeyTextField;
+
+  /**
+   * Judges comments overview field in *Past Winners Year*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: Overall judges comments...
+   * - **API ID Path**: past_winners_year.judges_comments_overview
+   * - **Tab**: Judges Comments
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  judges_comments_overview: prismic.RichTextField;
+
+  /**
+   * 1st prize comments field in *Past Winners Year*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: Comments for the 1st prize book...
+   * - **API ID Path**: past_winners_year.judges_comments_first_prize
+   * - **Tab**: Judges Comments
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  judges_comments_first_prize: prismic.RichTextField;
+
+  /**
+   * 2nd prize comments field in *Past Winners Year*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: Comments for the 2nd prize book...
+   * - **API ID Path**: past_winners_year.judges_comments_second_prize
+   * - **Tab**: Judges Comments
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  judges_comments_second_prize: prismic.RichTextField;
+
+  /**
+   * 3rd prize comments field in *Past Winners Year*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: Comments for the 3rd prize book...
+   * - **API ID Path**: past_winners_year.judges_comments_third_prize
+   * - **Tab**: Judges Comments
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  judges_comments_third_prize: prismic.RichTextField;
+
+  /**
+   * Children's prize comments field in *Past Winners Year*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: Comments for the children's prize book...
+   * - **API ID Path**: past_winners_year.judges_comments_children_prize
+   * - **Tab**: Judges Comments
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  judges_comments_children_prize: prismic.RichTextField; /**
+   * Results paragraph field in *Past Winners Year*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: Results were announced...
+   * - **API ID Path**: past_winners_year.results_paragraph
+   * - **Tab**: Results & CTA
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  results_paragraph: prismic.RichTextField;
+
+  /**
+   * Enter CTA label field in *Past Winners Year*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: Enter your book
+   * - **API ID Path**: past_winners_year.enter_cta_label
+   * - **Tab**: Results & CTA
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  enter_cta_label: prismic.KeyTextField;
+
+  /**
+   * Enter CTA URL field in *Past Winners Year*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: /enter
+   * - **API ID Path**: past_winners_year.enter_cta_url
+   * - **Tab**: Results & CTA
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  enter_cta_url: prismic.KeyTextField; /**
    * Meta Title field in *Past Winners Year*
    *
    * - **Field Type**: Text
@@ -1932,6 +2108,36 @@ export interface WinnersGridSliceDefaultPrimaryItemsItem {
    * - **Documentation**: https://prismic.io/docs/fields/text
    */
   amazon_url: prismic.KeyTextField;
+
+  /**
+   * Winner Bio field in *WinnersGrid → Default → Primary → Winners*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: Bio and background about the winner (shown in left column of spotlight)
+   * - **API ID Path**: winners_grid.default.primary.items[].winner_details
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  winner_details: prismic.RichTextField;
+
+  /**
+   * Portrait Image field in *WinnersGrid → Default → Primary → Winners*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: winners_grid.default.primary.items[].portrait_image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  portrait_image: prismic.ImageField<never>;
+
+  /**
+   * Literary History field in *WinnersGrid → Default → Primary → Winners*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: Literary history and previous works (shown in right column of spotlight)
+   * - **API ID Path**: winners_grid.default.primary.items[].literary_history
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  literary_history: prismic.RichTextField;
 }
 
 /**
@@ -2028,6 +2234,7 @@ declare module "@prismicio/client" {
       PastWinnersYearDocumentData,
       PastWinnersYearDocumentDataSlicesSlice,
       PastWinnersYearDocumentDataWinnersItem,
+      PastWinnersYearDocumentDataSlices1Slice,
       PastWinnersYearDocumentDataShortlistItem,
       PastWinnersYearDocumentDataLonglistItem,
       PrimaryNavigationDocument,
