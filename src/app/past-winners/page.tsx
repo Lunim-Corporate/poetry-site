@@ -107,7 +107,7 @@ export default async function PastWinnersPage() {
                       </div>
 
                     {/* Winners row */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:[grid-template-columns:1.4fr_1fr_1fr_1fr] md:divide-x md:divide-dashed md:divide-slate-300 bg-[#F9F5EF]">
+                    <div className="grid grid-cols-2 gap-4 sm:gap-8 md:gap-0 md:grid-cols-4 [grid-template-columns:1.4fr_1fr_1fr_1fr] md:divide-x md:divide-dashed md:divide-slate-300 bg-[#F9F5EF]">
                       {PRIZE_ORDER.map((level, index) => {
                         const winner = winners.find(
                           (w) => w.prize_level === level
@@ -124,7 +124,7 @@ export default async function PastWinnersPage() {
                         return (
                           <div key={level} className="contents">
                             <div
-                              className="px-2 py-3 md:px-4 md:py-4 flex flex-col items-center md:pt-4"
+                              className="py-3 md:px-4 md:py-4 flex flex-col items-center md:pt-4"
                             >
                             {/* Mobile-only: keep heading directly above cover */}
                             <p
@@ -212,7 +212,7 @@ export default async function PastWinnersPage() {
                   <div className="mt-4 text-right">
                     <Link
                       href={`/past-winners/${yearNumber}`}
-                      className="text-sm font-medium text-slate-700 hover:text-primary transition-colors underline underline-offset-2"
+                      className="text-md font-medium text-slate-700 hover:text-primary transition-colors underline underline-offset-2"
                     >
                       More details plus the {yearNumber} shortlist &raquo;
                     </Link>
