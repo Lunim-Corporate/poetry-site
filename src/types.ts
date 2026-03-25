@@ -261,6 +261,7 @@ export interface WinnerEntry {
 
 export interface ListEntry {
   book_title: string;
+  book_link?: string;
   author: string;
   location?: string;
 }

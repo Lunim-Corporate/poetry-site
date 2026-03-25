@@ -65,6 +65,13 @@
                 "placeholder": ""
               }
             },
+            "book_link": {
+              "type": "Text",
+              "config": {
+                "label": "Book link (URL)",
+                "placeholder": "https://example.com/book"
+              }
+            },
             "author": {
               "type": "Text",
               "config": {
@@ -158,6 +165,13 @@
                 "placeholder": ""
               }
             },
+            "book_link": {
+              "type": "Text",
+              "config": {
+                "label": "Book link (URL)",
+                "placeholder": "https://example.com/book"
+              }
+            },
             "author": {
               "type": "Text",
               "config": {
@@ -188,6 +202,13 @@
               "config": {
                 "label": "Book Title",
                 "placeholder": ""
+              }
+            },
+            "book_link": {
+              "type": "Text",
+              "config": {
+                "label": "Book link (URL)",
+                "placeholder": "https://example.com/book"
               }
             },
             "author": {
