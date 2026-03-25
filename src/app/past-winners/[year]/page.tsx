@@ -467,9 +467,29 @@ export default async function WinnersYearPage({ params }: PageProps) {
                       <li key={index} className="flex items-start gap-2 text-sm">
                         <span className="mt-1 text-slate-500">•</span>
                         <p className="text-slate-700">
-                          <strong className="text-slate-900 font-semibold">
-                            {entry.book_title}
-                          </strong>{" "}
+                          {entry.book_link ? (
+                            /^https?:\/\//.test(entry.book_link) ? (
+                              <a
+                                href={entry.book_link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-slate-900 font-semibold hover:text-primary transition-colors"
+                              >
+                                {entry.book_title}
+                              </a>
+                            ) : (
+                              <Link
+                                href={entry.book_link}
+                                className="text-slate-900 font-semibold hover:text-primary transition-colors"
+                              >
+                                {entry.book_title}
+                              </Link>
+                            )
+                          ) : (
+                            <strong className="text-slate-900 font-semibold">
+                              {entry.book_title}
+                            </strong>
+                          )}{" "}
                           —{" "}
                           <em className="text-slate-700">{entry.author}</em>
                           {entry.location && (
@@ -501,9 +521,29 @@ export default async function WinnersYearPage({ params }: PageProps) {
                       <li key={index} className="flex items-start gap-2 text-sm">
                         <span className="mt-1 text-slate-500">•</span>
                         <p className="text-slate-700">
-                          <strong className="text-slate-900 font-semibold">
-                            {entry.book_title}
-                          </strong>{" "}
+                          {entry.book_link ? (
+                            /^https?:\/\//.test(entry.book_link) ? (
+                              <a
+                                href={entry.book_link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-slate-900 font-semibold hover:text-primary transition-colors"
+                              >
+                                {entry.book_title}
+                              </a>
+                            ) : (
+                              <Link
+                                href={entry.book_link}
+                                className="text-slate-900 font-semibold hover:text-primary transition-colors"
+                              >
+                                {entry.book_title}
+                              </Link>
+                            )
+                          ) : (
+                            <strong className="text-slate-900 font-semibold">
+                              {entry.book_title}
+                            </strong>
+                          )}{" "}
                           —{" "}
                           <em className="text-slate-700">{entry.author}</em>
                           {entry.location && (
