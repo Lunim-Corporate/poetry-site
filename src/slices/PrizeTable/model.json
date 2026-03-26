@@ -21,7 +21,7 @@
                 "type": "Text",
                 "config": {
                   "label": "Prize Level",
-                  "placeholder": "1st Place"
+                  "placeholder": "1st Prize"
                 }
               },
               "amount": {

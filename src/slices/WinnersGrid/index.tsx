@@ -8,9 +8,9 @@ const proseClasses =
 
 export default function WinnersGrid({ slice }: SliceComponentProps<WinnersGridSliceData>) {
   const winners = slice.primary.items || [];
-  const firstPlace = winners.find(w => w.prize_level === "1st Place");
-  const remainingWinners = winners.filter(w => w.prize_level !== "1st Place");
-  const remainingOrder = PRIZE_ORDER.filter(l => l !== "1st Place");
+  const firstPlace = winners.find(w => w.prize_level === "1st Prize");
+  const remainingWinners = winners.filter(w => w.prize_level !== "1st Prize");
+  const remainingOrder = PRIZE_ORDER.filter(l => l !== "1st Prize");
 
   return (
     <div

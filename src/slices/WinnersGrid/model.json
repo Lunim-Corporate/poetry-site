@@ -30,10 +30,10 @@
                   "label": "Prize Level",
                   "placeholder": "Select prize level",
                   "options": [
-                    "1st Place",
-                    "2nd Place",
-                    "3rd Place",
-                    "Children's"
+                    "1st Prize",
+                    "2nd Prize",
+                    "3rd Prize",
+                    "Children's Prize"
                   ]
                 }
               },
