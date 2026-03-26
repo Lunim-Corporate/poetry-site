@@ -79,6 +79,20 @@ export default async function PastWinnersPage() {
           {parsedYearDocs.length > 0 ? (
             parsedYearDocs.map(({ yearNumber, data }) => {
               const winners: WinnerEntry[] = data.winners ?? [];
+              const childrenWinner = winners.find(
+                (w) => w.prize_level === "Children's Prize"
+              );
+              const hasChildrenPrize = Boolean(childrenWinner?.book_title);
+              const prizeOrder = hasChildrenPrize
+                ? PRIZE_ORDER
+                : PRIZE_ORDER.filter((level) => level !== "Children's Prize");
+
+              const mdGridColsClass = hasChildrenPrize
+                ? "md:grid-cols-4"
+                : "md:grid-cols-3";
+              const lgGridTemplateClass = hasChildrenPrize
+                ? "lg:[grid-template-columns:1.4fr_1fr_1fr_1fr]"
+                : "lg:[grid-template-columns:1.4fr_1fr_1fr]";
 
               return (
                 <section
@@ -91,8 +105,8 @@ export default async function PastWinnersPage() {
 
                   <div className="md:border md:border-[#B7A08F] rounded-2xl overflow-hidden bg-[#F9F5EF]">
                     {/* Header row */}
-                      <div className="hidden md:grid md:grid-cols-4 lg:[grid-template-columns:1.4fr_1fr_1fr_1fr] border-b border-[#B7A08F] text-center text-sm bg-[#FFFEFA]">
-                        {PRIZE_ORDER.map((level, index) => (
+                      <div className={`hidden md:grid ${mdGridColsClass} ${lgGridTemplateClass} border-b border-[#B7A08F] text-center text-sm bg-[#FFFEFA]`}>
+                        {prizeOrder.map((level, index) => (
                           <div
                             key={level}
                             className={`py-3 ${
@@ -107,8 +121,8 @@ export default async function PastWinnersPage() {
                       </div>
 
                     {/* Winners row */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:[grid-template-columns:1.4fr_1fr_1fr_1fr] md:divide-x md:divide-dashed md:divide-slate-300 bg-[#F9F5EF]">
-                      {PRIZE_ORDER.map((level, index) => {
+                    <div className={`grid grid-cols-2 ${mdGridColsClass} ${lgGridTemplateClass} md:divide-x md:divide-dashed md:divide-slate-300 bg-[#F9F5EF]`}>
+                      {prizeOrder.map((level, index) => {
                         const winner = winners.find(
                           (w) => w.prize_level === level
                         );

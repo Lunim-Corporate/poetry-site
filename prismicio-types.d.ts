@@ -2046,7 +2046,7 @@ export interface WinnersGridSliceDefaultPrimaryItemsItem {
    * - **Documentation**: https://prismic.io/docs/fields/select
    */
   prize_level: prismic.SelectField<
-    "1st Place" | "2nd Place" | "3rd Place" | "Children's"
+    "1st Prize" | "2nd Prize" | "3rd Prize" | "Children's"
   >;
 
   /**

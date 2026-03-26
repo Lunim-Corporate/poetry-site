@@ -141,7 +141,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
             {winners.length > 0 && (
               (() => {
                 const firstPrize = winners.find(
-                  (w) => w.prize_level === "1st Place"
+                  (w) => w.prize_level === "1st Prize"
                 );
 
                 if (!firstPrize) return null;
@@ -254,7 +254,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
             {/* 2nd, 3rd & Children's Prize detail sections (same format as 1st) */}
             {winners.length > 0 && (
               <div className="space-y-8">
-                {["2nd Place", "3rd Place", "Children's"].map((level) => {
+                {["2nd Prize", "3rd Prize", "Children's Prize"].map((level) => {
                   const prizeWinner = winners.find((w) => w.prize_level === level);
 
                   if (!prizeWinner) return null;
