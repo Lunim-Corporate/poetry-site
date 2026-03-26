@@ -38,6 +38,12 @@ export default async function WinnersYearPage({ params }: PageProps) {
     const winners: WinnerEntry[] = data.winners ?? [];
     const shortlist: ListEntry[] = data.shortlist ?? [];
     const longlist: ListEntry[] = data.longlist ?? [];
+    const judgesPrizeComments = [
+      data.judges_comments_first_prize,
+      data.judges_comments_second_prize,
+      data.judges_comments_third_prize,
+      data.judges_comments_children_prize,
+    ].filter(Boolean) as RichTextField[];
 
     return (
       <>
@@ -415,39 +421,20 @@ export default async function WinnersYearPage({ params }: PageProps) {
                   </div>
                 </div>
 
-                <div className="space-y-6  pt-6 border-t border-slate-200">
-                  {data.judges_comments_first_prize && (
-                    <div>
-                      <div className={proseClasses}>
-                        <PrismicRichText field={data.judges_comments_first_prize} />
+                {judgesPrizeComments.length > 0 && (
+                  <div className="space-y-6 border-t pt-6 border-slate-200">
+                    {judgesPrizeComments.map((comment, index) => (
+                      <div
+                        key={index}
+                        className={index > 0 && comment.length > 0 ? "border-t pt-6 border-slate-200" : ""}
+                      >
+                        <div className={proseClasses}>
+                          <PrismicRichText field={comment} />
+                        </div>
                       </div>
-                    </div>
-                  )}
-
-                  {data.judges_comments_second_prize && (
-                    <div className="border-t pt-6 border-slate-200">
-                      <div className={proseClasses}>
-                        <PrismicRichText field={data.judges_comments_second_prize} />
-                      </div>
-                    </div>
-                  )}
-
-                  {data.judges_comments_third_prize && (
-                    <div className="border-t pt-6 border-slate-200">
-                      <div className={proseClasses}>
-                        <PrismicRichText field={data.judges_comments_third_prize} />
-                      </div>
-                    </div>
-                  )}
-
-                  {data.judges_comments_children_prize && (
-                    <div className="border-t pt-6 border-slate-200">
-                      <div className={proseClasses}>
-                        <PrismicRichText field={data.judges_comments_children_prize} />
-                      </div>
-                    </div>
-                  )}
-                </div>
+                    ))}
+                  </div>
+                )}
               </section>
             )}
 
@@ -473,14 +460,14 @@ export default async function WinnersYearPage({ params }: PageProps) {
                                 href={entry.book_link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-slate-900 font-semibold hover:text-primary transition-colors"
+                                className="text-slate-900 font-semibold underline hover:no-underline hover:text-primary transition-colors"
                               >
                                 {entry.book_title}
                               </a>
                             ) : (
                               <Link
                                 href={entry.book_link}
-                                className="text-slate-900 font-semibold hover:text-primary transition-colors"
+                                className="text-slate-900 font-semibold underline hover:no-underline hover:text-primary transition-colors"
                               >
                                 {entry.book_title}
                               </Link>
@@ -527,14 +514,14 @@ export default async function WinnersYearPage({ params }: PageProps) {
                                 href={entry.book_link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-slate-900 font-semibold hover:text-primary transition-colors"
+                                className="text-slate-900 font-semibold underline hover:no-underline hover:text-primary transition-colors"
                               >
                                 {entry.book_title}
                               </a>
                             ) : (
                               <Link
                                 href={entry.book_link}
-                                className="text-slate-900 font-semibold hover:text-primary transition-colors"
+                                className="text-slate-900 font-semibold underline hover:no-underline hover:text-primary transition-colors"
                               >
                                 {entry.book_title}
                               </Link>
