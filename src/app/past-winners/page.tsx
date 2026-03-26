@@ -107,7 +107,7 @@ export default async function PastWinnersPage() {
                       </div>
 
                     {/* Winners row */}
-                    <div className="grid grid-cols-2 gap-4 sm:gap-8 md:gap-0 md:grid-cols-4 [grid-template-columns:1.4fr_1fr_1fr_1fr] md:divide-x md:divide-dashed md:divide-slate-300 bg-[#F9F5EF]">
+                    <div className="grid grid-cols-2 gap-4 sm:gap-8 md:gap-0 md:[grid-template-columns:1.4fr_1fr_1fr_1fr] md:divide-x md:divide-dashed md:divide-slate-300 bg-[#F9F5EF]">
                       {PRIZE_ORDER.map((level, index) => {
                         const winner = winners.find(
                           (w) => w.prize_level === level
