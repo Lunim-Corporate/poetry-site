@@ -33,7 +33,15 @@ export default async function WinnersYearPage({ params }: PageProps) {
   if (doc) {
     const data = doc.data as unknown as PastWinnersYearData;
     const allSlices = (data.slices ?? []) as PrismicSlice[];
-    const heroSlices = allSlices.filter((s) => s.slice_type === "hero");
+    const heroSlices = allSlices
+      .filter((s) => s.slice_type === "hero")
+      .map((s) => ({
+        ...s,
+        primary: {
+          ...s.primary,
+          variant: "small",
+        },
+      }));
 
     const winners: WinnerEntry[] = data.winners ?? [];
     const shortlist: ListEntry[] = data.shortlist ?? [];
