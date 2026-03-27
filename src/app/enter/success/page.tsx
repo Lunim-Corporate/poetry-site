@@ -69,6 +69,7 @@ export default async function SuccessPage({
 
   const entrantName = intent.metadata?.entrant_name ?? "Entrant";
   const entrantEmail = intent.metadata?.entrant_email ?? "";
+  const entrantPhone = intent.metadata?.entrant_phone ?? "";
   const bookCount = Number(intent.metadata?.book_count ?? 1);
   const totalGBP = intent.metadata?.total_gbp ?? "0";
   const bookLabel = bookCount === 1 ? "book" : "books";
@@ -107,6 +108,7 @@ export default async function SuccessPage({
       sheetRowUrl = await appendEntryToSheet({
         name: entrantName,
         email: entrantEmail,
+        phone: entrantPhone,
         quantity: bookCount,
         priceGBP: Number(totalGBP),
         paymentId: intentId,

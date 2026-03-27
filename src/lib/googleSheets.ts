@@ -3,6 +3,7 @@ import { google } from "googleapis";
 export interface EntryRow {
   name: string;
   email: string;
+  phone: string;
   quantity: number;
   priceGBP: number;
   paymentId: string;
@@ -29,16 +30,17 @@ export async function appendEntryToSheet(entry: EntryRow): Promise<string> {
 
   const response = await sheets.spreadsheets.values.append({
     spreadsheetId,
-    range: "Sheet1!A:G",
-    valueInputOption: "USER_ENTERED",
+    range: "Sheet1!A:H",
+    valueInputOption: "RAW",
     requestBody: {
       values: [
         [
           timestamp,
           entry.name,
           entry.email,
+          entry.phone,
           entry.quantity,
-          `£${entry.priceGBP}`,
+          "\u00A3" + entry.priceGBP,
           entry.paymentId,
           "paid",
         ],
@@ -46,7 +48,7 @@ export async function appendEntryToSheet(entry: EntryRow): Promise<string> {
     },
   });
 
-  // Extract the row number from the updated range (e.g. "Sheet1!A5:G5") and
+  // Extract the row number from the updated range (e.g. "Sheet1!A5:H5") and
   // build a direct link so admins can jump straight to this entry.
   const updatedRange = response.data.updates?.updatedRange ?? "";
   const rowMatch = updatedRange.match(/[A-Z](\d+):/);

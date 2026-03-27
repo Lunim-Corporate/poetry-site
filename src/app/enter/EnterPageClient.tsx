@@ -36,6 +36,51 @@ const RULES = [
   "By entering this competition, each entrant agrees to be bound by these rules.",
 ];
 
+const PHONE_COUNTRY_CODES = [
+  { value: "+44", label: "United Kingdom (+44)" },
+  { value: "+1", label: "United States/Canada (+1)" },
+  { value: "+353", label: "Ireland (+353)" },
+  { value: "+61", label: "Australia (+61)" },
+  { value: "+64", label: "New Zealand (+64)" },
+  { value: "+27", label: "South Africa (+27)" },
+  { value: "+91", label: "India (+91)" },
+  { value: "+92", label: "Pakistan (+92)" },
+  { value: "+880", label: "Bangladesh (+880)" },
+  { value: "+81", label: "Japan (+81)" },
+  { value: "+82", label: "South Korea (+82)" },
+  { value: "+86", label: "China (+86)" },
+  { value: "+65", label: "Singapore (+65)" },
+  { value: "+60", label: "Malaysia (+60)" },
+  { value: "+63", label: "Philippines (+63)" },
+  { value: "+971", label: "United Arab Emirates (+971)" },
+  { value: "+49", label: "Germany (+49)" },
+  { value: "+33", label: "France (+33)" },
+  { value: "+34", label: "Spain (+34)" },
+  { value: "+39", label: "Italy (+39)" },
+  { value: "+31", label: "Netherlands (+31)" },
+  { value: "+32", label: "Belgium (+32)" },
+  { value: "+41", label: "Switzerland (+41)" },
+  { value: "+46", label: "Sweden (+46)" },
+  { value: "+47", label: "Norway (+47)" },
+  { value: "+45", label: "Denmark (+45)" },
+  { value: "+358", label: "Finland (+358)" },
+  { value: "+48", label: "Poland (+48)" },
+  { value: "+351", label: "Portugal (+351)" },
+  { value: "+30", label: "Greece (+30)" },
+  { value: "+420", label: "Czech Republic (+420)" },
+  { value: "+36", label: "Hungary (+36)" },
+  { value: "+40", label: "Romania (+40)" },
+  { value: "+7", label: "Kazakhstan/Russia (+7)" },
+  { value: "+55", label: "Brazil (+55)" },
+  { value: "+52", label: "Mexico (+52)" },
+  { value: "+54", label: "Argentina (+54)" },
+  { value: "+56", label: "Chile (+56)" },
+  { value: "+57", label: "Colombia (+57)" },
+  { value: "+234", label: "Nigeria (+234)" },
+  { value: "+254", label: "Kenya (+254)" },
+  { value: "+20", label: "Egypt (+20)" },
+];
+
 function buildBookPrices(priceSingle: number, priceMultiple: number) {
   const prices: Record<number, number> = {};
   for (let i = 1; i <= 6; i++) {
@@ -73,16 +118,26 @@ function getStepMessage(targetStep: number, action: string): string {
   }
 }
 
+function getFormattedPhoneNumber(countryCode: string, phoneNumber: string): string {
+  const trimmedPhoneNumber = phoneNumber.trim();
+  if (!trimmedPhoneNumber || !countryCode) return "";
+  return `${countryCode} ${trimmedPhoneNumber}`;
+}
+
 export default function EnterPageClient({
   settings,
-  cancelled,
 }: {
   settings: EnterPageSettings;
-  cancelled?: boolean;
 }) {
   const [currentStep, setCurrentStep] = useState<Step>(1);
   const [rulesConfirmed, setRulesConfirmed] = useState(false);
-  const [formData, setFormData] = useState({ name: "", email: "", bookCount: 0 });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phoneCountryCode: "",
+    phoneNumber: "",
+    bookCount: 0,
+  });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [isFetchingIntent, setIsFetchingIntent] = useState(false);
@@ -132,6 +187,8 @@ export default function EnterPageClient({
     if (!formData.name.trim()) newErrors.name = "Please enter your name.";
     if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
       newErrors.email = "Please enter a valid email address.";
+    if (formData.phoneNumber.trim() && !formData.phoneCountryCode)
+      newErrors.phoneNumber = "Please select a country code for the phone number.";
     if (!formData.bookCount)
       newErrors.bookCount = "Please select how many books you'd like to enter.";
     setErrors(newErrors);
@@ -152,6 +209,7 @@ export default function EnterPageClient({
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
+          phone: getFormattedPhoneNumber(formData.phoneCountryCode, formData.phoneNumber),
           bookCount: formData.bookCount,
         }),
       });
@@ -335,6 +393,47 @@ export default function EnterPageClient({
                   />
                   {errors.email && (
                     <p className="text-xs text-red-600 mt-1" role="alert">{errors.email}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1" htmlFor="entry-phone-number">
+                    Phone number (optional)
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-[200px_minmax(0,1fr)] gap-3">
+                    <select
+                      id="entry-phone-country-code"
+                      name="phoneCountryCode"
+                      value={formData.phoneCountryCode}
+                      onChange={(e) => {
+                        setFormData({ ...formData, phoneCountryCode: e.target.value });
+                        if (errors.phoneNumber) setErrors({ ...errors, phoneNumber: "" });
+                      }}
+                      className="w-full px-4 py-2.5 text-sm border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                    >
+                      <option value="">Country code</option>
+                      {PHONE_COUNTRY_CODES.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                    <input
+                      id="entry-phone-number"
+                      type="tel"
+                      name="phoneNumber"
+                      inputMode="tel"
+                      autoComplete="tel-national"
+                      value={formData.phoneNumber}
+                      onChange={(e) => {
+                        setFormData({ ...formData, phoneNumber: e.target.value });
+                        if (errors.phoneNumber) setErrors({ ...errors, phoneNumber: "" });
+                      }}
+                      className="w-full px-4 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                    />
+                  </div>
+                  {errors.phoneNumber && (
+                    <p className="text-xs text-red-600 mt-1" role="alert">{errors.phoneNumber}</p>
                   )}
                 </div>
 

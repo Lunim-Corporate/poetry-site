@@ -21,9 +21,10 @@ function calculateTotal(
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, bookCount } = body as {
+    const { name, email, phone, bookCount } = body as {
       name: string;
       email: string;
+      phone?: string;
       bookCount: number;
     };
 
@@ -58,6 +59,7 @@ export async function POST(request: NextRequest) {
       metadata: {
         entrant_name: name,
         entrant_email: email,
+        entrant_phone: phone?.trim() ?? "",
         book_count: String(bookCount),
         total_gbp: String(totalGBP),
       },
