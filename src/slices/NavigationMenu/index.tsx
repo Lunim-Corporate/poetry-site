@@ -12,6 +12,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
+  const [rulesStepParam, setRulesStepParam] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const brandName = slice.primary.brand_name || "Maya";
@@ -28,6 +29,20 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
   };
 
   const isPastWinnersActive = () => pathname.startsWith("/past-winners");
+  const isRulesStage = pathname === "/enter" && (!rulesStepParam || rulesStepParam === "1");
+
+  const closeMobileNav = () => {
+    setMobileNavOpen(false);
+    setMobileDropdownOpen(false);
+  };
+
+  const handleRulesNavClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname === "/enter") {
+      event.preventDefault();
+      window.dispatchEvent(new CustomEvent("enter-wizard-go-to-step", { detail: 1 }));
+    }
+    closeMobileNav();
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -52,8 +67,27 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
 
   useEffect(() => {
     document.body.classList.toggle("nav-open", mobileNavOpen);
-    if (!mobileNavOpen) setMobileDropdownOpen(false);
   }, [mobileNavOpen]);
+
+  useEffect(() => {
+    const syncRulesStep = () => {
+      const nextUrl = new URL(window.location.href);
+      setRulesStepParam(nextUrl.searchParams.get("step"));
+    };
+
+    const handleWizardStepChanged = (event: Event) => {
+      setRulesStepParam((event as CustomEvent<string>).detail);
+    };
+
+    syncRulesStep();
+    window.addEventListener("popstate", syncRulesStep);
+    window.addEventListener("enter-wizard-step-changed", handleWizardStepChanged);
+
+    return () => {
+      window.removeEventListener("popstate", syncRulesStep);
+      window.removeEventListener("enter-wizard-step-changed", handleWizardStepChanged);
+    };
+  }, []);
 
 
   return (
@@ -165,12 +199,13 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
             </div>
 
             <Link
-              href="/enter"
+              href="/enter?step=1"
               className={`px-4 py-2 text-sm lg:text-base font-medium transition-colors ${
-                pathname === "/enter"
+                isRulesStage
                   ? "text-[#FFE169] underline underline-offset-4 decoration-[#FFE169]"
                   : "text-white hover:underline hover:underline-offset-4 hover:decoration-white"
               }`}
+              onClick={handleRulesNavClick}
             >
               The Rules
             </Link>
@@ -277,10 +312,10 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                 </div>
 
                 <Link
-                  href="/enter"
-                  onClick={() => setMobileNavOpen(false)}
+                  href="/enter?step=1"
+                  onClick={handleRulesNavClick}
                   className={`px-4 py-3 font-medium transition-colors ${
-                    pathname === "/enter"
+                    isRulesStage
                       ? "text-primary underline underline-offset-4"
                       : "text-slate-600 hover:text-primary hover:underline hover:underline-offset-4"
                   }`}

@@ -1,15 +1,28 @@
 import { google } from "googleapis";
 
-export interface EntryRow {
+const SHEET_NAME = "Sheet1";
+const SHEET_GID = 0;
+const ROW_WIDTH = 11;
+
+export interface IncompleteEntryRow {
+  token: string;
+  rulesConfirmed: boolean;
   name: string;
   email: string;
   phone: string;
   quantity: number;
   priceGBP: number;
-  paymentId: string;
 }
 
-export async function appendEntryToSheet(entry: EntryRow): Promise<string> {
+export interface PaidEntryUpdate {
+  token: string;
+  quantity: number;
+  priceGBP: number;
+  paymentId: string;
+  paidAt: string;
+}
+
+function getSheetsConfig() {
   const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
   const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
   const privateKey = process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY?.replace(/\\n/g, "\n");
@@ -18,41 +31,152 @@ export async function appendEntryToSheet(entry: EntryRow): Promise<string> {
     throw new Error("Missing Google Sheets environment variables.");
   }
 
+  return { spreadsheetId, clientEmail, privateKey };
+}
+
+async function getSheetsClient() {
+  const { clientEmail, privateKey } = getSheetsConfig();
+
   const auth = new google.auth.JWT({
     email: clientEmail,
     key: privateKey,
     scopes: ["https://www.googleapis.com/auth/spreadsheets"],
   });
 
-  const sheets = google.sheets({ version: "v4", auth });
+  return google.sheets({ version: "v4", auth });
+}
 
-  const timestamp = new Date().toISOString();
+function buildRowUrl(spreadsheetId: string, rowNumber: number): string {
+  return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/edit#gid=${SHEET_GID}&range=A${rowNumber}`;
+}
+
+function formatPrice(priceGBP: number): string {
+  return "\u00A3" + priceGBP;
+}
+
+function normalizeRow(values: unknown[] | undefined): string[] {
+  const row = Array.from({ length: ROW_WIDTH }, (_, index) => {
+    const value = values?.[index];
+    return value == null ? "" : String(value);
+  });
+  return row;
+}
+
+async function findRowByToken(token: string): Promise<number | null> {
+  const { spreadsheetId } = getSheetsConfig();
+  const sheets = await getSheetsClient();
+
+  const response = await sheets.spreadsheets.values.get({
+    spreadsheetId,
+    range: `${SHEET_NAME}!H2:H`,
+  });
+
+  const values = response.data.values ?? [];
+  const index = values.findIndex((row) => String(row[0] ?? "").trim() === token);
+
+  return index === -1 ? null : index + 2;
+}
+
+async function getRowValues(rowNumber: number): Promise<string[]> {
+  const { spreadsheetId } = getSheetsConfig();
+  const sheets = await getSheetsClient();
+
+  const response = await sheets.spreadsheets.values.get({
+    spreadsheetId,
+    range: `${SHEET_NAME}!A${rowNumber}:K${rowNumber}`,
+  });
+
+  return normalizeRow(response.data.values?.[0]);
+}
+
+async function updateRowValues(rowNumber: number, values: string[]): Promise<void> {
+  const { spreadsheetId } = getSheetsConfig();
+  const sheets = await getSheetsClient();
+
+  await sheets.spreadsheets.values.update({
+    spreadsheetId,
+    range: `${SHEET_NAME}!A${rowNumber}:K${rowNumber}`,
+    valueInputOption: "RAW",
+    requestBody: {
+      values: [normalizeRow(values)],
+    },
+  });
+}
+
+async function appendRow(values: string[]): Promise<number> {
+  const { spreadsheetId } = getSheetsConfig();
+  const sheets = await getSheetsClient();
 
   const response = await sheets.spreadsheets.values.append({
     spreadsheetId,
-    range: "Sheet1!A:H",
+    range: `${SHEET_NAME}!A:K`,
     valueInputOption: "RAW",
     requestBody: {
-      values: [
-        [
-          timestamp,
-          entry.name,
-          entry.email,
-          entry.phone,
-          entry.quantity,
-          "\u00A3" + entry.priceGBP,
-          entry.paymentId,
-          "Paid",
-        ],
-      ],
+      values: [normalizeRow(values)],
     },
   });
 
-  // Extract the row number from the updated range (e.g. "Sheet1!A5:H5") and
-  // build a direct link so admins can jump straight to this entry.
   const updatedRange = response.data.updates?.updatedRange ?? "";
-  const rowMatch = updatedRange.match(/[A-Z](\d+):/);
-  const rowNumber = rowMatch ? rowMatch[1] : "1";
+  const rowMatch = updatedRange.match(/[A-Z]+(\d+):/);
 
-  return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/edit#gid=0&range=A${rowNumber}`;
+  return rowMatch ? Number(rowMatch[1]) : 1;
+}
+
+export async function upsertIncompleteEntry(entry: IncompleteEntryRow): Promise<string> {
+  const { spreadsheetId } = getSheetsConfig();
+  const rowNumber = await findRowByToken(entry.token);
+
+  if (rowNumber) {
+    const current = await getRowValues(rowNumber);
+    current[1] = entry.name;
+    current[2] = entry.email;
+    current[3] = entry.phone;
+    current[4] = String(entry.quantity);
+    current[5] = formatPrice(entry.priceGBP);
+    current[6] = "";
+    current[7] = entry.token;
+    current[8] = "Incomplete";
+    current[9] = entry.rulesConfirmed ? "Yes" : "No";
+    current[10] = "";
+
+    await updateRowValues(rowNumber, current);
+    return buildRowUrl(spreadsheetId, rowNumber);
+  }
+
+  const newRowNumber = await appendRow([
+    new Date().toISOString(),
+    entry.name,
+    entry.email,
+    entry.phone,
+    String(entry.quantity),
+    formatPrice(entry.priceGBP),
+    "",
+    entry.token,
+    "Incomplete",
+    entry.rulesConfirmed ? "Yes" : "No",
+    "",
+  ]);
+
+  return buildRowUrl(spreadsheetId, newRowNumber);
+}
+
+export async function markEntryPaidByToken(entry: PaidEntryUpdate): Promise<string> {
+  const { spreadsheetId } = getSheetsConfig();
+  const rowNumber = await findRowByToken(entry.token);
+
+  if (!rowNumber) {
+    throw new Error("Could not find existing Google Sheets row for entry token.");
+  }
+
+  const current = await getRowValues(rowNumber);
+  current[4] = String(entry.quantity);
+  current[5] = formatPrice(entry.priceGBP);
+  current[6] = entry.paymentId;
+  current[7] = entry.token;
+  current[8] = "Paid";
+  current[10] = entry.paidAt;
+
+  await updateRowValues(rowNumber, current);
+
+  return buildRowUrl(spreadsheetId, rowNumber);
 }

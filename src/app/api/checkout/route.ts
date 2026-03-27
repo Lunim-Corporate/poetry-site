@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createClient } from "@/prismicio";
 import { DEFAULT_PRICE_SINGLE, DEFAULT_PRICE_MULTIPLE } from "@/app/enter/constants";
+import { upsertIncompleteEntry } from "@/lib/googleSheets";
 
 function getStripe() {
   return new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -21,14 +22,16 @@ function calculateTotal(
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, phone, bookCount } = body as {
+    const { name, email, phone, token, rulesConfirmed, bookCount } = body as {
       name: string;
       email: string;
       phone?: string;
+      token?: string;
+      rulesConfirmed?: boolean;
       bookCount: number;
     };
 
-    if (!name || !email || !bookCount || bookCount < 1 || bookCount > 6) {
+    if (!name || !email || !token || !bookCount || bookCount < 1 || bookCount > 6) {
       return NextResponse.json(
         { error: "Invalid entry details." },
         { status: 400 }
@@ -50,6 +53,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    await upsertIncompleteEntry({
+      token: token.trim(),
+      rulesConfirmed: Boolean(rulesConfirmed),
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone?.trim() ?? "",
+      quantity: bookCount,
+      priceGBP: totalGBP,
+    });
+
     const stripe = getStripe();
     const intent = await stripe.paymentIntents.create({
       amount: totalGBP * 100, // Stripe uses pence
@@ -57,9 +70,10 @@ export async function POST(request: NextRequest) {
       receipt_email: email,
       automatic_payment_methods: { enabled: true },
       metadata: {
-        entrant_name: name,
-        entrant_email: email,
+        entrant_name: name.trim(),
+        entrant_email: email.trim(),
         entrant_phone: phone?.trim() ?? "",
+        entry_token: token?.trim() ?? "",
         book_count: String(bookCount),
         total_gbp: String(totalGBP),
       },

@@ -7,7 +7,7 @@ import { DEFAULT_SHIPPING } from "../constants";
 import PrintButton from "./PrintButton";
 import MarkEntryComplete from "./MarkEntryComplete";
 import SuccessStepper from "./SuccessStepper";
-import { appendEntryToSheet } from "@/lib/googleSheets";
+import { markEntryPaidByToken } from "@/lib/googleSheets";
 import { sendEntrantConfirmation, sendAdminNotification } from "@/lib/email";
 
 export const metadata: Metadata = {
@@ -69,7 +69,7 @@ export default async function SuccessPage({
 
   const entrantName = intent.metadata?.entrant_name ?? "Entrant";
   const entrantEmail = intent.metadata?.entrant_email ?? "";
-  const entrantPhone = intent.metadata?.entrant_phone ?? "";
+  const entryToken = intent.metadata?.entry_token ?? "";
   const bookCount = Number(intent.metadata?.book_count ?? 1);
   const totalGBP = intent.metadata?.total_gbp ?? "0";
   const bookLabel = bookCount === 1 ? "book" : "books";
@@ -105,21 +105,28 @@ export default async function SuccessPage({
 
   if (!intent.metadata?.entry_processed) {
     try {
-      sheetRowUrl = await appendEntryToSheet({
-        name: entrantName,
-        email: entrantEmail,
-        phone: entrantPhone,
-        quantity: bookCount,
-        priceGBP: Number(totalGBP),
-        paymentId: intentId,
-      });
+      if (entryToken) {
+        sheetRowUrl = await markEntryPaidByToken({
+          token: entryToken,
+          quantity: bookCount,
+          priceGBP: Number(totalGBP),
+          paymentId: intentId,
+          paidAt: new Date(intent.created * 1000).toISOString(),
+        });
+      } else {
+        console.error("Missing entry token in Stripe metadata; skipping Google Sheets paid sync.");
+      }
     } catch (err) {
-      console.error("Failed to log entry to Google Sheets:", err);
+      console.error("Failed to sync paid entry to Google Sheets:", err);
     }
 
-    await stripe.paymentIntents.update(intentId, {
-      metadata: { ...intent.metadata, entry_processed: "true", sheet_row_url: sheetRowUrl },
-    });
+    try {
+      await stripe.paymentIntents.update(intentId, {
+        metadata: { ...intent.metadata, entry_processed: "true", sheet_row_url: sheetRowUrl },
+      });
+    } catch (err) {
+      console.error("Failed to update Stripe metadata after entry processing:", err);
+    }
 
     sendEntrantConfirmation(emailEntry).catch((err) =>
       console.error("Failed to send entrant confirmation email:", err)

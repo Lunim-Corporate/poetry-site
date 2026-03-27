@@ -124,6 +124,17 @@ function getFormattedPhoneNumber(countryCode: string, phoneNumber: string): stri
   return `${countryCode} ${trimmedPhoneNumber}`;
 }
 
+function generateEntryToken(length = 8): string {
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let token = "";
+
+  for (let i = 0; i < length; i += 1) {
+    token += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+  }
+
+  return token;
+}
+
 export default function EnterPageClient({
   settings,
 }: {
@@ -144,6 +155,7 @@ export default function EnterPageClient({
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [modalMessage, setModalMessage] = useState<string | null>(null);
   const [isWizardLocked, setIsWizardLocked] = useState(false);
+  const [entryToken, setEntryToken] = useState<string | null>(null);
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -151,6 +163,18 @@ export default function EnterPageClient({
       setIsWizardLocked(true);
     }
   }, []);
+
+  useEffect(() => {
+    const nextUrl = new URL(window.location.href);
+    const nextStep = String(currentStep);
+
+    if (nextUrl.searchParams.get("step") !== nextStep) {
+      nextUrl.searchParams.set("step", nextStep);
+      window.history.replaceState(window.history.state, "", nextUrl.toString());
+    }
+
+    window.dispatchEvent(new CustomEvent("enter-wizard-step-changed", { detail: nextStep }));
+  }, [currentStep]);
 
   const priceSingle = settings.price_single_book ?? DEFAULT_PRICE_SINGLE;
   const priceMultiple = settings.price_multiple_books ?? DEFAULT_PRICE_MULTIPLE;
@@ -203,13 +227,19 @@ export default function EnterPageClient({
     setCheckoutError(null);
 
     try {
+      const phone = getFormattedPhoneNumber(formData.phoneCountryCode, formData.phoneNumber);
+      const token = entryToken ?? generateEntryToken(8);
+      setEntryToken(token);
+
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: getFormattedPhoneNumber(formData.phoneCountryCode, formData.phoneNumber),
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          phone,
+          token,
+          rulesConfirmed,
           bookCount: formData.bookCount,
         }),
       });
@@ -225,11 +255,38 @@ export default function EnterPageClient({
       setClientSecret(data.clientSecret);
       setCurrentStep(3);
     } catch {
-      setCheckoutError("Could not connect to payment service. Please try again.");
+      setCheckoutError("Could not save your entry details or connect to payment service. Please try again.");
     } finally {
       setIsFetchingIntent(false);
     }
   };
+
+  useEffect(() => {
+    const handleWizardStepRequest = (event: Event) => {
+      const requestedStep = (event as CustomEvent<number>).detail;
+      if (requestedStep === currentStep) return;
+      if (requestedStep < currentStep) {
+        if (isWizardLocked) {
+          setModalMessage("The competition entry process is now complete. You can no longer change any details.");
+          return;
+        }
+        setCurrentStep(requestedStep as Step);
+        return;
+      }
+      if (requestedStep === 2 && rulesConfirmed) {
+        setCurrentStep(2);
+        return;
+      }
+      if (requestedStep === 3 && clientSecret) {
+        setCurrentStep(3);
+        return;
+      }
+      setModalMessage(getStepMessage(requestedStep, action));
+    };
+
+    window.addEventListener("enter-wizard-go-to-step", handleWizardStepRequest);
+    return () => window.removeEventListener("enter-wizard-go-to-step", handleWizardStepRequest);
+  }, [action, clientSecret, currentStep, isWizardLocked, rulesConfirmed]);
 
   return (
     <section className="py-10 bg-white font-sans">
@@ -505,6 +562,7 @@ export default function EnterPageClient({
               {clientSecret ? (
                 <PaymentForm
                   clientSecret={clientSecret}
+                  entryToken={entryToken ?? ""}
                   totalGBP={bookPrices[formData.bookCount]}
                   bookCount={formData.bookCount}
                 />
