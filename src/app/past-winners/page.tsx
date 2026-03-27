@@ -226,7 +226,7 @@ export default async function PastWinnersPage() {
                   <div className="mt-4 text-right">
                     <Link
                       href={`/past-winners/${yearNumber}`}
-                      className="text-md font-medium text-slate-700 hover:text-primary transition-colors underline underline-offset-2"
+                      className="text-md font-medium text-slate-700 hover:text-primary transition-colors underline underline-offset-2 hover:no-underline"
                     >
                       More details plus the {yearNumber} shortlist &raquo;
                     </Link>
