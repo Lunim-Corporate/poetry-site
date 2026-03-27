@@ -9,12 +9,7 @@ import EnterPageClient from "./EnterPageClient";
 
 export const revalidate = 60;
 
-export default async function EnterPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ cancelled?: string }>;
-}) {
-  const { cancelled } = await searchParams;
+export default async function EnterPage() {
   const client = createClient();
   const doc = await client.getSingle("enter_page").catch(() => null);
 
@@ -37,7 +32,7 @@ export default async function EnterPage({
       {hero.length > 0 && (
         <SliceZone slices={hero} components={components} />
       )}
-      <EnterPageClient settings={settings} cancelled={cancelled === "true"} />
+      <EnterPageClient settings={settings} />
     </>
   );
 }

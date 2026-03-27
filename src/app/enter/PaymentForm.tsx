@@ -13,9 +13,11 @@ import {
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 function CheckoutForm({
+  entryToken,
   totalGBP,
   bookCount,
 }: {
+  entryToken: string;
   totalGBP: number;
   bookCount: number;
 }) {
@@ -55,6 +57,28 @@ function CheckoutForm({
     }
 
     if (paymentIntent?.status === "succeeded") {
+      if (entryToken) {
+        try {
+          const syncResponse = await fetch("/api/entry-status", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              token: entryToken,
+              paymentId: paymentIntent.id,
+              bookCount,
+              totalGBP,
+              paidAt: new Date().toISOString(),
+            }),
+          });
+
+          if (!syncResponse.ok) {
+            throw new Error("Paid entry sync failed.");
+          }
+        } catch (syncError) {
+          console.error("Failed to mark sheet entry as paid from client:", syncError);
+        }
+      }
+
       sessionStorage.setItem("maya_entry_complete", "true");
       router.push(`/enter/success?payment_intent_id=${paymentIntent.id}`);
     }
@@ -105,10 +129,12 @@ function CheckoutForm({
 
 export default function PaymentForm({
   clientSecret,
+  entryToken,
   totalGBP,
   bookCount,
 }: {
   clientSecret: string;
+  entryToken: string;
   totalGBP: number;
   bookCount: number;
 }) {
@@ -123,7 +149,7 @@ export default function PaymentForm({
         },
       }}
     >
-      <CheckoutForm totalGBP={totalGBP} bookCount={bookCount} />
+      <CheckoutForm entryToken={entryToken} totalGBP={totalGBP} bookCount={bookCount} />
     </Elements>
   );
 }
