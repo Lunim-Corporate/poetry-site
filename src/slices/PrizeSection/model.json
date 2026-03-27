@@ -53,21 +53,21 @@
         "childrens_prize_title": {
           "type": "Text",
           "config": {
-            "label": "Children's Prize Title",
-            "placeholder": "Children's Prize"
+            "label": "Children Prize Title",
+            "placeholder": "Children Prize"
           }
         },
         "childrens_prize_amount": {
           "type": "Number",
           "config": {
-            "label": "Children's Prize Amount (£)",
+            "label": "Children Prize Amount (£)",
             "placeholder": "200"
           }
         },
         "childrens_prize_description": {
           "type": "StructuredText",
           "config": {
-            "label": "Children's Prize Description",
+            "label": "Children Prize Description",
             "allowTargetBlank": true,
             "multi": "paragraph"
           }

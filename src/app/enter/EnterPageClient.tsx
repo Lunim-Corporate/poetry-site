@@ -108,7 +108,7 @@ function useIsMobile() {
 function getStepMessage(targetStep: number, action: string): string {
   switch (targetStep) {
     case 2:
-      return `To continue to step 2, please first confirm you have read the rules then ${action} "I have read the rules \u2014 Continue" at the bottom of Step 1.`;
+      return `To continue to step 2, please first confirm you have read the rules then ${action} "Continue to enter details" at the bottom of Step 1.`;
     case 3:
       return `To continue to step 3, please first enter your personal details and the number of books you're entering, then ${action} "Continue to payment" at the bottom of Step 2.`;
     case 4:
