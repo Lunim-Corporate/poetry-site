@@ -261,6 +261,7 @@ export interface WinnerEntry {
 
 export interface ListEntry {
   book_title: string;
+  book_link?: string;
   author: string;
   location?: string;
 }
@@ -269,6 +270,6 @@ export interface ListEntry {
 // Constants
 // ---------------------------------------------------------------------------
 
-export const PRIZE_ORDER = ["1st Place", "2nd Place", "3rd Place", "Children's"] as const;
+export const PRIZE_ORDER = ["1st Prize", "2nd Prize", "3rd Prize", "Children's Prize"] as const;
 
 export const DEFAULT_YEARS = [2025, 2024, 2023, 2022, 2021, 2020];

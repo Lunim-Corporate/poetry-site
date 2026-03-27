@@ -42,7 +42,7 @@ export async function appendEntryToSheet(entry: EntryRow): Promise<string> {
           entry.quantity,
           "\u00A3" + entry.priceGBP,
           entry.paymentId,
-          "paid",
+          "Paid",
         ],
       ],
     },

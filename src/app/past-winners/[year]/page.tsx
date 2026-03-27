@@ -33,11 +33,25 @@ export default async function WinnersYearPage({ params }: PageProps) {
   if (doc) {
     const data = doc.data as unknown as PastWinnersYearData;
     const allSlices = (data.slices ?? []) as PrismicSlice[];
-    const heroSlices = allSlices.filter((s) => s.slice_type === "hero");
+    const heroSlices = allSlices
+      .filter((s) => s.slice_type === "hero")
+      .map((s) => ({
+        ...s,
+        primary: {
+          ...s.primary,
+          variant: "small",
+        },
+      }));
 
     const winners: WinnerEntry[] = data.winners ?? [];
     const shortlist: ListEntry[] = data.shortlist ?? [];
     const longlist: ListEntry[] = data.longlist ?? [];
+    const judgesPrizeComments = [
+      data.judges_comments_first_prize,
+      data.judges_comments_second_prize,
+      data.judges_comments_third_prize,
+      data.judges_comments_children_prize,
+    ].filter(Boolean) as RichTextField[];
 
     return (
       <>
@@ -141,7 +155,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
             {winners.length > 0 && (
               (() => {
                 const firstPrize = winners.find(
-                  (w) => w.prize_level === "1st Place"
+                  (w) => w.prize_level === "1st Prize"
                 );
 
                 if (!firstPrize) return null;
@@ -254,7 +268,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
             {/* 2nd, 3rd & Children's Prize detail sections (same format as 1st) */}
             {winners.length > 0 && (
               <div className="space-y-8">
-                {["2nd Place", "3rd Place", "Children's"].map((level) => {
+                {["2nd Prize", "3rd Prize", "Children's Prize"].map((level) => {
                   const prizeWinner = winners.find((w) => w.prize_level === level);
 
                   if (!prizeWinner) return null;
@@ -415,39 +429,20 @@ export default async function WinnersYearPage({ params }: PageProps) {
                   </div>
                 </div>
 
-                <div className="space-y-6  pt-6 border-t border-slate-200">
-                  {data.judges_comments_first_prize && (
-                    <div>
-                      <div className={proseClasses}>
-                        <PrismicRichText field={data.judges_comments_first_prize} />
+                {judgesPrizeComments.length > 0 && (
+                  <div className="space-y-6 border-t pt-6 border-slate-200">
+                    {judgesPrizeComments.map((comment, index) => (
+                      <div
+                        key={index}
+                        className={index > 0 && comment.length > 0 ? "border-t pt-6 border-slate-200" : ""}
+                      >
+                        <div className={proseClasses}>
+                          <PrismicRichText field={comment} />
+                        </div>
                       </div>
-                    </div>
-                  )}
-
-                  {data.judges_comments_second_prize && (
-                    <div className="border-t pt-6 border-slate-200">
-                      <div className={proseClasses}>
-                        <PrismicRichText field={data.judges_comments_second_prize} />
-                      </div>
-                    </div>
-                  )}
-
-                  {data.judges_comments_third_prize && (
-                    <div className="border-t pt-6 border-slate-200">
-                      <div className={proseClasses}>
-                        <PrismicRichText field={data.judges_comments_third_prize} />
-                      </div>
-                    </div>
-                  )}
-
-                  {data.judges_comments_children_prize && (
-                    <div className="border-t pt-6 border-slate-200">
-                      <div className={proseClasses}>
-                        <PrismicRichText field={data.judges_comments_children_prize} />
-                      </div>
-                    </div>
-                  )}
-                </div>
+                    ))}
+                  </div>
+                )}
               </section>
             )}
 
@@ -467,9 +462,29 @@ export default async function WinnersYearPage({ params }: PageProps) {
                       <li key={index} className="flex items-start gap-2 text-sm">
                         <span className="mt-1 text-slate-500">•</span>
                         <p className="text-slate-700">
-                          <strong className="text-slate-900 font-semibold">
-                            {entry.book_title}
-                          </strong>{" "}
+                          {entry.book_link ? (
+                            /^https?:\/\//.test(entry.book_link) ? (
+                              <a
+                                href={entry.book_link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-slate-900 font-semibold underline hover:no-underline hover:text-primary transition-colors"
+                              >
+                                {entry.book_title}
+                              </a>
+                            ) : (
+                              <Link
+                                href={entry.book_link}
+                                className="text-slate-900 font-semibold underline hover:no-underline hover:text-primary transition-colors"
+                              >
+                                {entry.book_title}
+                              </Link>
+                            )
+                          ) : (
+                            <strong className="text-slate-900 font-semibold">
+                              {entry.book_title}
+                            </strong>
+                          )}{" "}
                           —{" "}
                           <em className="text-slate-700">{entry.author}</em>
                           {entry.location && (
@@ -501,9 +516,29 @@ export default async function WinnersYearPage({ params }: PageProps) {
                       <li key={index} className="flex items-start gap-2 text-sm">
                         <span className="mt-1 text-slate-500">•</span>
                         <p className="text-slate-700">
-                          <strong className="text-slate-900 font-semibold">
-                            {entry.book_title}
-                          </strong>{" "}
+                          {entry.book_link ? (
+                            /^https?:\/\//.test(entry.book_link) ? (
+                              <a
+                                href={entry.book_link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-slate-900 font-semibold underline hover:no-underline hover:text-primary transition-colors"
+                              >
+                                {entry.book_title}
+                              </a>
+                            ) : (
+                              <Link
+                                href={entry.book_link}
+                                className="text-slate-900 font-semibold underline hover:no-underline hover:text-primary transition-colors"
+                              >
+                                {entry.book_title}
+                              </Link>
+                            )
+                          ) : (
+                            <strong className="text-slate-900 font-semibold">
+                              {entry.book_title}
+                            </strong>
+                          )}{" "}
                           —{" "}
                           <em className="text-slate-700">{entry.author}</em>
                           {entry.location && (

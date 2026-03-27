@@ -259,7 +259,7 @@ export default function EnterPageClient({
 
               return (
                 <div key={index} className="flex flex-col items-center flex-1 relative z-10">
-                  <p className="text-sm text-slate-400 font-medium mb-1.5">
+                  <p className="text-sm text-slate-700 font-medium mb-1.5">
                     Step {stepNum}
                   </p>
                   <button
@@ -270,18 +270,18 @@ export default function EnterPageClient({
                         ? "bg-[#23100A] border-[#23100A] text-[#FFE169] cursor-default"
                         : isCompleted
                         ? "bg-slate-100 border-[#23100A] text-[#23100A] cursor-pointer hover:bg-slate-200"
-                        : "bg-white border-slate-200 text-slate-400 cursor-pointer hover:border-slate-300"
+                        : "bg-white border-slate-500 text-slate-500 cursor-pointer hover:border-slate-300"
                     }`}
                   >
                     {stepNum}
                   </button>
                   <p className="text-center mt-1.5 leading-tight">
-                    <span className="hidden md:block text-sm text-slate-500">
+                    <span className="hidden md:block text-sm text-slate-700">
                       {step.label}
                       <br />
                       {step.sublabel}
                     </span>
-                    <span className="md:hidden text-sm text-slate-500">{step.mobileLabel}</span>
+                    <span className="md:hidden text-sm text-slate-700">{step.mobileLabel}</span>
                   </p>
                 </div>
               );
@@ -293,7 +293,7 @@ export default function EnterPageClient({
         {currentStep === 1 && (
           <div className="bg-white border border-slate-200 rounded-xl p-6 md:p-8 shadow-sm">
             <h2 className="text-lg font-semibold text-slate-900 mb-1">Competition Rules</h2>
-            <p className="text-sm text-slate-500 mb-6">
+            <p className="text-sm text-slate-700 mb-6">
               Please review the competition rules before submitting your entry.
             </p>
 
@@ -346,7 +346,7 @@ export default function EnterPageClient({
               >
                 &laquo; Back to step 1
               </button>
-              <p className="text-sm text-slate-500 mb-6">
+              <p className="text-sm text-slate-700 mb-6">
                 Tell us about yourself and how many books you&apos;re entering.
               </p>
 
@@ -497,7 +497,7 @@ export default function EnterPageClient({
               >
                 &laquo; Back to step 2
               </button>
-              <p className="text-sm text-slate-500 mb-6">
+              <p className="text-sm text-slate-700 mb-6">
                 Total: &pound;{bookPrices[formData.bookCount]} for {formData.bookCount}{" "}
                 {formData.bookCount === 1 ? "book" : "books"}
               </p>

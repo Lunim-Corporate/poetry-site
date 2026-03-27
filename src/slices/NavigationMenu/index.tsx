@@ -55,6 +55,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
     if (!mobileNavOpen) setMobileDropdownOpen(false);
   }, [mobileNavOpen]);
 
+
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50 h-[72px] max-[899px]:h-16 flex items-center border-b bg-gradient-to-r from-[#451E10] via-[#7a3520] to-[#451E10] backdrop-blur-sm">
@@ -68,21 +69,21 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                 <Image
                   src={slice.primary.brand_logo.url}
                   alt=""
-                  width={24}
-                  height={24}
-                  className="w-6 h-6"
+                  width={32}
+                  height={32}
+                  className="md:w-8 md:h-8 w-6 h-6"
                 />
               ) : (
                 <Image
                   src="/logo.png"
                   alt=""
-                  width={24}
-                  height={24}
-                  className="w-6 h-6"
+                  width={32}
+                  height={32}
+                  className="md:w-8 md:h-8 w-6 h-6"
                 />
               )}
             </span>
-            <span className="text-[#FFE169]">{brandName}</span>
+            <span className="text-[#FFE169] md:text-xl text-lg">{brandName}</span>
           </Link>
 
           {/* Mobile menu button + Contact Us */}
@@ -111,7 +112,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
               <Link
                 key={index}
                 href={link.url}
-                className={`px-4 py-2 text-sm font-medium transition-colors ${
+                className={`px-4 py-2 text-sm lg:text-base font-medium transition-colors ${
                   isActive(link.url)
                     ? "text-[#FFE169] underline underline-offset-4 decoration-[#FFE169]"
                     : "text-white hover:underline hover:underline-offset-4 hover:decoration-white"
@@ -126,7 +127,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
               <div className="flex items-center">
                 <Link
                   href="/past-winners"
-                  className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  className={`px-4 py-2 text-sm lg:text-base font-medium transition-colors ${
                     isPastWinnersActive()
                       ? "text-[#FFE169] underline underline-offset-4 decoration-[#FFE169]"
                       : "text-white hover:underline hover:underline-offset-4 hover:decoration-white"
@@ -141,7 +142,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                   }`}
                 >
                   <span
-                    className={`inline-block text-xl leading-none transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
+                    className={`inline-block text-2xl leading-none transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
                   >
                     ▾
                   </span>
@@ -165,7 +166,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
 
             <Link
               href="/enter"
-              className={`px-4 py-2 text-sm font-medium transition-colors ${
+              className={`px-4 py-2 text-sm lg:text-base font-medium transition-colors ${
                 pathname === "/enter"
                   ? "text-[#FFE169] underline underline-offset-4 decoration-[#FFE169]"
                   : "text-white hover:underline hover:underline-offset-4 hover:decoration-white"
@@ -175,13 +176,13 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
             </Link>
             <Link
               href="/#faq"
-              className="px-4 py-2 text-sm font-medium text-white hover:underline hover:underline-offset-4 hover:decoration-white transition-colors"
+              className="px-4 py-2 text-sm lg:text-base font-medium text-white hover:underline hover:underline-offset-4 hover:decoration-white transition-colors"
             >
               FAQ
             </Link>
             <Link
               href="/#contact-form"
-              className="px-4 py-2 text-sm font-medium text-white hover:underline hover:underline-offset-4 hover:decoration-white transition-colors"
+              className="px-4 py-2 text-sm lg:text-base font-medium text-white hover:underline hover:underline-offset-4 hover:decoration-white transition-colors"
             >
               Contact Us
             </Link>
