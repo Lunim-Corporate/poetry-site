@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import type { EnterPageSettings } from "@/types";
 import { WIZARD_STEPS, DEFAULT_PRICE_SINGLE, DEFAULT_PRICE_MULTIPLE } from "./constants";
@@ -157,6 +157,7 @@ export default function EnterPageClient({
   const [isWizardLocked, setIsWizardLocked] = useState(false);
   const [entryToken, setEntryToken] = useState<string | null>(null);
   const isMobile = useIsMobile();
+  const stepperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (sessionStorage.getItem("maya_entry_complete") === "true") {
@@ -174,6 +175,13 @@ export default function EnterPageClient({
     }
 
     window.dispatchEvent(new CustomEvent("enter-wizard-step-changed", { detail: nextStep }));
+
+    if (stepperRef.current) {
+      // nav is fixed: 72px desktop, 64px mobile (breakpoint 900px) — add 16px breathing room
+      const navHeight = window.innerWidth < 900 ? 64 : 72;
+      const top = stepperRef.current.getBoundingClientRect().top + window.scrollY - navHeight - 16;
+      window.scrollTo({ top: Math.max(0, top), left: 0, behavior: "instant" });
+    }
   }, [currentStep]);
 
   const priceSingle = settings.price_single_book ?? DEFAULT_PRICE_SINGLE;
@@ -292,7 +300,7 @@ export default function EnterPageClient({
     <section className="py-10 bg-white font-sans">
       <div className="max-w-2xl mx-auto px-6">
         {/* Wizard Steps */}
-        <div className="mb-10">
+        <div ref={stepperRef} className="mb-10">
           <div className="flex items-start justify-between relative">
             {[1, 2, 3].map((connectorAfterStep) => (
               <div
