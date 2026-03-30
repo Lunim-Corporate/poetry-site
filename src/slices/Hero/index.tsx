@@ -9,9 +9,9 @@ export default function Hero({ slice }: SliceComponentProps<HeroSliceData>) {
   const variant: HeroVariant = slice.primary.variant || "default";
 
   const sectionClasses: Record<HeroVariant, string> = {
-    home: "min-h-[640px] bg-gradient-to-br from-primary to-primary-dark text-white flex items-stretch",
-    small: "min-h-[140px] bg-gradient-to-br from-primary to-primary-dark text-white flex items-center",
-    default: "min-h-[320px] bg-gradient-to-br from-primary to-primary-dark text-white flex items-center",
+    home: "min-h-[640px] bg-gradient-to-br from-[#7a3520] to-[#451e10] text-white flex items-stretch",
+    small: "min-h-[140px] bg-gradient-to-br from--[#7a3520] to-[#451e10] text-white flex items-center",
+    default: "min-h-[320px] bg-gradient-to-br from-[#451E10] to-[#451e10] text-white flex items-center",
   };
 
   const titleClasses: Record<HeroVariant, string> = {
