@@ -13,7 +13,7 @@ const VALID_PATHS = [
   /^\/slice-simulator\/?$/,
 ];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Skip static files that slipped past the matcher (e.g. /some-image.png)

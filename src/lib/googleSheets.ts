@@ -81,7 +81,7 @@ async function getRowValues(rowNumber: number): Promise<(string | number)[]> {
     range: `${SHEET_NAME}!A${rowNumber}:K${rowNumber}`,
   });
 
-  return normalizeRow(response.data.values?.[0]);
+  return normalizeRow(response.data.values?.[0] ?? []);
 }
 
 async function updateRowValues(rowNumber: number, values: (string | number)[]): Promise<void> {
