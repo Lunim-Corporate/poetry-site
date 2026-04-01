@@ -70,6 +70,17 @@ body.nav-open {
   overflow: hidden;
 }
 
+p a {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  color: var(--color-primary);
+}
+
+p a:hover {
+  text-decoration: none;
+  color: var(--color-primary-light);
+}
+
 @media (max-width: 899px) {
   :root {
     --header-height: 64px;
