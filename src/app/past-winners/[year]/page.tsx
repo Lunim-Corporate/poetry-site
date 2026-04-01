@@ -264,7 +264,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
                           rel="noopener noreferrer"
                           className="font-semibold text-primary hover:text-primary-light underline hover:no-underline underline-offset-2"
                         >
-                          Purchase a copy
+                          Purchase a copy of {firstPrize.book_title}
                         </Link>
                       </p>
                     )}
@@ -387,7 +387,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
                             rel="noopener noreferrer"
                             className="text-primary hover:text-primary-light underline hover:no-underline underline-offset-2"
                           >
-                            Purchase a copy
+                            Purchase a copy of {prizeWinner.book_title}
                           </Link>
                         </p>
                       )}
