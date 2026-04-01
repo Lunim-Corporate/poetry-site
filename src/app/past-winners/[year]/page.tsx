@@ -567,15 +567,14 @@ export default async function WinnersYearPage({ params }: PageProps) {
             {(data.enter_cta_label || data.enter_cta_url) && (
               <section className="mt-6 border-t border-slate-200 pt-4">
                 <p className="text-sm pt-6 text-slate-800">
-                  {data.enter_cta_label || "Enter your book"}{" "}
                   <Link
                     href={data.enter_cta_url || "/enter"}
-                    target="_blank"
+                    target="_self"
                     rel="noopener noreferrer"
                     className="text-primary font-semibold underline underline-offset-2"
                   >
-                    click here.
-                  </Link>
+                    {data.enter_cta_label || "To enter your book, click here"}
+                  </Link>{data.enter_cta_label ? "." : ""}
                 </p>
               </section>
             )}
