@@ -13,6 +13,7 @@ import type {
   WinnerEntry,
 } from "@/types";
 import { DEFAULT_YEARS, PRIZE_ORDER } from "@/types";
+import { wrapCoverWithBookLink } from "@/lib/wrapCoverWithBookLink";
 
 export const revalidate = 60;
 
@@ -155,20 +156,26 @@ export default async function PastWinnersPage() {
                               isFirst ? (
                                 // 1st Prize: wider and taller cream panel with centered cover
                                 <div className="w-full md:max-w-[280px] mb-2 md:mb-3 rounded-md bg-[#f5e9d4] border border-slate-200 flex items-center justify-center overflow-hidden shadow-md">
-                                  <PrismicNextImage
-                                    field={winner.cover_image}
-                                    className="h-full w-auto object-contain"
-                                    fallbackAlt=""
-                                  />
+                                  {wrapCoverWithBookLink(
+                                    winner.book_link,
+                                    <PrismicNextImage
+                                      field={winner.cover_image}
+                                      className="h-full w-auto object-contain"
+                                      fallbackAlt=""
+                                    />
+                                  )}
                                 </div>
                               ) : (
                                 // Other prizes: smaller standard cover cards
                                 <div className="w-full md:max-w-[140px] mb-2 md:mb-3 rounded-md overflow-hidden shadow-md border border-slate-200 bg-white">
-                                  <PrismicNextImage
-                                    field={winner.cover_image}
-                                    className="h-full w-auto object-contain"
-                                    fallbackAlt=""
-                                  />
+                                  {wrapCoverWithBookLink(
+                                    winner.book_link,
+                                    <PrismicNextImage
+                                      field={winner.cover_image}
+                                      className="h-full w-auto object-contain"
+                                      fallbackAlt=""
+                                    />
+                                  )}
                                 </div>
                               )
                             ) : isFirst ? (
@@ -182,9 +189,13 @@ export default async function PastWinnersPage() {
                             )}
 
                             {winner ? (
-                              <p className="text-[15px] md:text-sm text-left md:text-center leading-snug w-full">
+                              <p className="past-winners-listing-winner text-[15px] md:text-sm text-left md:text-center leading-snug w-full">
                                 <span className="font-semibold text-slate-900 block text-base md:text-sm">
-                                  {winner.book_title}
+                                  {wrapCoverWithBookLink(
+                                    winner.book_link,
+                                    winner.book_title,
+                                    "block text-inherit no-underline hover:underline"
+                                  )}
                                 </span>
                                 {authors && (
                                   <em className="text-slate-600 block text-[15px] md:text-sm">
