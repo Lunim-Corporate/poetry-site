@@ -22,13 +22,14 @@ function calculateTotal(
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, phone, token, rulesConfirmed, bookCount } = body as {
+    const { name, email, phone, token, rulesConfirmed, bookCount, bookTitles } = body as {
       name: string;
       email: string;
       phone?: string;
       token?: string;
       rulesConfirmed?: boolean;
       bookCount: number;
+      bookTitles?: string[];
     };
 
     if (!name || !email || !token || !bookCount || bookCount < 1 || bookCount > 6) {
@@ -61,6 +62,7 @@ export async function POST(request: NextRequest) {
       phone: phone?.trim() ?? "",
       quantity: bookCount,
       priceGBP: totalGBP,
+      bookTitles: (bookTitles ?? []).map((t) => t.trim()),
     });
 
     const stripe = getStripe();

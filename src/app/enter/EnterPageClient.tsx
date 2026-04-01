@@ -148,6 +148,7 @@ export default function EnterPageClient({
     phoneCountryCode: "",
     phoneNumber: "",
     bookCount: 0,
+    bookTitles: [] as string[],
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [clientSecret, setClientSecret] = useState<string | null>(null);
@@ -223,6 +224,8 @@ export default function EnterPageClient({
       newErrors.phoneNumber = "Please select a country code for the phone number.";
     if (!formData.bookCount)
       newErrors.bookCount = "Please select how many books you'd like to enter.";
+    if (formData.bookCount > 0 && formData.bookTitles.some((t) => !t.trim()))
+      newErrors.bookTitles = "Please enter a title for each book.";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -249,6 +252,7 @@ export default function EnterPageClient({
           token,
           rulesConfirmed,
           bookCount: formData.bookCount,
+          bookTitles: formData.bookTitles.map((t) => t.trim()),
         }),
       });
 
@@ -515,8 +519,12 @@ export default function EnterPageClient({
                           value={option.value}
                           checked={formData.bookCount === option.value}
                           onChange={() => {
-                            setFormData({ ...formData, bookCount: option.value });
-                            if (errors.bookCount) setErrors({ ...errors, bookCount: "" });
+                            const newTitles = Array.from(
+                              { length: option.value },
+                              (_, i) => formData.bookTitles[i] ?? ""
+                            );
+                            setFormData({ ...formData, bookCount: option.value, bookTitles: newTitles });
+                            if (errors.bookCount) setErrors({ ...errors, bookCount: "", bookTitles: "" });
                           }}
                           className="w-4 h-4 accent-primary"
                         />
@@ -528,6 +536,37 @@ export default function EnterPageClient({
                     <p className="text-xs text-red-600 mt-1" role="alert">{errors.bookCount}</p>
                   )}
                 </div>
+
+                {formData.bookCount > 0 && (
+                  <div className="space-y-3">
+                    {Array.from({ length: formData.bookCount }, (_, i) => (
+                      <div key={i}>
+                        <label
+                          className="block text-sm font-medium text-slate-700 mb-1"
+                          htmlFor={`book-title-${i}`}
+                        >
+                          {i === 0 ? "Book Title" : `Book Title ${i + 1}`}
+                        </label>
+                        <input
+                          id={`book-title-${i}`}
+                          type="text"
+                          required
+                          value={formData.bookTitles[i] ?? ""}
+                          onChange={(e) => {
+                            const updated = [...formData.bookTitles];
+                            updated[i] = e.target.value;
+                            setFormData({ ...formData, bookTitles: updated });
+                            if (errors.bookTitles) setErrors({ ...errors, bookTitles: "" });
+                          }}
+                          className="w-full px-4 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                        />
+                      </div>
+                    ))}
+                    {errors.bookTitles && (
+                      <p className="text-xs text-red-600 mt-1" role="alert">{errors.bookTitles}</p>
+                    )}
+                  </div>
+                )}
 
                 {checkoutError && (
                   <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3" role="alert">
@@ -573,6 +612,7 @@ export default function EnterPageClient({
                   entryToken={entryToken ?? ""}
                   totalGBP={bookPrices[formData.bookCount]}
                   bookCount={formData.bookCount}
+                  bookTitles={formData.bookTitles}
                 />
               ) : (
                 <div className="flex items-center justify-center py-8 text-slate-400 text-sm gap-2">

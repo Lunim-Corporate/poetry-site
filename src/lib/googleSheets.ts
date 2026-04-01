@@ -2,7 +2,7 @@ import { google } from "googleapis";
 
 const SHEET_NAME = "Sheet1";
 const SHEET_GID = 0;
-const ROW_WIDTH = 11;
+const ROW_WIDTH = 12;
 
 export interface IncompleteEntryRow {
   token: string;
@@ -12,6 +12,7 @@ export interface IncompleteEntryRow {
   phone: string;
   quantity: number;
   priceGBP: number;
+  bookTitles: string[];
 }
 
 export interface PaidEntryUpdate {
@@ -20,6 +21,7 @@ export interface PaidEntryUpdate {
   priceGBP: number;
   paymentId: string;
   paidAt: string;
+  bookTitles?: string[];
 }
 
 function getSheetsConfig() {
@@ -78,7 +80,7 @@ async function getRowValues(rowNumber: number): Promise<(string | number)[]> {
 
   const response = await sheets.spreadsheets.values.get({
     spreadsheetId,
-    range: `${SHEET_NAME}!A${rowNumber}:K${rowNumber}`,
+    range: `${SHEET_NAME}!A${rowNumber}:L${rowNumber}`,
   });
 
   return normalizeRow(response.data.values?.[0] ?? []);
@@ -90,7 +92,7 @@ async function updateRowValues(rowNumber: number, values: (string | number)[]): 
 
   await sheets.spreadsheets.values.update({
     spreadsheetId,
-    range: `${SHEET_NAME}!A${rowNumber}:K${rowNumber}`,
+    range: `${SHEET_NAME}!A${rowNumber}:L${rowNumber}`,
     valueInputOption: "RAW",
     requestBody: {
       values: [normalizeRow(values)],
@@ -104,7 +106,7 @@ async function appendRow(values: (string | number)[]): Promise<number> {
 
   const response = await sheets.spreadsheets.values.append({
     spreadsheetId,
-    range: `${SHEET_NAME}!A:K`,
+    range: `${SHEET_NAME}!A:L`,
     valueInputOption: "RAW",
     requestBody: {
       values: [normalizeRow(values)],
@@ -133,6 +135,7 @@ export async function upsertIncompleteEntry(entry: IncompleteEntryRow): Promise<
     current[8] = "Incomplete";
     current[9] = entry.rulesConfirmed ? "Yes" : "No";
     current[10] = "";
+    current[11] = entry.bookTitles.join(", ");
 
     await updateRowValues(rowNumber, current);
     return buildRowUrl(spreadsheetId, rowNumber);
@@ -150,6 +153,7 @@ export async function upsertIncompleteEntry(entry: IncompleteEntryRow): Promise<
     "Incomplete",
     entry.rulesConfirmed ? "Yes" : "No",
     "",
+    entry.bookTitles.join(", "),
   ]);
 
   return buildRowUrl(spreadsheetId, newRowNumber);
@@ -170,6 +174,9 @@ export async function markEntryPaidByToken(entry: PaidEntryUpdate): Promise<stri
   current[7] = entry.token;
   current[8] = "Paid";
   current[10] = entry.paidAt;
+  if (entry.bookTitles && entry.bookTitles.length > 0) {
+    current[11] = entry.bookTitles.join(", ");
+  }
 
   await updateRowValues(rowNumber, current);
 

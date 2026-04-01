@@ -16,10 +16,12 @@ function CheckoutForm({
   entryToken,
   totalGBP,
   bookCount,
+  bookTitles,
 }: {
   entryToken: string;
   totalGBP: number;
   bookCount: number;
+  bookTitles: string[];
 }) {
   const stripe = useStripe();
   const elements = useElements();
@@ -68,6 +70,7 @@ function CheckoutForm({
               bookCount,
               totalGBP,
               paidAt: new Date().toISOString(),
+              bookTitles,
             }),
           });
 
@@ -132,11 +135,13 @@ export default function PaymentForm({
   entryToken,
   totalGBP,
   bookCount,
+  bookTitles,
 }: {
   clientSecret: string;
   entryToken: string;
   totalGBP: number;
   bookCount: number;
+  bookTitles: string[];
 }) {
   return (
     <Elements
@@ -149,7 +154,7 @@ export default function PaymentForm({
         },
       }}
     >
-      <CheckoutForm entryToken={entryToken} totalGBP={totalGBP} bookCount={bookCount} />
+      <CheckoutForm entryToken={entryToken} totalGBP={totalGBP} bookCount={bookCount} bookTitles={bookTitles} />
     </Elements>
   );
 }

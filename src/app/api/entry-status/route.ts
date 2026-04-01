@@ -4,12 +4,13 @@ import { markEntryPaidByToken } from "@/lib/googleSheets";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { token, paymentId, bookCount, totalGBP, paidAt } = body as {
+    const { token, paymentId, bookCount, totalGBP, paidAt, bookTitles } = body as {
       token?: string;
       paymentId?: string;
       bookCount?: number;
       totalGBP?: number;
       paidAt?: string;
+      bookTitles?: string[];
     };
 
     if (!token || !paymentId || !bookCount || !totalGBP || !paidAt) {
@@ -25,6 +26,7 @@ export async function POST(request: NextRequest) {
       priceGBP: totalGBP,
       paymentId,
       paidAt,
+      bookTitles: bookTitles ?? [],
     });
 
     return NextResponse.json({ ok: true, sheetRowUrl });
