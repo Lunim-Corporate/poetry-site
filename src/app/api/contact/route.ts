@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendContactFormNotification } from "@/lib/email";
+import { appendContactMessageRow } from "@/lib/googleSheets";
 import { parseFullName, upsertListMember } from "@/lib/mailchimp";
 
 export async function POST(req: NextRequest) {
@@ -43,6 +44,22 @@ export async function POST(req: NextRequest) {
     console.error("Contact form email failed:", err);
     return NextResponse.json(
       { error: "Could not send your message. Please try again later." },
+      { status: 500 }
+    );
+  }
+
+  try {
+    await appendContactMessageRow({
+      timestamp: new Date().toISOString(),
+      name: trimmedName,
+      email: trimmedEmail,
+      newsletter: wantsNewsletter ? "Yes" : "No",
+      message: trimmedMessage,
+    });
+  } catch (err) {
+    console.error("Contact form Google Sheets append failed:", err);
+    return NextResponse.json(
+      { error: "Could not save your message. Please try again later." },
       { status: 500 }
     );
   }

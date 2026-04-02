@@ -1,6 +1,8 @@
 import { google } from "googleapis";
 
 const DEFAULT_SHEET_TAB_NAME = "Entries";
+/** Contact form log tab: Timestamp, Name, Email, Newsletter, Message. Override via env if renamed. */
+const DEFAULT_MESSAGES_TAB_NAME = "Messages";
 const SHEET_GID = 0;
 /** Max sheet row when scanning for token (`A2:J{n}`). Keep modest — large n slows every lookup. */
 const TOKEN_SCAN_MAX_ROW = 5_000;
@@ -203,6 +205,34 @@ async function appendRow(values: (string | number)[]): Promise<number> {
   const rowMatch = updatedRange.match(/[A-Z]+(\d+):/);
 
   return rowMatch ? Number(rowMatch[1]) : 1;
+}
+
+function resolveMessagesTabTitle(): string {
+  return process.env.GOOGLE_SHEETS_MESSAGES_TAB_NAME?.trim() || DEFAULT_MESSAGES_TAB_NAME;
+}
+
+/** Appends one row to the Messages tab (same spreadsheet as Entries). */
+export async function appendContactMessageRow(entry: {
+  timestamp: string;
+  name: string;
+  email: string;
+  newsletter: "Yes" | "No";
+  message: string;
+}): Promise<void> {
+  const { spreadsheetId } = getSheetsConfig();
+  const sheets = await getSheetsClient();
+  const tab = resolveMessagesTabTitle();
+
+  await sheets.spreadsheets.values.append({
+    spreadsheetId,
+    range: sheetRange(`A:E`, tab),
+    valueInputOption: "RAW",
+    requestBody: {
+      values: [
+        [entry.timestamp, entry.name, entry.email, entry.newsletter, entry.message],
+      ],
+    },
+  });
 }
 
 export async function upsertIncompleteEntry(entry: IncompleteEntryRow): Promise<string> {
