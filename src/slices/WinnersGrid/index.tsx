@@ -90,7 +90,7 @@ export default function WinnersGrid({ slice }: SliceComponentProps<WinnersGridSl
                   rel="noopener noreferrer"
                   className="text-primary underline hover:text-primary-light"
                 >
-                  Purchase a copy
+                  Purchase a copy of {firstPlace.book_title}
                 </a>
               </strong>
             </p>

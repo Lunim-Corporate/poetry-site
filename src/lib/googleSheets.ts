@@ -50,16 +50,11 @@ function buildRowUrl(spreadsheetId: string, rowNumber: number): string {
   return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/edit#gid=${SHEET_GID}&range=A${rowNumber}`;
 }
 
-function formatPrice(priceGBP: number): string {
-  return "\u00A3" + priceGBP;
-}
-
-function normalizeRow(values: unknown[] | undefined): string[] {
-  const row = Array.from({ length: ROW_WIDTH }, (_, index) => {
+function normalizeRow(values: (string | number | null | undefined)[]): (string | number)[] {
+  return Array.from({ length: ROW_WIDTH }, (_, index) => {
     const value = values?.[index];
-    return value == null ? "" : String(value);
+    return value == null ? "" : value;
   });
-  return row;
 }
 
 async function findRowByToken(token: string): Promise<number | null> {
@@ -77,7 +72,7 @@ async function findRowByToken(token: string): Promise<number | null> {
   return index === -1 ? null : index + 2;
 }
 
-async function getRowValues(rowNumber: number): Promise<string[]> {
+async function getRowValues(rowNumber: number): Promise<(string | number)[]> {
   const { spreadsheetId } = getSheetsConfig();
   const sheets = await getSheetsClient();
 
@@ -86,10 +81,10 @@ async function getRowValues(rowNumber: number): Promise<string[]> {
     range: `${SHEET_NAME}!A${rowNumber}:K${rowNumber}`,
   });
 
-  return normalizeRow(response.data.values?.[0]);
+  return normalizeRow(response.data.values?.[0] ?? []);
 }
 
-async function updateRowValues(rowNumber: number, values: string[]): Promise<void> {
+async function updateRowValues(rowNumber: number, values: (string | number)[]): Promise<void> {
   const { spreadsheetId } = getSheetsConfig();
   const sheets = await getSheetsClient();
 
@@ -103,7 +98,7 @@ async function updateRowValues(rowNumber: number, values: string[]): Promise<voi
   });
 }
 
-async function appendRow(values: string[]): Promise<number> {
+async function appendRow(values: (string | number)[]): Promise<number> {
   const { spreadsheetId } = getSheetsConfig();
   const sheets = await getSheetsClient();
 
@@ -127,12 +122,12 @@ export async function upsertIncompleteEntry(entry: IncompleteEntryRow): Promise<
   const rowNumber = await findRowByToken(entry.token);
 
   if (rowNumber) {
-    const current = await getRowValues(rowNumber);
+    const current: (string | number)[] = await getRowValues(rowNumber);
     current[1] = entry.name;
     current[2] = entry.email;
     current[3] = entry.phone;
-    current[4] = String(entry.quantity);
-    current[5] = formatPrice(entry.priceGBP);
+    current[4] = entry.quantity;
+    current[5] = entry.priceGBP;
     current[6] = "";
     current[7] = entry.token;
     current[8] = "Incomplete";
@@ -148,8 +143,8 @@ export async function upsertIncompleteEntry(entry: IncompleteEntryRow): Promise<
     entry.name,
     entry.email,
     entry.phone,
-    String(entry.quantity),
-    formatPrice(entry.priceGBP),
+    entry.quantity,
+    entry.priceGBP,
     "",
     entry.token,
     "Incomplete",
@@ -168,9 +163,9 @@ export async function markEntryPaidByToken(entry: PaidEntryUpdate): Promise<stri
     throw new Error("Could not find existing Google Sheets row for entry token.");
   }
 
-  const current = await getRowValues(rowNumber);
-  current[4] = String(entry.quantity);
-  current[5] = formatPrice(entry.priceGBP);
+  const current: (string | number)[] = await getRowValues(rowNumber);
+  current[4] = entry.quantity;
+  current[5] = entry.priceGBP;
   current[6] = entry.paymentId;
   current[7] = entry.token;
   current[8] = "Paid";

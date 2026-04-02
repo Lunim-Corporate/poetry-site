@@ -23,9 +23,9 @@
           "type": "StructuredText",
           "config": {
             "label": "Intro Text",
+            "placeholder": "We have three main prize categories",
             "allowTargetBlank": true,
-            "single": "paragraph",
-            "placeholder": "We have three main prize categories"
+            "single": "paragraph,strong,em,hyperlink,list-item,o-list-item"
           }
         },
         "prizes": {
@@ -68,8 +68,9 @@
           "type": "StructuredText",
           "config": {
             "label": "Children Prize Description",
+            "placeholder": "",
             "allowTargetBlank": true,
-            "multi": "paragraph"
+            "multi": "paragraph,strong,em,hyperlink,list-item,o-list-item"
           }
         },
         "benefits_title": {
@@ -97,8 +98,9 @@
           "type": "StructuredText",
           "config": {
             "label": "Additional Note",
+            "placeholder": "",
             "allowTargetBlank": true,
-            "single": "paragraph"
+            "single": "paragraph,strong,em,hyperlink,list-item,o-list-item"
           }
         }
       },

@@ -89,7 +89,7 @@
                   "label": "Winner Bio",
                   "placeholder": "Bio and background about the winner (shown in left column of spotlight)",
                   "allowTargetBlank": true,
-                  "multi": "heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl,paragraph,preformatted"
+                  "multi": "preformatted,heading1,heading2,heading3,heading4,heading5,heading6,em,hyperlink,image,embed,list-item,o-list-item,rtl,strong,paragraph"
                 }
               },
               "portrait_image": {

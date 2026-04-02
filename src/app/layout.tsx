@@ -4,6 +4,7 @@ import { PrismicPreview } from "@prismicio/next";
 import { createClient, repositoryName } from "@/prismicio";
 import NavigationMenu from "@/slices/NavigationMenu";
 import FooterSlice from "@/slices/Footer";
+import ScrollToTop from "@/components/ScrollToTop";
 import type { NavigationMenuSliceData, FooterSliceData, PrismicSlice } from "@/types";
 import { DEFAULT_YEARS } from "@/types";
 import "./globals.css";
@@ -97,6 +98,7 @@ export default async function RootLayout({
     <html lang="en" className={`${sourceSerifPro.variable} ${workSans.variable}`}>
       <body>
         <PrismicPreview repositoryName={repositoryName}>
+          <ScrollToTop />
           <NavigationMenu
             slice={navigationMenu || defaultNavigationSlice}
             index={0}
