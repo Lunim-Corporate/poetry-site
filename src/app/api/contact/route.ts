@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { sendContactFormNotification } from "@/lib/email";
 import { parseFullName, upsertListMember } from "@/lib/mailchimp";
 
 export async function POST(req: NextRequest) {
@@ -26,14 +27,34 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Message is required." }, { status: 400 });
   }
 
-  if (newsletter) {
-    const { firstName, lastName } = parseFullName(name);
-    const result = await upsertListMember(email.trim(), {
+  const trimmedName = name.trim();
+  const trimmedEmail = email.trim();
+  const trimmedMessage = message.trim();
+  const wantsNewsletter = Boolean(newsletter);
+
+  try {
+    await sendContactFormNotification({
+      name: trimmedName,
+      email: trimmedEmail,
+      message: trimmedMessage,
+      newsletterOptIn: wantsNewsletter,
+    });
+  } catch (err) {
+    console.error("Contact form email failed:", err);
+    return NextResponse.json(
+      { error: "Could not send your message. Please try again later." },
+      { status: 500 }
+    );
+  }
+
+  if (wantsNewsletter) {
+    const { firstName, lastName } = parseFullName(trimmedName);
+    const result = await upsertListMember(trimmedEmail, {
       FNAME: firstName,
       LNAME: lastName,
     });
     if (!result.ok) {
-      return NextResponse.json({ error: result.error }, { status: 500 });
+      console.error("Contact form: Mailchimp signup failed after email was sent:", result.error);
     }
   }
 

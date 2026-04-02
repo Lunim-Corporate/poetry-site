@@ -118,3 +118,42 @@ export async function sendAdminNotification(entry: EmailEntry): Promise<void> {
     `,
   });
 }
+
+export interface ContactFormPayload {
+  name: string;
+  email: string;
+  message: string;
+  newsletterOptIn: boolean;
+}
+
+/** Sends the site contact form message to `ADMIN_EMAIL` (same inbox as entry notifications). */
+export async function sendContactFormNotification(payload: ContactFormPayload): Promise<void> {
+  const resend = getResend();
+  const fromEmail = process.env.EMAIL_FROM!;
+  const adminEmail = process.env.ADMIN_EMAIL;
+
+  if (!adminEmail) throw new Error("Missing ADMIN_EMAIL environment variable.");
+
+  const { name, email, message, newsletterOptIn } = payload;
+  const timestamp = new Date().toISOString();
+
+  await resend.emails.send({
+    from: fromEmail,
+    to: adminEmail,
+    replyTo: email,
+    subject: `Contact form: ${name}`,
+    html: `
+      <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; color: #1e293b;">
+        <h2 style="font-size: 18px; margin-bottom: 12px;">Website contact message</h2>
+        <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+          <tr><td style="padding: 6px 12px 6px 0; color: #64748b; vertical-align: top;">Name</td><td>${escapeHtml(name)}</td></tr>
+          <tr><td style="padding: 6px 12px 6px 0; color: #64748b; vertical-align: top;">Email</td><td><a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></td></tr>
+          <tr><td style="padding: 6px 12px 6px 0; color: #64748b;">Newsletter</td><td>${newsletterOptIn ? "Yes (requested)" : "No"}</td></tr>
+          <tr><td style="padding: 6px 12px 6px 0; color: #64748b;">Sent</td><td>${timestamp}</td></tr>
+        </table>
+        <h3 style="font-size: 15px; margin: 20px 0 8px;">Message</h3>
+        <pre style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; font-family: inherit; font-size: 14px; white-space: pre-wrap; margin: 0;">${escapeHtml(message)}</pre>
+      </div>
+    `,
+  });
+}
