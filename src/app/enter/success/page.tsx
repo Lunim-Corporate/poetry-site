@@ -7,7 +7,7 @@ import { DEFAULT_SHIPPING } from "../constants";
 import PrintButton from "./PrintButton";
 import MarkEntryComplete from "./MarkEntryComplete";
 import SuccessStepper from "./SuccessStepper";
-import { markEntryPaidByToken } from "@/lib/googleSheets";
+import { getBookTitlesForToken, markEntryPaidByToken } from "@/lib/googleSheets";
 import { sendEntrantConfirmation, sendAdminNotification } from "@/lib/email";
 
 export const metadata: Metadata = {
@@ -19,6 +19,53 @@ function getStripe() {
   return new Stripe(process.env.STRIPE_SECRET_KEY!, {
     apiVersion: "2026-01-28.clover",
   });
+}
+
+function parseBookTitlesFromStripeMetadata(
+  meta: Record<string, string | undefined>,
+  bookCount: number
+): string[] {
+  const json = meta.book_titles_json;
+  if (typeof json === "string" && json.trim()) {
+    try {
+      const parsed = JSON.parse(json) as unknown;
+      if (Array.isArray(parsed)) {
+        return parsed.map((t) => String(t).trim()).filter(Boolean);
+      }
+    } catch {
+      /* ignore invalid JSON */
+    }
+  }
+  const out: string[] = [];
+  for (let i = 1; i <= bookCount; i++) {
+    const v = meta[`book_title_${i}`];
+    if (typeof v === "string" && v.trim()) out.push(v.trim());
+  }
+  return out;
+}
+
+function mergeStripeMetadata(
+  existing: Stripe.Metadata | null,
+  patch: Record<string, string>
+): Record<string, string> {
+  const base: Record<string, string> = {};
+  if (existing) {
+    for (const key of Object.keys(existing)) {
+      const v = existing[key as keyof typeof existing];
+      if (typeof v === "string") base[key] = v;
+    }
+  }
+  return { ...base, ...patch };
+}
+
+/** Avoid blocking the whole page (and emails) if Google Sheets is slow or hangs. */
+function withTimeout<T>(promise: Promise<T>, ms: number, fallback: T): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((resolve) => {
+      setTimeout(() => resolve(fallback), ms);
+    }),
+  ]);
 }
 
 export default async function SuccessPage({
@@ -74,6 +121,17 @@ export default async function SuccessPage({
   const totalGBP = intent.metadata?.total_gbp ?? "0";
   const bookLabel = bookCount === 1 ? "book" : "books";
 
+  const meta = (intent.metadata ?? {}) as Record<string, string | undefined>;
+  const bookTitlesFromMetadata = parseBookTitlesFromStripeMetadata(meta, bookCount);
+  let resolvedBookTitles = bookTitlesFromMetadata;
+  if (resolvedBookTitles.length === 0 && entryToken) {
+    try {
+      resolvedBookTitles = await withTimeout(getBookTitlesForToken(entryToken), 8_000, []);
+    } catch (err) {
+      console.error("Could not load book titles from sheet for email:", err);
+    }
+  }
+
   const reference = `MAYA-${new Date().getFullYear()}-${intentId.slice(-8).toUpperCase()}`;
 
   const client = createClient();
@@ -95,6 +153,7 @@ export default async function SuccessPage({
     priceGBP: Number(totalGBP),
     paymentId: intentId,
     reference,
+    bookTitles: resolvedBookTitles.length > 0 ? resolvedBookTitles : undefined,
     shipping,
   };
 
@@ -104,6 +163,18 @@ export default async function SuccessPage({
     `https://docs.google.com/spreadsheets/d/${process.env.GOOGLE_SHEETS_SPREADSHEET_ID}/edit`;
 
   if (!intent.metadata?.entry_processed) {
+    // Send confirmation emails first. Previously: Stripe metadata update ran before
+    // emails; if that call hung or the worker died before the send lines, no mail went out
+    // while entry_processed could still get set on a retry.
+    try {
+      await Promise.all([
+        sendEntrantConfirmation(emailEntry),
+        sendAdminNotification(emailEntry),
+      ]);
+    } catch (err) {
+      console.error("Failed to send confirmation emails:", err);
+    }
+
     try {
       if (entryToken) {
         sheetRowUrl = await markEntryPaidByToken({
@@ -112,6 +183,7 @@ export default async function SuccessPage({
           priceGBP: Number(totalGBP),
           paymentId: intentId,
           paidAt: new Date(intent.created * 1000).toISOString(),
+          bookTitles: resolvedBookTitles.length > 0 ? resolvedBookTitles : undefined,
         });
       } else {
         console.error("Missing entry token in Stripe metadata; skipping Google Sheets paid sync.");
@@ -121,20 +193,14 @@ export default async function SuccessPage({
     }
 
     try {
-      await stripe.paymentIntents.update(intentId, {
-        metadata: { ...intent.metadata, entry_processed: "true", sheet_row_url: sheetRowUrl },
+      const mergedMeta = mergeStripeMetadata(intent.metadata, {
+        entry_processed: "true",
+        sheet_row_url: sheetRowUrl,
       });
+      await stripe.paymentIntents.update(intentId, { metadata: mergedMeta });
     } catch (err) {
       console.error("Failed to update Stripe metadata after entry processing:", err);
     }
-
-    sendEntrantConfirmation(emailEntry).catch((err) =>
-      console.error("Failed to send entrant confirmation email:", err)
-    );
-
-    sendAdminNotification(emailEntry).catch((err) =>
-      console.error("Failed to send admin notification email:", err)
-    );
   } else if (intent.metadata?.sheet_row_url) {
     sheetRowUrl = intent.metadata.sheet_row_url;
   }

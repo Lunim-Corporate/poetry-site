@@ -7,6 +7,8 @@ export interface EmailEntry {
   priceGBP: number;
   paymentId: string;
   reference: string;
+  /** Book titles in order; used for admin email listing. */
+  bookTitles?: string[];
   shipping: {
     name: string;
     street: string;
@@ -14,6 +16,14 @@ export interface EmailEntry {
     postcode: string;
     country: string;
   };
+}
+
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 function getResend() {
@@ -82,6 +92,11 @@ export async function sendAdminNotification(entry: EmailEntry): Promise<void> {
 
   const bookWord = entry.quantity === 1 ? "book" : "books";
   const timestamp = new Date().toISOString();
+  const titles = entry.bookTitles?.filter(Boolean) ?? [];
+  const booksCell =
+    titles.length > 0
+      ? `<ol style="margin: 0; padding-left: 20px;">${titles.map((t) => `<li>${escapeHtml(t)}</li>`).join("")}</ol>`
+      : `${entry.quantity} ${bookWord}`;
 
   await resend.emails.send({
     from: fromEmail,
@@ -91,9 +106,9 @@ export async function sendAdminNotification(entry: EmailEntry): Promise<void> {
       <div style="font-family: monospace; max-width: 600px; margin: 0 auto; color: #1e293b;">
         <h2 style="font-family: Georgia, serif; font-size: 18px;">New Entry Received</h2>
         <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
-          <tr><td style="padding: 6px 12px 6px 0; color: #64748b;">Name</td><td>${entry.name}</td></tr>
-          <tr><td style="padding: 6px 12px 6px 0; color: #64748b;">Email</td><td>${entry.email}</td></tr>
-          <tr><td style="padding: 6px 12px 6px 0; color: #64748b;">Books</td><td>${entry.quantity} ${bookWord}</td></tr>
+          <tr><td style="padding: 6px 12px 6px 0; color: #64748b; vertical-align: top;">Name</td><td>${entry.name}</td></tr>
+          <tr><td style="padding: 6px 12px 6px 0; color: #64748b; vertical-align: top;">Email</td><td>${entry.email}</td></tr>
+          <tr><td style="padding: 6px 12px 6px 0; color: #64748b; vertical-align: top;">Books</td><td>${booksCell}</td></tr>
           <tr><td style="padding: 6px 12px 6px 0; color: #64748b;">Amount</td><td>£${entry.priceGBP}</td></tr>
           <tr><td style="padding: 6px 12px 6px 0; color: #64748b;">Reference</td><td>${entry.reference}</td></tr>
           <tr><td style="padding: 6px 12px 6px 0; color: #64748b;">Payment ID</td><td>${entry.paymentId}</td></tr>

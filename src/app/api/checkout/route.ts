@@ -57,19 +57,31 @@ export async function POST(request: NextRequest) {
     // Create the PaymentIntent first so the client gets a clientSecret even if
     // Google Sheets is slow or temporarily failing (Sheets used to run first and blocked the response).
     const stripe = getStripe();
+    const trimmedTitles = Array.from({ length: bookCount }, (_, i) =>
+      String((bookTitles ?? [])[i] ?? "").trim()
+    );
+    const metadata: Record<string, string> = {
+      entrant_name: name.trim(),
+      entrant_email: email.trim(),
+      entrant_phone: phone?.trim() ?? "",
+      entry_token: token?.trim() ?? "",
+      book_count: String(bookCount),
+      total_gbp: String(totalGBP),
+    };
+    trimmedTitles.forEach((title, i) => {
+      if (title) metadata[`book_title_${i + 1}`] = title.slice(0, 500);
+    });
+    const titlesJson = JSON.stringify(trimmedTitles);
+    if (titlesJson.length <= 500) {
+      metadata.book_titles_json = titlesJson;
+    }
+
     const intent = await stripe.paymentIntents.create({
       amount: totalGBP * 100, // Stripe uses pence
       currency: "gbp",
       receipt_email: email,
       automatic_payment_methods: { enabled: true },
-      metadata: {
-        entrant_name: name.trim(),
-        entrant_email: email.trim(),
-        entrant_phone: phone?.trim() ?? "",
-        entry_token: token?.trim() ?? "",
-        book_count: String(bookCount),
-        total_gbp: String(totalGBP),
-      },
+      metadata,
     });
 
     // Sheets after response: plain `void` promises can be dropped on serverless when

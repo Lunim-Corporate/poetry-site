@@ -249,6 +249,16 @@ export async function upsertIncompleteEntry(entry: IncompleteEntryRow): Promise<
   return buildRowUrl(spreadsheetId, newRowNumber);
 }
 
+/** Book titles from column G (comma-joined in the sheet), for email fallback when Stripe metadata is missing. */
+export async function getBookTitlesForToken(token: string): Promise<string[]> {
+  const rowNumber = await findRowByToken(token);
+  if (!rowNumber) return [];
+  const row = await getRowValues(rowNumber);
+  const cell = String(row[6] ?? "").trim();
+  if (!cell) return [];
+  return cell.split(", ").map((t) => t.trim()).filter(Boolean);
+}
+
 export async function markEntryPaidByToken(entry: PaidEntryUpdate): Promise<string> {
   const { spreadsheetId } = getSheetsConfig();
   const rowNumber = await findRowByToken(entry.token);
