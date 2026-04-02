@@ -62,9 +62,9 @@ export default function Newsletter({ slice }: SliceComponentProps<NewsletterSlic
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full text-base md:text-sm"
+            className="w-full text-base"
           />
-          {error && <p className="text-red-600 text-sm mt-1">{error}</p>}
+          {error && <p className="text-red-600 text-base mt-1">{error}</p>}
           <button
             type="submit"
             className={`btn btn--full ${isLoading ? "is-loading" : ""}`}

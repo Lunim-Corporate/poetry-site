@@ -99,11 +99,11 @@ export default function Sidebar() {
         aria-label="Newsletter sign-up"
       >
         <h3 className="text-xl font-bold text-slate-900 mb-4">Newsletter</h3>
-        <p className="text-sm text-[#333333] mb-5">
+        <p className="text-base text-[#333333] mb-5">
           Want to be kept informed? No spam - just relevant updates.
         </p>
         {newsletterSuccess ? (
-          <p className="text-sm text-[#333333]">
+          <p className="text-base text-[#333333]">
             <strong>Thank you!</strong> You&apos;ve been added to our mailing
             list.
           </p>
@@ -133,7 +133,7 @@ export default function Sidebar() {
                   setNewsletterEmail(e.target.value);
                   if (newsletterError) setNewsletterError("");
                 }}
-                className="w-full px-4 py-2.5 text-base md:text-sm border-2 border-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-white placeholder:font-sans"
+                className="w-full px-4 py-2.5 text-base border-2 border-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-white placeholder:font-sans"
               />
               {newsletterError && (
                 <p className="text-xs text-red-600 mt-1" role="alert">
@@ -144,14 +144,14 @@ export default function Sidebar() {
             <button
               type="submit"
               disabled={newsletterSubmitting}
-              className="w-full border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] disabled:bg-slate-400 text-[#23100A] font-bold py-2.5 px-4 rounded-lg text-sm transition-all duration-300 flex items-center justify-center gap-2"
+              className="w-full border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] disabled:bg-slate-400 text-[#23100A] font-bold py-2.5 px-4 rounded-lg text-base transition-all duration-300 flex items-center justify-center gap-2"
             >
               {newsletterSubmitting && (
                 <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               )}
               {newsletterSubmitting ? "Signing up..." : "Sign up"}
             </button>
-            <p className="text-sm text-[#333333]">
+            <p className="text-base text-[#333333]">
               By signing up, you agree to receive emails. You can unsubscribe at
               any time.
             </p>
@@ -168,11 +168,11 @@ export default function Sidebar() {
         <h3 className="text-xl font-bold text-slate-900 mb-4">
           Contact Us
         </h3>
-        <p className="text-sm text-[#333333] mb-5">
+        <p className="text-base text-[#333333] mb-5">
           Send us a message and we&apos;ll get back to you.
         </p>
         {contactSuccess ? (
-          <p className="text-sm text-[#333333]">
+          <p className="text-base text-[#333333]">
             <strong>
               Thank you{contactData.name ? `, ${contactData.name}` : ""}!
             </strong>{" "}
@@ -199,7 +199,7 @@ export default function Sidebar() {
                   if (contactErrors.name)
                     setContactErrors({ ...contactErrors, name: "" });
                 }}
-                className="w-full px-4 py-2.5 text-base md:text-sm border-2 border-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-white placeholder:font-sans"
+                className="w-full px-4 py-2.5 text-base border-2 border-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-white placeholder:font-sans"
               />
               {contactErrors.name && (
                 <p className="text-xs text-red-600 mt-1" role="alert">
@@ -227,7 +227,7 @@ export default function Sidebar() {
                   if (contactErrors.email)
                     setContactErrors({ ...contactErrors, email: "" });
                 }}
-                className="w-full px-4 py-2.5 text-base md:text-sm border-2 border-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-white placeholder:font-sans"
+                className="w-full px-4 py-2.5 text-base border-2 border-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-white placeholder:font-sans"
               />
               {contactErrors.email && (
                 <p className="text-xs text-red-600 mt-1" role="alert">
@@ -253,7 +253,7 @@ export default function Sidebar() {
                   if (contactErrors.message)
                     setContactErrors({ ...contactErrors, message: "" });
                 }}
-                className="w-full px-4 py-2.5 text-base md:text-sm border-2 border-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-y bg-white"
+                className="w-full px-4 py-2.5 text-base border-2 border-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-y bg-white"
               />
               {contactErrors.message && (
                 <p className="text-xs text-red-600 mt-1" role="alert">
@@ -277,7 +277,7 @@ export default function Sidebar() {
               />
               <label
                 htmlFor="sidebar-contact-newsletter"
-                className="text-sm font-bold text-[#333333]"
+                className="text-base font-bold text-[#333333]"
               >
                 Sign me up to your newsletter
               </label>
@@ -290,7 +290,7 @@ export default function Sidebar() {
             <button
               type="submit"
               disabled={contactSubmitting}
-              className="w-full border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] disabled:bg-slate-400 text-[#23100A] font-bold py-2.5 px-4 rounded-lg text-sm transition-all duration-300 flex items-center justify-center gap-2"
+              className="w-full border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] disabled:bg-slate-400 text-[#23100A] font-bold py-2.5 px-4 rounded-lg text-base transition-all duration-300 flex items-center justify-center gap-2"
             >
               {contactSubmitting && (
                 <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

@@ -68,7 +68,7 @@ export async function sendEntrantConfirmation(entry: EmailEntry): Promise<void> 
 
         <h2 style="font-size: 16px; margin-bottom: 8px;">Next Step: Send Your ${entry.quantity === 1 ? "Book" : "Books"}</h2>
         <p>Please post your ${bookWord} to the address below:</p>
-        <pre style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; font-family: inherit; font-size: 14px; white-space: pre-wrap;">${shippingFormatted}</pre>
+        <pre style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; font-family: inherit; font-size: 16px; white-space: pre-wrap;">${shippingFormatted}</pre>
 
         <p style="font-size: 13px; color: #64748b;">
           Reference: <strong>${entry.reference}</strong><br/>
@@ -105,7 +105,7 @@ export async function sendAdminNotification(entry: EmailEntry): Promise<void> {
     html: `
       <div style="font-family: monospace; max-width: 600px; margin: 0 auto; color: #1e293b;">
         <h2 style="font-family: Georgia, serif; font-size: 18px;">New Entry Received</h2>
-        <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 16px;">
           <tr><td style="padding: 6px 12px 6px 0; color: #64748b; vertical-align: top;">Name</td><td>${entry.name}</td></tr>
           <tr><td style="padding: 6px 12px 6px 0; color: #64748b; vertical-align: top;">Email</td><td>${entry.email}</td></tr>
           <tr><td style="padding: 6px 12px 6px 0; color: #64748b; vertical-align: top;">Books</td><td>${booksCell}</td></tr>
@@ -145,14 +145,14 @@ export async function sendContactFormNotification(payload: ContactFormPayload): 
     html: `
       <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; color: #1e293b;">
         <h2 style="font-size: 18px; margin-bottom: 12px;">Website contact message</h2>
-        <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 16px;">
           <tr><td style="padding: 6px 12px 6px 0; color: #64748b; vertical-align: top;">Name</td><td>${escapeHtml(name)}</td></tr>
           <tr><td style="padding: 6px 12px 6px 0; color: #64748b; vertical-align: top;">Email</td><td><a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></td></tr>
           <tr><td style="padding: 6px 12px 6px 0; color: #64748b;">Newsletter</td><td>${newsletterOptIn ? "Yes (requested)" : "No"}</td></tr>
           <tr><td style="padding: 6px 12px 6px 0; color: #64748b;">Sent</td><td>${timestamp}</td></tr>
         </table>
         <h3 style="font-size: 15px; margin: 20px 0 8px;">Message</h3>
-        <pre style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; font-family: inherit; font-size: 14px; white-space: pre-wrap; margin: 0;">${escapeHtml(message)}</pre>
+        <pre style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; font-family: inherit; font-size: 16px; white-space: pre-wrap; margin: 0;">${escapeHtml(message)}</pre>
       </div>
     `,
   });

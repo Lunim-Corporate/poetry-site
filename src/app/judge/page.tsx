@@ -90,10 +90,10 @@ export default async function JudgePage() {
 
                 <div className="grid grid-cols-2 gap-4 mt-8">
                   <div className="aspect-[2/3] bg-gradient-to-br from-slate-100 to-slate-200 rounded-lg shadow-md flex items-center justify-center">
-                    <span className="text-sm text-slate-500">Book Cover</span>
+                    <span className="text-base text-slate-500">Book Cover</span>
                   </div>
                   <div className="aspect-[2/3] bg-gradient-to-br from-slate-100 to-slate-200 rounded-lg shadow-md flex items-center justify-center">
-                    <span className="text-sm text-slate-500">Book Cover</span>
+                    <span className="text-base text-slate-500">Book Cover</span>
                   </div>
                 </div>
               </div>

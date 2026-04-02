@@ -115,7 +115,7 @@ export default function AboutSection({ slice }: SliceComponentProps<AboutSection
       <div>
         <Link
           href="/enter"
-          className="font-sans inline-flex items-center justify-center px-6 py-3 rounded-lg font-bold text-sm border-2 border-[#23100A] bg-[#FFE169] text-[#23100A] hover:bg-[#23100A] hover:text-[#FFE169] transition-all duration-300"
+          className="font-sans inline-flex items-center justify-center px-6 py-3 rounded-lg font-bold text-base border-2 border-[#23100A] bg-[#FFE169] text-[#23100A] hover:bg-[#23100A] hover:text-[#FFE169] transition-all duration-300"
         >
           Enter Your Book
         </Link>

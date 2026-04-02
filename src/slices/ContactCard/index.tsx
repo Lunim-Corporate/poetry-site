@@ -78,7 +78,7 @@ export default function ContactCard({ slice }: SliceComponentProps<ContactCardSl
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full text-base md:text-sm"
+                className="w-full text-base"
               />
             </div>
             <div>
@@ -91,7 +91,7 @@ export default function ContactCard({ slice }: SliceComponentProps<ContactCardSl
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full text-base md:text-sm"
+                className="w-full text-base"
               />
             </div>
           </div>
@@ -106,7 +106,7 @@ export default function ContactCard({ slice }: SliceComponentProps<ContactCardSl
               required
               value={formData.message}
               onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-              className="w-full text-base md:text-sm"
+              className="w-full text-base"
             />
           </div>
 
@@ -124,7 +124,7 @@ export default function ContactCard({ slice }: SliceComponentProps<ContactCardSl
           </div>
 
           {error && (
-            <p className="text-sm text-red-600" role="alert">
+            <p className="text-base text-red-600" role="alert">
               {error}
             </p>
           )}

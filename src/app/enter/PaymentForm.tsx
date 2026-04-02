@@ -91,7 +91,7 @@ function CheckoutForm({
     <form onSubmit={handleSubmit} className="space-y-5">
       {/* Spinner shown until PaymentElement signals it's fully rendered */}
       {!isReady && (
-        <div className="flex items-center justify-center py-10 text-slate-400 text-sm gap-2">
+        <div className="flex items-center justify-center py-10 text-slate-400 text-base gap-2">
           <span className="w-4 h-4 border-2 border-slate-300 border-t-slate-500 rounded-full animate-spin" />
           Loading payment form...
         </div>
@@ -105,7 +105,7 @@ function CheckoutForm({
 
       {error && (
         <p
-          className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3"
+          className="text-base text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3"
           role="alert"
         >
           {error}

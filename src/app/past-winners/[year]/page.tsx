@@ -86,7 +86,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
                     return (
                       <div key={level} className="text-center">
                         <p
-                          className={`text-sm font-semibold mb-3 ${
+                          className={`text-base font-semibold mb-3 ${
                             level === "1st Place"
                               ? "text-accent-dark"
                               : "text-slate-500"
@@ -124,7 +124,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
                         )}
 
                         {winner ? (
-                          <p className="text-sm">
+                          <p className="text-base">
                             <span className="font-semibold text-slate-900 block">
                               {winner.book_title}
                             </span>
@@ -143,7 +143,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
                             )}
                           </p>
                         ) : (
-                          <p className="text-sm text-slate-400">TBD</p>
+                          <p className="text-base text-slate-400">TBD</p>
                         )}
                       </div>
                     );
@@ -403,7 +403,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
                 <h3 className="text-lg font-semibold text-[#333333] mb-2">
                   {data.press_media_heading}
                 </h3>
-                <p className="text-sm text-slate-800">
+                <p className="text-base text-slate-800">
                   Press release –{" "}
                   <Link
                     href={data.press_media_link_url}
@@ -476,14 +476,14 @@ export default async function WinnersYearPage({ params }: PageProps) {
                 <h3 className="text-2xl font-semibold text-slate-900">
                   {(data.year ?? year) as string} Shortlist
                 </h3>
-                <p className="text-sm text-slate-600 mt-2 mb-4">
+                <p className="text-base text-slate-600 mt-2 mb-4">
                   The shortlist celebrates a wide range of voices and styles.
                 </p>
 
                 <div className="mt-1 rounded-xl border border-[#B7A08F] bg-[#F9F5EF] px-4 py-4 md:px-5 md:py-5">
                   <ul className="space-y-2">
                     {shortlist.map((entry, index) => (
-                      <li key={index} className="flex items-start gap-2 text-sm">
+                      <li key={index} className="flex items-start gap-2 text-base">
                         <span className="mt-1 text-slate-500">•</span>
                         <p className="text-slate-700">
                           {entry.book_link ? (
@@ -530,14 +530,14 @@ export default async function WinnersYearPage({ params }: PageProps) {
                 <h3 className="text-2xl font-semibold text-slate-900">
                   {(data.year ?? year) as string} Longlist
                 </h3>
-                <p className="text-sm text-slate-600 mt-2 mb-4">
+                <p className="text-base text-slate-600 mt-2 mb-4">
                   The shortlist celebrates a wide range of voices and styles.
                 </p>
 
                 <div className="mt-1 rounded-xl border border-[#B7A08F] bg-[#F9F5EF] px-4 py-4 md:px-5 md:py-5">
                   <ul className="space-y-2">
                     {longlist.map((entry, index) => (
-                      <li key={index} className="flex items-start gap-2 text-sm">
+                      <li key={index} className="flex items-start gap-2 text-base">
                         <span className="mt-1 text-slate-500">•</span>
                         <p className="text-slate-700">
                           {entry.book_link ? (
@@ -590,7 +590,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
             {/* Enter your book – click here. */}
             {(data.enter_cta_label || data.enter_cta_url) && (
               <section className="mt-6 border-t border-slate-200 pt-4">
-                <p className="text-sm pt-6 text-slate-800">
+                <p className="text-base pt-6 text-slate-800">
                   <Link
                     href={data.enter_cta_url || "/enter"}
                     target="_self"
@@ -607,7 +607,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
             <div className="pt-4 border-t border-slate-200">
               <Link
                 href="/past-winners"
-                className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-primary transition-colors"
+                className="inline-flex items-center gap-2 text-base font-medium text-slate-600 hover:text-primary transition-colors"
               >
                 ← Back to All Years
               </Link>
@@ -638,7 +638,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
           <div className="mt-8 pt-6 border-t border-slate-200">
             <Link
               href="/past-winners"
-              className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-primary transition-colors"
+              className="inline-flex items-center gap-2 text-base font-medium text-slate-600 hover:text-primary transition-colors"
             >
               ← Back to All Years
             </Link>

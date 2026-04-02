@@ -10,7 +10,7 @@ export default function Footer({ slice }: SliceComponentProps<FooterSliceData>) 
   return (
     <footer className="py-8 bg-gradient-to-r from-[#451E10] via-[#7a3520] to-[#451E10]">
       <div className="max-w-6xl mx-auto px-6">
-        <p className="text-sm text-white/70">
+        <p className="text-base text-white/70">
           © {currentYear} {copyrightText}. Delivered by{" "}
           <a
             href={deliveredByUrl}

@@ -106,7 +106,7 @@ export default async function PastWinnersPage() {
 
                   <div className="md:border md:border-[#B7A08F] rounded-2xl overflow-hidden bg-[#F9F5EF]">
                     {/* Header row */}
-                      <div className={`hidden md:grid ${mdGridColsClass} ${lgGridTemplateClass} border-b border-[#B7A08F] text-center text-sm bg-[#FFFEFA]`}>
+                      <div className={`hidden md:grid ${mdGridColsClass} ${lgGridTemplateClass} border-b border-[#B7A08F] text-center text-base bg-[#FFFEFA]`}>
                         {prizeOrder.map((level, index) => (
                           <div
                             key={level}
@@ -189,8 +189,8 @@ export default async function PastWinnersPage() {
                             )}
 
                             {winner ? (
-                              <p className="past-winners-listing-winner text-[15px] md:text-sm text-left md:text-center leading-snug w-full">
-                                <span className="font-semibold text-slate-900 block text-base md:text-sm">
+                              <p className="past-winners-listing-winner text-base text-left md:text-center leading-snug w-full">
+                                <span className="font-semibold text-slate-900 block text-base">
                                   {wrapCoverWithBookLink(
                                     winner.book_link,
                                     winner.book_title,
@@ -198,18 +198,18 @@ export default async function PastWinnersPage() {
                                   )}
                                 </span>
                                 {authors && (
-                                  <em className="text-slate-600 block text-[15px] md:text-sm">
+                                  <em className="text-slate-600 block text-base">
                                     {authors}
                                   </em>
                                 )}
                                 {winner.location && (
-                                  <span className="text-slate-500 block text-[15px] md:text-sm">
+                                  <span className="text-slate-500 block text-base">
                                     {winner.location}
                                   </span>
                                 )}
                               </p>
                             ) : (
-                              <p className="text-[15px] text-slate-400 text-left md:text-center w-full">
+                              <p className="text-base text-slate-400 text-left md:text-center w-full">
                                 Winner to be announced
                               </p>
                             )}

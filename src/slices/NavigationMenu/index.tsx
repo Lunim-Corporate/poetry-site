@@ -124,7 +124,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
           <div className="max-[899px]:flex hidden items-center gap-4 ml-auto">
             <Link
               href="/#contact-form"
-              className="text-sm font-medium text-white hover:text-white/80 transition-colors"
+              className="text-base font-medium text-white hover:text-white/80 transition-colors"
             >
               Contact Us
             </Link>
@@ -146,7 +146,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
               <Link
                 key={index}
                 href={link.url}
-                className={`px-4 py-2 text-sm lg:text-base font-medium transition-colors ${
+                className={`px-4 py-2 text-base font-medium transition-colors ${
                   isActive(link.url)
                     ? "text-[#FFE169] underline underline-offset-4 decoration-[#FFE169]"
                     : "text-white hover:underline hover:underline-offset-4 hover:decoration-white"
@@ -161,7 +161,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
               <div className="flex items-center">
                 <Link
                   href="/past-winners"
-                  className={`px-4 py-2 text-sm lg:text-base font-medium transition-colors ${
+                  className={`px-4 py-2 text-base font-medium transition-colors ${
                     isPastWinnersActive()
                       ? "text-[#FFE169] underline underline-offset-4 decoration-[#FFE169]"
                       : "text-white hover:underline hover:underline-offset-4 hover:decoration-white"
@@ -189,7 +189,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                       key={year}
                       href={`/past-winners/${year}`}
                       onClick={() => setDropdownOpen(false)}
-                      className="block px-3 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+                      className="block px-3 py-2 text-base text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
                     >
                       {year} Winners
                     </Link>
@@ -200,7 +200,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
 
             <Link
               href="/enter?step=1"
-              className={`px-4 py-2 text-sm lg:text-base font-medium transition-colors ${
+              className={`px-4 py-2 text-base font-medium transition-colors ${
                 isRulesStage
                   ? "text-[#FFE169] underline underline-offset-4 decoration-[#FFE169]"
                   : "text-white hover:underline hover:underline-offset-4 hover:decoration-white"
@@ -211,13 +211,13 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
             </Link>
             <Link
               href="/#faq"
-              className="px-4 py-2 text-sm lg:text-base font-medium text-white hover:underline hover:underline-offset-4 hover:decoration-white transition-colors"
+              className="px-4 py-2 text-base font-medium text-white hover:underline hover:underline-offset-4 hover:decoration-white transition-colors"
             >
               FAQ
             </Link>
             <Link
               href="/#contact-form"
-              className="px-4 py-2 text-sm lg:text-base font-medium text-white hover:underline hover:underline-offset-4 hover:decoration-white transition-colors"
+              className="px-4 py-2 text-base font-medium text-white hover:underline hover:underline-offset-4 hover:decoration-white transition-colors"
             >
               Contact Us
             </Link>
@@ -233,7 +233,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
               <nav className="fixed top-4 right-4 w-[min(360px,calc(100vw-2rem))] max-h-[calc(100vh-2rem)] p-5 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 flex flex-col gap-2 overflow-y-auto">
                 <button
                   onClick={() => setMobileNavOpen(false)}
-                  className="absolute top-2.5 right-2.5 px-3 py-1.5 text-sm font-semibold border border-slate-200 rounded-lg hover:border-slate-300 transition-colors"
+                  className="absolute top-2.5 right-2.5 px-3 py-1.5 text-base font-semibold border border-slate-200 rounded-lg hover:border-slate-300 transition-colors"
                 >
                   Close
                 </button>
@@ -302,7 +302,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                             setMobileDropdownOpen(false);
                             setMobileNavOpen(false);
                           }}
-                          className="block px-3 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+                          className="block px-3 py-2 text-base text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
                         >
                           {year} Winners
                         </Link>

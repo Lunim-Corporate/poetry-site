@@ -220,14 +220,14 @@ export default async function SuccessPage({
         {/* Step 4 card */}
         <div className="bg-white border border-slate-200 rounded-xl p-6 md:p-8 shadow-sm">
           {/* Status banner */}
-          <div className="border-2 border-emerald-400 rounded-xl bg-emerald-50 px-4 py-3 font-bold text-sm text-emerald-800 mb-4" role="status">
+          <div className="border-2 border-emerald-400 rounded-xl bg-emerald-50 px-4 py-3 font-bold text-base text-emerald-800 mb-4" role="status">
             Thank you, payment of &pound;{totalGBP} was made successfully.
           </div>
 
           <h2 className="text-lg font-semibold text-slate-900 mb-1">
             Print label and send your {bookLabel}
           </h2>
-          <p className="text-sm text-slate-500 mb-4">
+          <p className="text-base text-slate-500 mb-4">
             Click the &ldquo;Print label&rdquo; button to print out the details shown
             below, then stick this on the parcel for the {bookLabel} you&apos;re
             sending. Or, if you prefer, copy the details by hand &mdash; make sure to
@@ -237,8 +237,8 @@ export default async function SuccessPage({
           {/* Label grid */}
           <div id="print-label" className="grid grid-cols-1 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] gap-6 mt-2 mb-5 p-4 border-2 border-dashed border-slate-400/60 rounded-lg">
             <div>
-              <h3 className="text-sm font-semibold text-slate-700 mt-0 mb-2">Address</h3>
-              <p className="text-sm text-slate-600 leading-relaxed">
+              <h3 className="text-base font-semibold text-slate-700 mt-0 mb-2">Address</h3>
+              <p className="text-base text-slate-600 leading-relaxed">
                 <strong>{shipping.name}</strong>
                 <br />
                 {shipping.street.split("\n").map((line, i) => (
@@ -255,7 +255,7 @@ export default async function SuccessPage({
               </p>
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-slate-700 mt-0 mb-3">Reference</h3>
+              <h3 className="text-base font-semibold text-slate-700 mt-0 mb-3">Reference</h3>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={qrDataUrl}
@@ -264,7 +264,7 @@ export default async function SuccessPage({
                 height={112}
                 className="rounded"
               />
-              <p className="text-sm font-extrabold text-slate-900 mt-3">{reference}</p>
+              <p className="text-base font-extrabold text-slate-900 mt-3">{reference}</p>
             </div>
           </div>
 
@@ -289,7 +289,7 @@ export default async function SuccessPage({
           <div className="mt-5">
             <Link
               href="/"
-              className="text-sm text-slate-500 underline hover:text-slate-700"
+              className="text-base text-slate-500 underline hover:text-slate-700"
             >
               Return to home page
             </Link>
@@ -316,7 +316,7 @@ function ErrorState({
         <p className="text-slate-600 mb-6">{message}</p>
         <Link
           href="/enter"
-          className="inline-block border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] text-[#23100A] font-bold py-2.5 px-5 rounded-lg text-sm transition-colors"
+          className="inline-block border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] text-[#23100A] font-bold py-2.5 px-5 rounded-lg text-base transition-colors"
         >
           {linkText}
         </Link>

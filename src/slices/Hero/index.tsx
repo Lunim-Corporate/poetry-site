@@ -21,7 +21,7 @@ export default function Hero({ slice }: SliceComponentProps<HeroSliceData>) {
   };
 
   const subtitleClasses: Record<HeroVariant, string> = {
-    home: "font-sans font-semibold text-lg text-white/85 mt-4 max-w-2xl mx-auto [text-shadow:0_2px_18px_rgba(0,0,0,0.85)]",
+    home: "font-sans font-semibold text-xl text-white/85 mt-4 max-w-2xl mx-auto [text-shadow:0_2px_18px_rgba(0,0,0,0.85)]",
     small: "font-sans text-white/85 mt-2 [text-shadow:0_2px_18px_rgba(0,0,0,0.85)]",
     default: "font-sans text-lg text-white/85 mt-4 max-w-2xl mx-auto [text-shadow:0_2px_18px_rgba(0,0,0,0.85)]",
   };
@@ -53,12 +53,19 @@ export default function Hero({ slice }: SliceComponentProps<HeroSliceData>) {
             <PrismicRichText field={slice.primary.title} />
           </div>
           {slice.primary.subtitle && (
-            <div
-              className={`${subtitleClasses[variant]} animate-fade-in-up`}
-              style={{ animationDelay: "150ms" }}
-            >
-              <PrismicRichText field={slice.primary.subtitle} />
-            </div>
+            <PrismicRichText
+              field={slice.primary.subtitle}
+              components={{
+                paragraph: ({ children }) => (
+                  <p
+                    className={`${subtitleClasses[variant]} animate-fade-in-up`}
+                    style={{ animationDelay: "150ms" }}
+                  >
+                    {children}
+                  </p>
+                ),
+              }}
+            />
           )}
           {(slice.primary.cta_text || slice.primary.secondary_cta_text) && (
             <div
@@ -71,7 +78,7 @@ export default function Hero({ slice }: SliceComponentProps<HeroSliceData>) {
                   className={`font-sans inline-flex items-center justify-center rounded-lg font-bold transition-all duration-300 ${
                     variant === "home"
                       ? "px-8 py-4 text-base bg-[#FFE169] hover:bg-[#FFE169]/90 text-slate-900"
-                      : "px-6 py-3 text-sm border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] text-[#23100A]"
+                      : "px-6 py-3 text-base border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] text-[#23100A]"
                   }`}
                 >
                   {slice.primary.cta_text}
@@ -80,7 +87,7 @@ export default function Hero({ slice }: SliceComponentProps<HeroSliceData>) {
               {slice.primary.secondary_cta_text && (
                 <Link
                   href={slice.primary.secondary_cta_link || "#"}
-                  className="font-sans inline-flex items-center justify-center px-6 py-3 rounded-lg font-semibold text-sm border border-white/30 text-white hover:bg-white/10 transition-all duration-300"
+                  className="font-sans inline-flex items-center justify-center px-6 py-3 rounded-lg font-semibold text-base border border-white/30 text-white hover:bg-white/10 transition-all duration-300"
                 >
                   {slice.primary.secondary_cta_text}
                 </Link>

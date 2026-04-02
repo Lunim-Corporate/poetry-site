@@ -99,7 +99,7 @@ export default function JudgeProfile({ slice }: SliceComponentProps<JudgeProfile
                   </div>
                 )}
                 {book.book_title && (
-                  <p className="mt-2 text-sm font-medium text-slate-700 group-hover:text-primary transition-colors">
+                  <p className="mt-2 text-base font-medium text-slate-700 group-hover:text-primary transition-colors">
                     {book.book_title}
                   </p>
                 )}
@@ -113,7 +113,7 @@ export default function JudgeProfile({ slice }: SliceComponentProps<JudgeProfile
       <div className="mt-10">
         <Link
           href="/enter"
-          className="font-sans inline-flex items-center justify-center px-6 py-3 rounded-lg font-bold text-sm border-2 border-[#23100A] bg-[#FFE169] text-[#23100A] hover:bg-[#23100A] hover:text-[#FFE169] transition-all duration-300"
+          className="font-sans inline-flex items-center justify-center px-6 py-3 rounded-lg font-bold text-base border-2 border-[#23100A] bg-[#FFE169] text-[#23100A] hover:bg-[#23100A] hover:text-[#FFE169] transition-all duration-300"
         >
           Enter Your Book
         </Link>

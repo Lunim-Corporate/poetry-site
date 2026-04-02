@@ -339,13 +339,13 @@ export default function EnterPageClient({
 
               return (
                 <div key={index} className="flex flex-col items-center flex-1 relative z-10">
-                  <p className="text-sm text-slate-700 font-medium mb-1.5">
+                  <p className="text-base text-slate-700 font-medium mb-1.5">
                     Step {stepNum}
                   </p>
                   <button
                     type="button"
                     onClick={() => handleStepClick(stepNum)}
-                    className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all ${
+                    className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-base font-bold border-2 transition-all ${
                       isActive
                         ? "bg-[#23100A] border-[#23100A] text-[#FFE169] cursor-default"
                         : isCompleted
@@ -356,12 +356,12 @@ export default function EnterPageClient({
                     {stepNum}
                   </button>
                   <p className="text-center mt-1.5 leading-tight">
-                    <span className="hidden md:block text-sm text-slate-700">
+                    <span className="hidden md:block text-base text-slate-700">
                       {step.label}
                       <br />
                       {step.sublabel}
                     </span>
-                    <span className="md:hidden text-sm text-slate-700">{step.mobileLabel}</span>
+                    <span className="md:hidden text-base text-slate-700">{step.mobileLabel}</span>
                   </p>
                 </div>
               );
@@ -373,11 +373,11 @@ export default function EnterPageClient({
         {currentStep === 1 && (
           <div className="bg-white border border-slate-200 rounded-xl p-6 md:p-8 shadow-sm">
             <h2 className="text-lg font-semibold text-slate-900 mb-1">Competition Rules</h2>
-            <p className="text-sm text-slate-700 mb-6">
+            <p className="text-base text-slate-700 mb-6">
               Please review the competition rules before submitting your entry.
             </p>
 
-            <ol className="list-decimal list-outside pl-5 space-y-3 text-sm text-slate-600 font-normal">
+            <ol className="list-decimal list-outside pl-5 space-y-3 text-base text-slate-600 font-normal">
               {RULES.map((rule, index) => (
                 <li key={index} className="leading-relaxed">{rule}</li>
               ))}
@@ -391,7 +391,7 @@ export default function EnterPageClient({
                   onChange={(e) => setRulesConfirmed(e.target.checked)}
                   className="mt-0.5 w-4 h-4 accent-primary shrink-0"
                 />
-                <span className="text-sm text-slate-700">
+                <span className="text-base text-slate-700">
                   I confirm I have read and understood the rules of the competition
                 </span>
               </label>
@@ -422,17 +422,17 @@ export default function EnterPageClient({
               <button
                 type="button"
                 onClick={() => setCurrentStep(1)}
-                className="text-sm text-slate-700 underline inline-block mb-4 mt-1 hover:text-slate-900 cursor-pointer"
+                className="text-base text-slate-700 underline inline-block mb-4 mt-1 hover:text-slate-900 cursor-pointer"
               >
                 &laquo; Back to step 1
               </button>
-              <p className="text-sm text-slate-700 mb-6">
+              <p className="text-base text-slate-700 mb-6">
                 Tell us about yourself and how many books you&apos;re entering.
               </p>
 
               <form className="space-y-4" onSubmit={handleStep2Submit} noValidate>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1" htmlFor="entry-name">
+                  <label className="block text-base font-medium text-slate-700 mb-1" htmlFor="entry-name">
                     Name
                   </label>
                   <input
@@ -446,7 +446,7 @@ export default function EnterPageClient({
                       setFormData({ ...formData, name: e.target.value });
                       if (errors.name) setErrors({ ...errors, name: "" });
                     }}
-                    className="w-full px-4 py-2.5 text-base md:text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                    className="w-full px-4 py-2.5 text-base border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                   />
                   {errors.name && (
                     <p className="text-xs text-red-600 mt-1" role="alert">{errors.name}</p>
@@ -454,7 +454,7 @@ export default function EnterPageClient({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1" htmlFor="entry-email">
+                  <label className="block text-base font-medium text-slate-700 mb-1" htmlFor="entry-email">
                     Email address
                   </label>
                   <input
@@ -469,7 +469,7 @@ export default function EnterPageClient({
                       setFormData({ ...formData, email: e.target.value });
                       if (errors.email) setErrors({ ...errors, email: "" });
                     }}
-                    className="w-full px-4 py-2.5 text-base md:text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                    className="w-full px-4 py-2.5 text-base border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                   />
                   {errors.email && (
                     <p className="text-xs text-red-600 mt-1" role="alert">{errors.email}</p>
@@ -477,7 +477,7 @@ export default function EnterPageClient({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1" htmlFor="entry-phone-number">
+                  <label className="block text-base font-medium text-slate-700 mb-1" htmlFor="entry-phone-number">
                     Phone number (optional)
                   </label>
                   <div className="grid grid-cols-1 sm:grid-cols-[200px_minmax(0,1fr)] gap-3">
@@ -489,7 +489,7 @@ export default function EnterPageClient({
                         setFormData({ ...formData, phoneCountryCode: e.target.value });
                         if (errors.phoneNumber) setErrors({ ...errors, phoneNumber: "" });
                       }}
-                      className="w-full px-4 py-2.5 text-base md:text-sm border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                      className="w-full px-4 py-2.5 text-base border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                     >
                       <option value="">Country code</option>
                       {PHONE_COUNTRY_CODES.map((option) => (
@@ -509,7 +509,7 @@ export default function EnterPageClient({
                         setFormData({ ...formData, phoneNumber: e.target.value });
                         if (errors.phoneNumber) setErrors({ ...errors, phoneNumber: "" });
                       }}
-                      className="w-full px-4 py-2.5 text-base md:text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                      className="w-full px-4 py-2.5 text-base border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                     />
                   </div>
                   {errors.phoneNumber && (
@@ -518,7 +518,7 @@ export default function EnterPageClient({
                 </div>
 
                 <div>
-                  <p className="text-sm font-medium text-slate-700 mb-2">
+                  <p className="text-base font-medium text-slate-700 mb-2">
                     Number of books you&apos;d like to enter
                   </p>
                   <div className="space-y-2">
@@ -539,7 +539,7 @@ export default function EnterPageClient({
                           }}
                           className="w-4 h-4 accent-primary"
                         />
-                        <span className="text-sm text-slate-700">{option.label}</span>
+                        <span className="text-base text-slate-700">{option.label}</span>
                       </label>
                     ))}
                   </div>
@@ -553,7 +553,7 @@ export default function EnterPageClient({
                     {Array.from({ length: formData.bookCount }, (_, i) => (
                       <div key={i}>
                         <label
-                          className="block text-sm font-medium text-slate-700 mb-1"
+                          className="block text-base font-medium text-slate-700 mb-1"
                           htmlFor={`book-title-${i}`}
                         >
                           {i === 0 ? "Book Title" : `Book Title ${i + 1}`}
@@ -569,7 +569,7 @@ export default function EnterPageClient({
                             setFormData({ ...formData, bookTitles: updated });
                             if (errors.bookTitles) setErrors({ ...errors, bookTitles: "" });
                           }}
-                          className="w-full px-4 py-2.5 text-base md:text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                          className="w-full px-4 py-2.5 text-base border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                         />
                       </div>
                     ))}
@@ -580,7 +580,7 @@ export default function EnterPageClient({
                 )}
 
                 {checkoutError && (
-                  <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3" role="alert">
+                  <p className="text-base text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3" role="alert">
                     {checkoutError}
                   </p>
                 )}
@@ -608,11 +608,11 @@ export default function EnterPageClient({
               <button
                 type="button"
                 onClick={() => setCurrentStep(2)}
-                className="text-sm text-slate-700 underline inline-block mb-4 mt-1 hover:text-slate-900 cursor-pointer"
+                className="text-base text-slate-700 underline inline-block mb-4 mt-1 hover:text-slate-900 cursor-pointer"
               >
                 &laquo; Back to step 2
               </button>
-              <p className="text-sm text-slate-700 mb-6">
+              <p className="text-base text-slate-700 mb-6">
                 Total: &pound;{bookPrices[formData.bookCount]} for {formData.bookCount}{" "}
                 {formData.bookCount === 1 ? "book" : "books"}
               </p>
@@ -626,7 +626,7 @@ export default function EnterPageClient({
                   bookTitles={formData.bookTitles}
                 />
               ) : (
-                <div className="flex items-center justify-center py-8 text-slate-400 text-sm gap-2">
+                <div className="flex items-center justify-center py-8 text-slate-400 text-base gap-2">
                   <span className="w-4 h-4 border-2 border-slate-300 border-t-slate-500 rounded-full animate-spin" />
                   Loading payment form...
                 </div>
@@ -646,11 +646,11 @@ export default function EnterPageClient({
             className="bg-white rounded-xl shadow-lg max-w-md mx-4 p-6"
             onClick={(e) => e.stopPropagation()}
           >
-            <p className="text-sm text-slate-700 leading-relaxed">{modalMessage}</p>
+            <p className="text-base text-slate-700 leading-relaxed">{modalMessage}</p>
             <button
               type="button"
               onClick={() => setModalMessage(null)}
-              className="mt-4 w-full border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] text-[#23100A] font-bold py-2.5 px-4 rounded-lg text-sm transition-colors"
+              className="mt-4 w-full border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] text-[#23100A] font-bold py-2.5 px-4 rounded-lg text-base transition-colors"
             >
               OK
             </button>
