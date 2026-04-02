@@ -2,6 +2,10 @@ import { google } from "googleapis";
 
 const SHEET_NAME = "Sheet1";
 const SHEET_GID = 0;
+// Final column layout (after moving bookTitles):
+// A: createdAt, B: name, C: email, D: phone, E: quantity,
+// F: bookTitles, G: priceGBP, H: paymentId, I: token, J: status,
+// K: rulesConfirmed, L: paidAt
 const ROW_WIDTH = 12;
 
 export interface IncompleteEntryRow {
@@ -21,6 +25,8 @@ export interface PaidEntryUpdate {
   priceGBP: number;
   paymentId: string;
   paidAt: string;
+  // Optional because some flows only sync paymentId/paidAt and rely on the
+  // earlier incomplete upsert to have already written bookTitles.
   bookTitles?: string[];
 }
 
@@ -65,7 +71,8 @@ async function findRowByToken(token: string): Promise<number | null> {
 
   const response = await sheets.spreadsheets.values.get({
     spreadsheetId,
-    range: `${SHEET_NAME}!H2:H`,
+    // token moved from H -> I
+    range: `${SHEET_NAME}!I2:I`,
   });
 
   const values = response.data.values ?? [];
@@ -80,6 +87,7 @@ async function getRowValues(rowNumber: number): Promise<(string | number)[]> {
 
   const response = await sheets.spreadsheets.values.get({
     spreadsheetId,
+    // write/read A -> L
     range: `${SHEET_NAME}!A${rowNumber}:L${rowNumber}`,
   });
 
@@ -123,19 +131,21 @@ export async function upsertIncompleteEntry(entry: IncompleteEntryRow): Promise<
   const { spreadsheetId } = getSheetsConfig();
   const rowNumber = await findRowByToken(entry.token);
 
+  const bookTitlesCell = (entry.bookTitles ?? []).join(", ");
+
   if (rowNumber) {
     const current: (string | number)[] = await getRowValues(rowNumber);
     current[1] = entry.name;
     current[2] = entry.email;
     current[3] = entry.phone;
     current[4] = entry.quantity;
-    current[5] = entry.priceGBP;
-    current[6] = "";
-    current[7] = entry.token;
-    current[8] = "Incomplete";
-    current[9] = entry.rulesConfirmed ? "Yes" : "No";
-    current[10] = "";
-    current[11] = entry.bookTitles.join(", ");
+    current[5] = bookTitlesCell;
+    current[6] = entry.priceGBP;
+    current[7] = "";
+    current[8] = entry.token;
+    current[9] = "Incomplete";
+    current[10] = entry.rulesConfirmed ? "Yes" : "No";
+    current[11] = "";
 
     await updateRowValues(rowNumber, current);
     return buildRowUrl(spreadsheetId, rowNumber);
@@ -147,13 +157,13 @@ export async function upsertIncompleteEntry(entry: IncompleteEntryRow): Promise<
     entry.email,
     entry.phone,
     entry.quantity,
+    bookTitlesCell,
     entry.priceGBP,
     "",
     entry.token,
     "Incomplete",
     entry.rulesConfirmed ? "Yes" : "No",
     "",
-    entry.bookTitles.join(", "),
   ]);
 
   return buildRowUrl(spreadsheetId, newRowNumber);
@@ -169,14 +179,14 @@ export async function markEntryPaidByToken(entry: PaidEntryUpdate): Promise<stri
 
   const current: (string | number)[] = await getRowValues(rowNumber);
   current[4] = entry.quantity;
-  current[5] = entry.priceGBP;
-  current[6] = entry.paymentId;
-  current[7] = entry.token;
-  current[8] = "Paid";
-  current[10] = entry.paidAt;
-  if (entry.bookTitles && entry.bookTitles.length > 0) {
-    current[11] = entry.bookTitles.join(", ");
+  if (entry.bookTitles) {
+    current[5] = entry.bookTitles.join(", ");
   }
+  current[6] = entry.priceGBP;
+  current[7] = entry.paymentId;
+  current[8] = entry.token;
+  current[9] = "Paid";
+  current[11] = entry.paidAt;
 
   await updateRowValues(rowNumber, current);
 
