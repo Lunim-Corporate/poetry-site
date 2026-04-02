@@ -234,6 +234,7 @@ export interface PastWinnersYearData extends PrismicMetaFields {
   press_media_link_url?: string;
   judge_section_heading?: string;
   judge_name?: string;
+  judge_biog?: RichTextField;
   judges_comments_heading?: string;
   judges_comments_overview?: RichTextField;
   judges_comments_first_prize?: RichTextField;

@@ -419,7 +419,9 @@ export default async function WinnersYearPage({ params }: PageProps) {
             )}
 
             {/* Judge (our YYYY Judge) */}
-            {(data.judge_section_heading || data.judge_name) && (
+            {(data.judge_section_heading ||
+              data.judge_name ||
+              (data.judge_biog && data.judge_biog.length > 0)) && (
               <section className="mt-10 pt-6 border-t border-slate-200">
                 <h3 className="text-xl font-semibold text-[#333333]">
                   {data.judge_section_heading
@@ -427,9 +429,14 @@ export default async function WinnersYearPage({ params }: PageProps) {
                     : `Judge (our ${data.year ?? year} Judge)`}
                 </h3>
                 {data.judge_name && (
-                  <p className="mt-2 text-base text-slate-800">
+                  <h4 className="mt-2 text-lg font-semibold text-slate-800">
                     {data.judge_name}
-                  </p>
+                  </h4>
+                )}
+                {data.judge_biog && data.judge_biog.length > 0 && (
+                  <div className={`mt-4 ${proseClasses}`}>
+                    <PrismicRichText field={data.judge_biog} />
+                  </div>
                 )}
               </section>
             )}

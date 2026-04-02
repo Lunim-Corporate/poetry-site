@@ -259,6 +259,15 @@
           "label": "Judge name",
           "placeholder": "Judge full name"
         }
+      },
+      "judge_biog": {
+        "type": "StructuredText",
+        "config": {
+          "label": "Judge biog",
+          "placeholder": "",
+          "allowTargetBlank": true,
+          "multi": "strong,em,hyperlink,list-item,o-list-item,paragraph"
+        }
       }
     },
     "Judges Comments": {

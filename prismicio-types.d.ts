@@ -790,7 +790,18 @@ interface PastWinnersYearDocumentData {
    * - **Tab**: Judge
    * - **Documentation**: https://prismic.io/docs/fields/text
    */
-  judge_name: prismic.KeyTextField; /**
+  judge_name: prismic.KeyTextField;
+
+  /**
+   * Judge biog field in *Past Winners Year*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: past_winners_year.judge_biog
+   * - **Tab**: Judge
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  judge_biog: prismic.RichTextField; /**
    * Judges comments heading field in *Past Winners Year*
    *
    * - **Field Type**: Text
