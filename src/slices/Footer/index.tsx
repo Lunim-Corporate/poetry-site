@@ -3,8 +3,8 @@ import type { FooterSliceData, SliceComponentProps } from "@/types";
 export default function Footer({ slice }: SliceComponentProps<FooterSliceData>) {
   const currentYear = new Date().getFullYear();
   const copyrightText = slice.primary.copyright_text || "Maya Poetry Book Awards";
-  const deliveredByText = slice.primary.delivered_by_text || "Surim";
-  const deliveredByUrl = slice.primary.delivered_by_url || "https://surim.io";
+  const deliveredByText = slice.primary.delivered_by_text || "Lunim";
+  const deliveredByUrl = slice.primary.delivered_by_url || "https://lunim.io";
 
   return (
     <footer className="py-8 bg-gradient-to-r from-[#451E10] via-[#7a3520] to-[#451E10]">
