@@ -50,7 +50,7 @@
             "label": "Biography",
             "placeholder": "Enter biography...",
             "allowTargetBlank": true,
-            "multi": "paragraph,strong,em,hyperlink"
+            "multi": "paragraph,strong,em,hyperlink,list-item,o-list-item"
           }
         },
         "entrepreneurial_history": {
@@ -59,7 +59,7 @@
             "label": "Entrepreneurial History",
             "placeholder": "Enter entrepreneurial history...",
             "allowTargetBlank": true,
-            "multi": "paragraph,strong,em,hyperlink"
+            "multi": "paragraph,strong,em,hyperlink,list-item,o-list-item"
           }
         },
         "literary_history": {
@@ -68,7 +68,7 @@
             "label": "Literary History",
             "placeholder": "Enter literary history...",
             "allowTargetBlank": true,
-            "multi": "paragraph,strong,em,hyperlink"
+            "multi": "paragraph,strong,em,hyperlink,list-item,o-list-item"
           }
         },
         "books": {

@@ -1,0 +1,111 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"section_title": {
+				"__TYPE__": "FieldContent",
+				"value": "differ",
+				"type": "Text"
+			},
+			"intro_text": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Sunt ea cupidatat excepteur irure quis magna adipisicing nostrud do. Proident ex deserunt Lorem proident dolor Lorem et officia mollit veniam proident. Ad commodo ut eu enim cillum ex quis officia."
+						}
+					}
+				]
+			},
+			"prizes": {
+				"__TYPE__": "GroupContentType",
+				"value": [
+					{
+						"__TYPE__": "GroupItemContent",
+						"value": [
+							[
+								"prize_title",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "bit",
+									"type": "Text"
+								}
+							],
+							[
+								"prize_amount",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "4",
+									"type": "Number"
+								}
+							]
+						]
+					}
+				]
+			},
+			"childrens_prize_title": {
+				"__TYPE__": "FieldContent",
+				"value": "clearly",
+				"type": "Text"
+			},
+			"childrens_prize_amount": {
+				"__TYPE__": "FieldContent",
+				"value": "4",
+				"type": "Number"
+			},
+			"childrens_prize_description": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Deserunt proident reprehenderit laborum do aute ea. Id consequat occaecat eiusmod dolor ut veniam officia."
+						}
+					}
+				]
+			},
+			"benefits_title": {
+				"__TYPE__": "FieldContent",
+				"value": "chamber",
+				"type": "Text"
+			},
+			"benefits": {
+				"__TYPE__": "GroupContentType",
+				"value": [
+					{
+						"__TYPE__": "GroupItemContent",
+						"value": [
+							[
+								"benefit",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "far",
+									"type": "Text"
+								}
+							]
+						]
+					}
+				]
+			},
+			"note": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Elit officia ipsum in deserunt id aliquip pariatur qui nostrud officia. Dolore fugiat consequat cupidatat nisi excepteur consectetur sit dolore occaecat."
+						}
+					}
+				]
+			}
+		},
+		"items": [
+			{
+				"__TYPE__": "GroupItemContent",
+				"value": []
+			}
+		]
+	}
+]
