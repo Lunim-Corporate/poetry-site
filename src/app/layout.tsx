@@ -8,6 +8,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import type { NavigationMenuSliceData, FooterSliceData, PrismicSlice } from "@/types";
 import { DEFAULT_YEARS } from "@/types";
 import "./globals.css";
+import BackToTopButton from "@/components/BackToTopButton";
 
 const sourceSerifPro = localFont({
   src: [
@@ -105,6 +106,7 @@ export default async function RootLayout({
             context={{}}
           />
           <main>{children}</main>
+          <BackToTopButton />
           <FooterSlice
             slice={footerSlice || defaultFooterSlice}
             index={0}
