@@ -24,7 +24,7 @@ export default function BackToTopButton() {
   }
 
   return (
-    <div className="w-full flex justify-center px-6 py-10">
+    <div className="w-full flex justify-center px-6 py-4">
       <button
         type="button"
         aria-label="Back to top"

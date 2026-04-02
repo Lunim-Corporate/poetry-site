@@ -312,7 +312,7 @@ export default function EnterPageClient({
   }, [action, clientSecret, currentStep, isWizardLocked, rulesConfirmed]);
 
   return (
-    <section className="py-10 bg-white font-sans">
+    <section className="py-10 font-sans">
       <div className="max-w-2xl mx-auto px-6">
         {/* Wizard Steps */}
         <div ref={stepperRef} className="mb-10">
