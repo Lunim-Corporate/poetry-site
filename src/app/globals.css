@@ -1,48 +1,48 @@
 @import "tailwindcss";
 
+/* Add base styles here */
+@layer base {
 /* ============================================
    CSS VARIABLES (for Tailwind to reference)
    ============================================ */
 
-:root {
-  --primary: #1e3a5f;
-  --primary-light: #2d4a6f;
-  --primary-dark: #152a47;
-  --accent: #c9a66b;
-  --accent-light: #ddb87d;
-  --accent-dark: #b8915a;
-  --header-height: 72px;
-}
-
-@theme inline {
-  --color-primary: #1e3a5f;
-  --color-primary-light: #2d4a6f;
-  --color-primary-dark: #152a47;
-  --color-accent: #c9a66b;
-  --color-accent-light: #ddb87d;
-  --color-accent-dark: #b8915a;
-  --font-family-serif: var(--font-serif), Georgia, serif;
-  --font-family-sans: var(--font-sans), system-ui, sans-serif;
-}
-
-/* Animations */
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(22px);
+   :root {
+    --primary: #1e3a5f;
+    --primary-light: #2d4a6f;
+    --primary-dark: #152a47;
+    --accent: #c9a66b;
+    --accent-light: #ddb87d;
+    --accent-dark: #b8915a;
+    --header-height: 72px;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  
+  @theme inline {
+    --color-primary: #1e3a5f;
+    --color-primary-light: #2d4a6f;
+    --color-primary-dark: #152a47;
+    --color-accent: #c9a66b;
+    --color-accent-light: #ddb87d;
+    --color-accent-dark: #b8915a;
+    --font-family-serif: var(--font-serif), Georgia, serif;
+    --font-family-sans: var(--font-sans), system-ui, sans-serif;
   }
-}
-
-@theme inline {
-  --animate-fade-in-up: fade-in-up 0.65s ease-out both;
-}
-
-/* Add base styles here */
-@layer base {
+  
+  /* Animations */
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(22px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @theme inline {
+    --animate-fade-in-up: fade-in-up 0.65s ease-out both;
+  }
+  
   /* Base styles */
   html {
     scroll-behavior: smooth;

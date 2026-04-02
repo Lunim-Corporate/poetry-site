@@ -446,7 +446,7 @@ export default function EnterPageClient({
                       setFormData({ ...formData, name: e.target.value });
                       if (errors.name) setErrors({ ...errors, name: "" });
                     }}
-                    className="w-full px-4 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                    className="w-full px-4 py-2.5 text-base md:text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                   />
                   {errors.name && (
                     <p className="text-xs text-red-600 mt-1" role="alert">{errors.name}</p>
@@ -469,7 +469,7 @@ export default function EnterPageClient({
                       setFormData({ ...formData, email: e.target.value });
                       if (errors.email) setErrors({ ...errors, email: "" });
                     }}
-                    className="w-full px-4 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                    className="w-full px-4 py-2.5 text-base md:text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                   />
                   {errors.email && (
                     <p className="text-xs text-red-600 mt-1" role="alert">{errors.email}</p>
@@ -489,7 +489,7 @@ export default function EnterPageClient({
                         setFormData({ ...formData, phoneCountryCode: e.target.value });
                         if (errors.phoneNumber) setErrors({ ...errors, phoneNumber: "" });
                       }}
-                      className="w-full px-4 py-2.5 text-sm border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                      className="w-full px-4 py-2.5 text-base md:text-sm border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                     >
                       <option value="">Country code</option>
                       {PHONE_COUNTRY_CODES.map((option) => (
@@ -509,7 +509,7 @@ export default function EnterPageClient({
                         setFormData({ ...formData, phoneNumber: e.target.value });
                         if (errors.phoneNumber) setErrors({ ...errors, phoneNumber: "" });
                       }}
-                      className="w-full px-4 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                      className="w-full px-4 py-2.5 text-base md:text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                     />
                   </div>
                   {errors.phoneNumber && (
@@ -569,7 +569,7 @@ export default function EnterPageClient({
                             setFormData({ ...formData, bookTitles: updated });
                             if (errors.bookTitles) setErrors({ ...errors, bookTitles: "" });
                           }}
-                          className="w-full px-4 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                          className="w-full px-4 py-2.5 text-base md:text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                         />
                       </div>
                     ))}

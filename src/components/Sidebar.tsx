@@ -133,7 +133,7 @@ export default function Sidebar() {
                   setNewsletterEmail(e.target.value);
                   if (newsletterError) setNewsletterError("");
                 }}
-                className="w-full px-4 py-2.5 text-sm border-2 border-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-white placeholder:font-sans"
+                className="w-full px-4 py-2.5 text-base md:text-sm border-2 border-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-white placeholder:font-sans"
               />
               {newsletterError && (
                 <p className="text-xs text-red-600 mt-1" role="alert">
@@ -199,7 +199,7 @@ export default function Sidebar() {
                   if (contactErrors.name)
                     setContactErrors({ ...contactErrors, name: "" });
                 }}
-                className="w-full px-4 py-2.5 text-sm border-2 border-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-white placeholder:font-sans"
+                className="w-full px-4 py-2.5 text-base md:text-sm border-2 border-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-white placeholder:font-sans"
               />
               {contactErrors.name && (
                 <p className="text-xs text-red-600 mt-1" role="alert">
@@ -227,7 +227,7 @@ export default function Sidebar() {
                   if (contactErrors.email)
                     setContactErrors({ ...contactErrors, email: "" });
                 }}
-                className="w-full px-4 py-2.5 text-sm border-2 border-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-white placeholder:font-sans"
+                className="w-full px-4 py-2.5 text-base md:text-sm border-2 border-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-white placeholder:font-sans"
               />
               {contactErrors.email && (
                 <p className="text-xs text-red-600 mt-1" role="alert">
@@ -253,7 +253,7 @@ export default function Sidebar() {
                   if (contactErrors.message)
                     setContactErrors({ ...contactErrors, message: "" });
                 }}
-                className="w-full px-4 py-2.5 text-sm border-2 border-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-y bg-white"
+                className="w-full px-4 py-2.5 text-base md:text-sm border-2 border-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-y bg-white"
               />
               {contactErrors.message && (
                 <p className="text-xs text-red-600 mt-1" role="alert">
