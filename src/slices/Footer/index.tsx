@@ -1,3 +1,4 @@
+import Script from "next/script";
 import type { FooterSliceData, SliceComponentProps } from "@/types";
 
 export default function Footer({ slice }: SliceComponentProps<FooterSliceData>) {
@@ -22,6 +23,10 @@ export default function Footer({ slice }: SliceComponentProps<FooterSliceData>) 
           .
         </p>
       </div>
+      <Script
+        src="https://static.cdn.prismic.io/prismic.js?new=true&repo=poetry-site"
+        strategy="lazyOnload"
+      />
     </footer>
   );
 }
