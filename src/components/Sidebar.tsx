@@ -27,9 +27,26 @@ export default function Sidebar() {
       return;
     }
     setNewsletterSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setNewsletterSubmitting(false);
-    setNewsletterSuccess(true);
+    setNewsletterError("");
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: newsletterEmail.trim() }),
+      });
+      const data = (await res.json()) as { error?: string };
+      if (res.ok) {
+        setNewsletterSuccess(true);
+      } else {
+        setNewsletterError(
+          data.error ?? "Something went wrong. Please try again."
+        );
+      }
+    } catch {
+      setNewsletterError("Something went wrong. Please try again.");
+    } finally {
+      setNewsletterSubmitting(false);
+    }
   };
 
   const handleContactSubmit = async (e: FormEvent) => {
