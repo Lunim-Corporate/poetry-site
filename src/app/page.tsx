@@ -6,6 +6,7 @@ import Image from "next/image";
 import { createClient } from "@/prismicio";
 import { components } from "@/slices";
 import TwoColumnLayout from "@/components/TwoColumnLayout";
+import HomeHashScroll from "@/components/HomeHashScroll";
 import { partitionSlices } from "@/utils/slices";
 import { generateMetaDataInfo } from "@/utils/generateMetaDataInfo";
 import type { PrismicMetaFields, PrismicSlice } from "@/types";
@@ -23,6 +24,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <HomeHashScroll />
       <SliceZone slices={hero} components={components} />
       <TwoColumnLayout>
         {content.map((slice, index) => {
