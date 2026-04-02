@@ -81,12 +81,12 @@ export default async function PastWinnersPage() {
             parsedYearDocs.map(({ yearNumber, data }) => {
               const winners: WinnerEntry[] = data.winners ?? [];
               const childrenWinner = winners.find(
-                (w) => w.prize_level === "Children Prize"
+                (w) => w.prize_level === "Children's Prize"
               );
               const hasChildrenPrize = Boolean(childrenWinner?.book_title);
               const prizeOrder = hasChildrenPrize
                 ? PRIZE_ORDER
-                : PRIZE_ORDER.filter((level) => level !== "Children Prize");
+                : PRIZE_ORDER.filter((level) => level !== "Children's Prize");
 
               const mdGridColsClass = hasChildrenPrize
                 ? "md:grid-cols-4"

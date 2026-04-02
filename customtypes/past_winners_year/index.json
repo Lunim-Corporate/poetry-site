@@ -54,7 +54,7 @@
                   "1st Prize",
                   "2nd Prize",
                   "3rd Prize",
-                  "Children Prize"
+                  "Children's Prize"
                 ]
               }
             },
@@ -313,8 +313,8 @@
       "judges_comments_children_prize": {
         "type": "StructuredText",
         "config": {
-          "label": "Children Prize comments",
-          "placeholder": "Comments for the Children Prize book...",
+          "label": "Children's Prize comments",
+          "placeholder": "Comments for the Children's Prize book...",
           "multi": "paragraph,strong,em,hyperlink,list-item,o-list-item"
         }
       }
