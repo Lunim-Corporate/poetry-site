@@ -253,6 +253,7 @@ export interface WinnerEntry {
   location?: string;
   cover_image?: ImageField;
   author_image?: ImageField;
+  book_link?: string;
   amazon_url?: string;
   winner_bio?: RichTextField;
   winner_details?: RichTextField; // legacy field, prefer winner_bio

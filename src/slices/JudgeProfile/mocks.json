@@ -1,0 +1,145 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"name": {
+				"__TYPE__": "FieldContent",
+				"value": "stems",
+				"type": "Text"
+			},
+			"title": {
+				"__TYPE__": "FieldContent",
+				"value": "mighty",
+				"type": "Text"
+			},
+			"location": {
+				"__TYPE__": "FieldContent",
+				"value": "class",
+				"type": "Text"
+			},
+			"portrait": {
+				"origin": {
+					"id": "main",
+					"url": "https://images.unsplash.com/photo-1544731612-de7f96afe55f",
+					"width": 6000,
+					"height": 4000
+				},
+				"url": "https://images.unsplash.com/photo-1544731612-de7f96afe55f?rect=1000%2C0%2C4000%2C4000&w=400&h=400",
+				"width": 400,
+				"height": 400,
+				"edit": {
+					"zoom": 1,
+					"crop": {
+						"x": 1000,
+						"y": 0
+					},
+					"background": "transparent"
+				},
+				"alt": "barn",
+				"credits": null,
+				"__TYPE__": "ImageContent",
+				"thumbnails": {}
+			},
+			"bio": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Labore deserunt sint magna voluptate aute esse quis aliquip."
+						}
+					}
+				]
+			},
+			"entrepreneurial_history": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Commodo aliquip dolore aliqua commodo sit dolor cillum. Exercitation labore amet officia quis officia ex dolor nulla magna exercitation mollit ut."
+						}
+					}
+				]
+			},
+			"literary_history": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Labore id magna enim. Veniam sint proident duis ut ut est consequat incididunt aute veniam. Exercitation enim eu labore occaecat excepteur sint ea nostrud officia sint officia pariatur laborum."
+						}
+					}
+				]
+			},
+			"books": {
+				"__TYPE__": "GroupContentType",
+				"value": [
+					{
+						"__TYPE__": "GroupItemContent",
+						"value": [
+							[
+								"book_title",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "hunter",
+									"type": "Text"
+								}
+							],
+							[
+								"book_image",
+								{
+									"origin": {
+										"id": "main",
+										"url": "https://images.unsplash.com/photo-1576662712957-9c79ae1280f8",
+										"width": 3456,
+										"height": 3456
+									},
+									"url": "https://images.unsplash.com/photo-1576662712957-9c79ae1280f8?rect=576%2C0%2C2304%2C3456&w=300&h=450",
+									"width": 300,
+									"height": 450,
+									"edit": {
+										"zoom": 1,
+										"crop": {
+											"x": 576,
+											"y": 0
+										},
+										"background": "transparent"
+									},
+									"alt": "upward",
+									"credits": null,
+									"__TYPE__": "ImageContent",
+									"thumbnails": {}
+								}
+							],
+							[
+								"book_amazon_url",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "silence",
+									"type": "Text"
+								}
+							],
+							[
+								"book_description",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "brother",
+									"type": "Text"
+								}
+							]
+						]
+					}
+				]
+			}
+		},
+		"items": [
+			{
+				"__TYPE__": "GroupItemContent",
+				"value": []
+			}
+		]
+	}
+]

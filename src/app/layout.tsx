@@ -67,8 +67,8 @@ const defaultFooterSlice: FooterSliceData = {
   variation: "default",
   primary: {
     copyright_text: "Maya Poetry Book Awards",
-    delivered_by_text: "Lunim",
-    delivered_by_url: "https://lunim.io",
+    delivered_by_text: "Surim",
+    delivered_by_url: "https://surim.io",
   },
 };
 

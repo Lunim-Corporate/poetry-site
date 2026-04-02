@@ -39,7 +39,7 @@
                   "label": "Answer",
                   "placeholder": "Enter answer...",
                   "allowTargetBlank": true,
-                  "multi": "paragraph,strong,em,hyperlink"
+                  "multi": "paragraph,strong,em,hyperlink,list-item,o-list-item"
                 }
               }
             }

@@ -23,14 +23,14 @@
           "type": "Text",
           "config": {
             "label": "Delivered By Text",
-            "placeholder": "Lunim"
+            "placeholder": "Surim"
           }
         },
         "delivered_by_url": {
           "type": "Text",
           "config": {
             "label": "Delivered By URL",
-            "placeholder": "https://lunim.io"
+            "placeholder": "https://surim.io"
           }
         }
       },

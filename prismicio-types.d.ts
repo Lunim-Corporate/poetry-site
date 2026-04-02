@@ -228,7 +228,7 @@ interface FooterDocumentData {
    * Delivered By Text field in *Footer*
    *
    * - **Field Type**: Text
-   * - **Placeholder**: Lunim
+   * - **Placeholder**: Surim
    * - **API ID Path**: footer.delivered_by_text
    * - **Tab**: Main
    * - **Documentation**: https://prismic.io/docs/fields/text
@@ -239,7 +239,7 @@ interface FooterDocumentData {
    * Delivered By URL field in *Footer*
    *
    * - **Field Type**: Text
-   * - **Placeholder**: https://lunim.io
+   * - **Placeholder**: https://surim.io
    * - **API ID Path**: footer.delivered_by_url
    * - **Tab**: Main
    * - **Documentation**: https://prismic.io/docs/fields/text
@@ -502,6 +502,16 @@ export interface PastWinnersYearDocumentDataWinnersItem {
   book_title: prismic.KeyTextField;
 
   /**
+   * Book link (URL) field in *Past Winners Year → Winners*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: https://example.com/book
+   * - **API ID Path**: past_winners_year.winners[].book_link
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  book_link: prismic.KeyTextField;
+
+  /**
    * Author field in *Past Winners Year → Winners*
    *
    * - **Field Type**: Text
@@ -599,6 +609,16 @@ export interface PastWinnersYearDocumentDataShortlistItem {
   book_title: prismic.KeyTextField;
 
   /**
+   * Book link (URL) field in *Past Winners Year → Shortlist*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: https://example.com/book
+   * - **API ID Path**: past_winners_year.shortlist[].book_link
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  book_link: prismic.KeyTextField;
+
+  /**
    * Author field in *Past Winners Year → Shortlist*
    *
    * - **Field Type**: Text
@@ -632,6 +652,16 @@ export interface PastWinnersYearDocumentDataLonglistItem {
    * - **Documentation**: https://prismic.io/docs/fields/text
    */
   book_title: prismic.KeyTextField;
+
+  /**
+   * Book link (URL) field in *Past Winners Year → Longlist*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: https://example.com/book
+   * - **API ID Path**: past_winners_year.longlist[].book_link
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  book_link: prismic.KeyTextField;
 
   /**
    * Author field in *Past Winners Year → Longlist*
@@ -816,10 +846,10 @@ interface PastWinnersYearDocumentData {
   judges_comments_third_prize: prismic.RichTextField;
 
   /**
-   * Children prize comments field in *Past Winners Year*
+   * Children Prize comments field in *Past Winners Year*
    *
    * - **Field Type**: Rich Text
-   * - **Placeholder**: Comments for the children prize book...
+   * - **Placeholder**: Comments for the Children Prize book...
    * - **API ID Path**: past_winners_year.judges_comments_children_prize
    * - **Tab**: Judges Comments
    * - **Documentation**: https://prismic.io/docs/fields/rich-text
@@ -1268,7 +1298,7 @@ export interface FooterSliceDefaultPrimary {
    * Delivered By Text field in *Footer → Default → Primary*
    *
    * - **Field Type**: Text
-   * - **Placeholder**: Lunim
+   * - **Placeholder**: Surim
    * - **API ID Path**: footer.default.primary.delivered_by_text
    * - **Documentation**: https://prismic.io/docs/fields/text
    */
@@ -1278,7 +1308,7 @@ export interface FooterSliceDefaultPrimary {
    * Delivered By URL field in *Footer → Default → Primary*
    *
    * - **Field Type**: Text
-   * - **Placeholder**: https://lunim.io
+   * - **Placeholder**: https://surim.io
    * - **API ID Path**: footer.default.primary.delivered_by_url
    * - **Documentation**: https://prismic.io/docs/fields/text
    */
@@ -1819,7 +1849,7 @@ export interface PrizeSectionSliceDefaultPrimary {
    * Children Prize Title field in *PrizeSection → Default → Primary*
    *
    * - **Field Type**: Text
-   * **Placeholder**: Children Prize
+   * - **Placeholder**: Children Prize
    * - **API ID Path**: prize_section.default.primary.childrens_prize_title
    * - **Documentation**: https://prismic.io/docs/fields/text
    */
@@ -1916,7 +1946,7 @@ export interface PrizeTableSliceDefaultPrimaryItemsItem {
    * Prize Level field in *PrizeTable → Default → Primary → Prize Items*
    *
    * - **Field Type**: Text
-   * - **Placeholder**: 1st Place
+   * - **Placeholder**: 1st Prize
    * - **API ID Path**: prize_table.default.primary.items[].level
    * - **Documentation**: https://prismic.io/docs/fields/text
    */

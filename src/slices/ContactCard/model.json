@@ -25,7 +25,7 @@
             "label": "Description",
             "placeholder": "Get in touch with us...",
             "allowTargetBlank": false,
-            "single": "paragraph"
+            "single": "paragraph,strong,em,hyperlink,list-item,o-list-item"
           }
         }
       },

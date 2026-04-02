@@ -1,0 +1,29 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"copyright_text": {
+				"__TYPE__": "FieldContent",
+				"value": "original",
+				"type": "Text"
+			},
+			"delivered_by_text": {
+				"__TYPE__": "FieldContent",
+				"value": "gulf",
+				"type": "Text"
+			},
+			"delivered_by_url": {
+				"__TYPE__": "FieldContent",
+				"value": "stop",
+				"type": "Text"
+			}
+		},
+		"items": [
+			{
+				"__TYPE__": "GroupItemContent",
+				"value": []
+			}
+		]
+	}
+]

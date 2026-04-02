@@ -14,6 +14,7 @@ import type {
   ListEntry,
 } from "@/types";
 import { DEFAULT_YEARS } from "@/types";
+import { wrapCoverWithBookLink } from "@/lib/wrapCoverWithBookLink";
 
 const proseClasses =
   "prose prose-slate max-w-none prose-p:text-[#333333] prose-p:leading-relaxed [&_p+p]:mt-6 prose-strong:text-slate-900 prose-a:text-primary prose-a:underline hover:prose-a:text-primary-light prose-li:text-slate-600";
@@ -174,7 +175,11 @@ export default async function WinnersYearPage({ params }: PageProps) {
                     </h2>
                     <h3 className="text-xl text-slate-800 mb-5">
                       <span className="font-semibold">
-                        {firstPrize.book_title}
+                        {wrapCoverWithBookLink(
+                          firstPrize.book_link,
+                          firstPrize.book_title,
+                          "inline font-semibold text-inherit no-underline hover:underline"
+                        )}
                       </span>
                       {": "}
                       <br className="md:hidden" />
@@ -189,13 +194,16 @@ export default async function WinnersYearPage({ params }: PageProps) {
                         {/* Book cover in cream panel */}
                         <div className="flex-shrink-0 bg-[#F3E7D6] rounded-md border border-slate-200 p-3 flex items-center justify-center">
                           {firstPrize.cover_image?.url ? (
-                            <div className="w-[140px] md:w-[180px]">
-                              <PrismicNextImage
-                                field={firstPrize.cover_image}
-                                className="w-full h-auto object-contain shadow-sm"
-                                fallbackAlt=""
-                              />
-                            </div>
+                            wrapCoverWithBookLink(
+                              firstPrize.book_link,
+                              <div className="w-[140px] md:w-[180px]">
+                                <PrismicNextImage
+                                  field={firstPrize.cover_image}
+                                  className="w-full h-auto object-contain shadow-sm"
+                                  fallbackAlt=""
+                                />
+                              </div>
+                            )
                           ) : (
                             <div className="w-[140px] md:w-[180px] aspect-[2/3] bg-slate-100 rounded-md flex items-center justify-center text-xs text-slate-400">
                               Cover coming soon
@@ -256,7 +264,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
                           rel="noopener noreferrer"
                           className="font-semibold text-primary hover:text-primary-light underline hover:no-underline underline-offset-2"
                         >
-                          Purchase a copy
+                          Purchase a copy of {firstPrize.book_title}
                         </Link>
                       </p>
                     )}
@@ -288,7 +296,13 @@ export default async function WinnersYearPage({ params }: PageProps) {
                         {prizeWinner.prize_level || level}
                       </h2>
                       <h3 className="text-xl text-slate-800 mb-5">
-                        <span className="font-semibold">{prizeWinner.book_title}</span>
+                        <span className="font-semibold">
+                          {wrapCoverWithBookLink(
+                            prizeWinner.book_link,
+                            prizeWinner.book_title,
+                            "inline font-semibold text-inherit no-underline hover:underline"
+                          )}
+                        </span>
                         {": "}
                         <br className="md:hidden" />
                         <span className="italic text-slate-700">
@@ -302,13 +316,16 @@ export default async function WinnersYearPage({ params }: PageProps) {
                           {/* Book cover in cream panel */}
                           <div className="flex-shrink-0 bg-[#F3E7D6] rounded-md border border-slate-200 p-3 flex items-center justify-center">
                             {prizeWinner.cover_image?.url ? (
-                              <div className="w-[140px] md:w-[180px]">
-                                <PrismicNextImage
-                                  field={prizeWinner.cover_image}
-                                  className="w-full h-auto object-contain shadow-sm"
-                                  fallbackAlt=""
-                                />
-                              </div>
+                              wrapCoverWithBookLink(
+                                prizeWinner.book_link,
+                                <div className="w-[140px] md:w-[180px]">
+                                  <PrismicNextImage
+                                    field={prizeWinner.cover_image}
+                                    className="w-full h-auto object-contain shadow-sm"
+                                    fallbackAlt=""
+                                  />
+                                </div>
+                              )
                             ) : (
                               <div className="w-[140px] md:w-[180px] aspect-[2/3] bg-slate-100 rounded-md flex items-center justify-center text-xs text-slate-400">
                                 Cover coming soon
@@ -370,7 +387,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
                             rel="noopener noreferrer"
                             className="text-primary hover:text-primary-light underline hover:no-underline underline-offset-2"
                           >
-                            Purchase a copy
+                            Purchase a copy of {prizeWinner.book_title}
                           </Link>
                         </p>
                       )}
@@ -567,15 +584,14 @@ export default async function WinnersYearPage({ params }: PageProps) {
             {(data.enter_cta_label || data.enter_cta_url) && (
               <section className="mt-6 border-t border-slate-200 pt-4">
                 <p className="text-sm pt-6 text-slate-800">
-                  {data.enter_cta_label || "Enter your book"}{" "}
                   <Link
                     href={data.enter_cta_url || "/enter"}
-                    target="_blank"
+                    target="_self"
                     rel="noopener noreferrer"
                     className="text-primary font-semibold underline underline-offset-2"
                   >
-                    click here.
-                  </Link>
+                    {data.enter_cta_label || "To enter your book, click here"}
+                  </Link>{data.enter_cta_label ? "." : ""}
                 </p>
               </section>
             )}
