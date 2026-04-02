@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, after } from "next/server";
 import Stripe from "stripe";
 import { createClient } from "@/prismicio";
 import { DEFAULT_PRICE_SINGLE, DEFAULT_PRICE_MULTIPLE } from "@/app/enter/constants";
@@ -54,17 +54,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    await upsertIncompleteEntry({
-      token: token.trim(),
-      rulesConfirmed: Boolean(rulesConfirmed),
-      name: name.trim(),
-      email: email.trim(),
-      phone: phone?.trim() ?? "",
-      quantity: bookCount,
-      priceGBP: totalGBP,
-      bookTitles: (bookTitles ?? []).map((t) => t.trim()),
-    });
-
+    // Create the PaymentIntent first so the client gets a clientSecret even if
+    // Google Sheets is slow or temporarily failing (Sheets used to run first and blocked the response).
     const stripe = getStripe();
     const intent = await stripe.paymentIntents.create({
       amount: totalGBP * 100, // Stripe uses pence
@@ -79,6 +70,27 @@ export async function POST(request: NextRequest) {
         book_count: String(bookCount),
         total_gbp: String(totalGBP),
       },
+    });
+
+    // Sheets after response: plain `void` promises can be dropped on serverless when
+    // the handler returns; `after()` keeps work in the request lifecycle.
+    const sheetPayload = {
+      token: token.trim(),
+      rulesConfirmed: Boolean(rulesConfirmed),
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone?.trim() ?? "",
+      quantity: bookCount,
+      priceGBP: totalGBP,
+      bookTitles: (bookTitles ?? []).map((t) => t.trim()),
+    };
+
+    after(async () => {
+      try {
+        await upsertIncompleteEntry(sheetPayload);
+      } catch (sheetErr) {
+        console.error("Google Sheets upsert failed (payment intent still created):", sheetErr);
+      }
     });
 
     return NextResponse.json({ clientSecret: intent.client_secret });

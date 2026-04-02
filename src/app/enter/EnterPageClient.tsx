@@ -181,7 +181,11 @@ export default function EnterPageClient({
       // nav is fixed: 72px desktop, 64px mobile (breakpoint 900px) — add 16px breathing room
       const navHeight = window.innerWidth < 900 ? 64 : 72;
       const top = stepperRef.current.getBoundingClientRect().top + window.scrollY - navHeight - 16;
-      window.scrollTo({ top: Math.max(0, top), left: 0, behavior: "instant" });
+      try {
+        window.scrollTo({ top: Math.max(0, top), left: 0, behavior: "auto" });
+      } catch {
+        window.scrollTo(0, Math.max(0, top));
+      }
     }
   }, [currentStep]);
 
@@ -224,7 +228,12 @@ export default function EnterPageClient({
       newErrors.phoneNumber = "Please select a country code for the phone number.";
     if (!formData.bookCount)
       newErrors.bookCount = "Please select how many books you'd like to enter.";
-    if (formData.bookCount > 0 && formData.bookTitles.some((t) => !t.trim()))
+    if (
+      formData.bookCount > 0 &&
+      Array.from({ length: formData.bookCount }, (_, i) => formData.bookTitles[i]).some(
+        (t) => !String(t ?? "").trim()
+      )
+    )
       newErrors.bookTitles = "Please enter a title for each book.";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -252,7 +261,9 @@ export default function EnterPageClient({
           token,
           rulesConfirmed,
           bookCount: formData.bookCount,
-          bookTitles: formData.bookTitles.map((t) => t.trim()),
+          bookTitles: Array.from({ length: formData.bookCount }, (_, i) =>
+            String(formData.bookTitles[i] ?? "").trim()
+          ),
         }),
       });
 
