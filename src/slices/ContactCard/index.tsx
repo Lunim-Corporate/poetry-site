@@ -13,13 +13,40 @@ export default function ContactCard({ slice }: SliceComponentProps<ContactCardSl
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState("");
+
+  const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setError("");
+    if (!formData.name.trim() || !formData.email.trim() || !validateEmail(formData.email) || !formData.message.trim()) {
+      setError("Please fill in all fields with a valid email.");
+      return;
+    }
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setIsLoading(false);
-    setIsSuccess(true);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          message: formData.message.trim(),
+          newsletter: formData.newsletter,
+        }),
+      });
+      const data = (await res.json()) as { error?: string };
+      if (!res.ok) {
+        setError(data.error ?? "Something went wrong. Please try again.");
+        return;
+      }
+      setIsSuccess(true);
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -92,6 +119,12 @@ export default function ContactCard({ slice }: SliceComponentProps<ContactCardSl
               Also sign me up for the newsletter
             </label>
           </div>
+
+          {error && (
+            <p className="text-sm text-red-600" role="alert">
+              {error}
+            </p>
+          )}
 
           <button
             type="submit"

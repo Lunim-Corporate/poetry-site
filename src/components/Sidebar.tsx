@@ -61,9 +61,33 @@ export default function Sidebar() {
       return;
     }
     setContactSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setContactSubmitting(false);
-    setContactSuccess(true);
+    setContactErrors({});
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: contactData.name.trim(),
+          email: contactData.email.trim(),
+          message: contactData.message.trim(),
+          newsletter: contactData.newsletter,
+        }),
+      });
+      const data = (await res.json()) as { error?: string };
+      if (!res.ok) {
+        setContactErrors({
+          _form: data.error ?? "Something went wrong. Please try again.",
+        });
+        return;
+      }
+      setContactSuccess(true);
+    } catch {
+      setContactErrors({
+        _form: "Something went wrong. Please try again.",
+      });
+    } finally {
+      setContactSubmitting(false);
+    }
   };
 
   return (
@@ -258,6 +282,11 @@ export default function Sidebar() {
                 Sign me up to your newsletter
               </label>
             </div>
+            {contactErrors._form && (
+              <p className="text-xs text-red-600 mb-2" role="alert">
+                {contactErrors._form}
+              </p>
+            )}
             <button
               type="submit"
               disabled={contactSubmitting}
