@@ -21,9 +21,9 @@ export default function Hero({ slice }: SliceComponentProps<HeroSliceData>) {
   };
 
   const subtitleClasses: Record<HeroVariant, string> = {
-    home: "font-sans font-semibold text-xl text-white/85 mt-4 max-w-2xl mx-auto [text-shadow:0_2px_18px_rgba(0,0,0,0.85)]",
+    home: "font-sans font-semibold text-xl text-white/85 mt-4 max-w-3xl mx-auto [text-shadow:0_2px_18px_rgba(0,0,0,0.85)]",
     small: "font-sans text-white/85 mt-2 [text-shadow:0_2px_18px_rgba(0,0,0,0.85)]",
-    default: "font-sans text-lg text-white/85 mt-4 max-w-2xl mx-auto [text-shadow:0_2px_18px_rgba(0,0,0,0.85)]",
+    default: "font-sans text-lg text-white/85 mt-4 max-w-3xl mx-auto [text-shadow:0_2px_18px_rgba(0,0,0,0.85)]",
   };
 
   const heroImage = slice.primary.hero_image;
@@ -48,7 +48,7 @@ export default function Hero({ slice }: SliceComponentProps<HeroSliceData>) {
         : "linear-gradient(to right, #23100A 0%, rgba(35,16,10,0.4) 30%, rgba(35,16,10,0.4) 70%, #23100A 100%)"
       }} />
       <div className="relative z-10 w-full max-w-6xl mx-auto px-6 py-8 flex">
-        <div className="text-center max-w-3xl mx-auto flex flex-col w-full">
+        <div className="text-center max-w-4xl mx-auto flex flex-col w-full">
           <div className={`${titleClasses[variant]} animate-fade-in-up`}>
             <PrismicRichText field={slice.primary.title} />
           </div>
