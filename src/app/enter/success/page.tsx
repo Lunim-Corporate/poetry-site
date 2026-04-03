@@ -235,7 +235,10 @@ export default async function SuccessPage({
           </p>
 
           {/* Label grid */}
-          <div id="print-label" className="grid grid-cols-1 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] gap-6 mt-2 mb-5 p-4 border-2 border-dashed border-slate-400/60 rounded-lg">
+          <div
+            id="print-label"
+            className="grid grid-cols-1 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] print:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] gap-6 mt-2 mb-5 p-4 border-2 border-dashed border-slate-400/60 rounded-lg"
+          >
             <div>
               <h3 className="text-base font-semibold text-slate-700 mt-0 mb-2">Address</h3>
               <p className="text-base text-slate-600 leading-relaxed">
