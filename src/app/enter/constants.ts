@@ -7,9 +7,9 @@ export const WIZARD_STEPS = [
 
 export const DEFAULT_SHIPPING = {
   name: "Maya Poetry Book Awards",
-  street: "c/o Dave Lewis\n123 Poetry Lane",
-  town: "Cardiff",
-  postcode: "CF10 1AA",
+  street: "9 The Avenue\nThe Common",
+  town: "Pontypridd",
+  postcode: "CF37 4DF",
   country: "United Kingdom",
 };
 
