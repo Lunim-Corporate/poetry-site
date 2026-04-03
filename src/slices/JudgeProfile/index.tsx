@@ -3,8 +3,9 @@ import { PrismicRichText } from "@prismicio/react";
 import Link from "next/link";
 import type { JudgeProfileSliceData, SliceComponentProps } from "@/types";
 
-const proseClasses =
-  "prose prose-slate max-w-none prose-p:text-slate-600 prose-p:leading-relaxed prose-strong:text-slate-900 prose-a:text-primary prose-a:underline hover:prose-a:text-primary-light";
+/** Rich text blocks — explicit selectors: `prose` requires @tailwindcss/typography (not installed). */
+const richTextClasses =
+  "max-w-none [&_p]:text-slate-600 [&_p]:leading-relaxed [&_p+p]:mt-6 [&_ul]:my-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:my-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:my-1 [&_li]:text-slate-600 [&_li]:pl-1 [&_strong]:font-semibold [&_strong]:text-slate-900 [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-primary-light [&_em]:italic [&_em]:text-slate-700";
 
 export default function JudgeProfile({ slice }: SliceComponentProps<JudgeProfileSliceData>) {
   const books = slice.primary.books || [];
@@ -44,7 +45,7 @@ export default function JudgeProfile({ slice }: SliceComponentProps<JudgeProfile
           </div>
         )}
         {slice.primary.bio && (
-          <div className={proseClasses}>
+          <div className={richTextClasses}>
             <PrismicRichText field={slice.primary.bio} />
           </div>
         )}
@@ -56,7 +57,7 @@ export default function JudgeProfile({ slice }: SliceComponentProps<JudgeProfile
           <h3 className="text-lg font-semibold text-slate-900 mb-3 pb-2 border-b border-slate-200">
             Entrepreneurial History
           </h3>
-          <div className={proseClasses}>
+          <div className={richTextClasses}>
             <PrismicRichText field={slice.primary.entrepreneurial_history} />
           </div>
         </div>
@@ -68,7 +69,7 @@ export default function JudgeProfile({ slice }: SliceComponentProps<JudgeProfile
           <h3 className="text-lg font-semibold text-slate-900 mb-3 pb-2 border-b border-slate-200">
             Literary History
           </h3>
-          <div className={`${proseClasses} prose-em:text-slate-700`}>
+          <div className={richTextClasses}>
             <PrismicRichText field={slice.primary.literary_history} />
           </div>
         </div>
