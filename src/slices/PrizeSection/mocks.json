@@ -47,12 +47,12 @@
 			},
 			"childrens_prize_title": {
 				"__TYPE__": "FieldContent",
-				"value": "clearly",
+				"value": "tell",
 				"type": "Text"
 			},
 			"childrens_prize_amount": {
 				"__TYPE__": "FieldContent",
-				"value": "4",
+				"value": "81",
 				"type": "Number"
 			},
 			"childrens_prize_description": {
@@ -61,7 +61,7 @@
 					{
 						"type": "paragraph",
 						"content": {
-							"text": "Deserunt proident reprehenderit laborum do aute ea. Id consequat occaecat eiusmod dolor ut veniam officia."
+							"text": "Consectetur consequat ad aliquip id. Laboris est tempor cupidatat sunt pariatur proident sunt aute pariatur sint non elit incididunt ad."
 						}
 					}
 				]

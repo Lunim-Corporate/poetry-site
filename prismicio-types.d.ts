@@ -488,7 +488,7 @@ export interface PastWinnersYearDocumentDataWinnersItem {
    * - **Documentation**: https://prismic.io/docs/fields/select
    */
   prize_level: prismic.SelectField<
-    "1st Prize" | "2nd Prize" | "3rd Prize" | "Children Prize"
+    "1st Prize" | "2nd Prize" | "3rd Prize" | "Children's Prize"
   >;
 
   /**
@@ -857,10 +857,10 @@ interface PastWinnersYearDocumentData {
   judges_comments_third_prize: prismic.RichTextField;
 
   /**
-   * Children Prize comments field in *Past Winners Year*
+   * Children's Prize comments field in *Past Winners Year*
    *
    * - **Field Type**: Rich Text
-   * - **Placeholder**: Comments for the Children Prize book...
+   * - **Placeholder**: Comments for the Children's Prize book...
    * - **API ID Path**: past_winners_year.judges_comments_children_prize
    * - **Tab**: Judges Comments
    * - **Documentation**: https://prismic.io/docs/fields/rich-text
@@ -1857,17 +1857,17 @@ export interface PrizeSectionSliceDefaultPrimary {
   >;
 
   /**
-   * Children Prize Title field in *PrizeSection → Default → Primary*
+   * Children's Prize Title field in *PrizeSection → Default → Primary*
    *
    * - **Field Type**: Text
-   * - **Placeholder**: Children Prize
+   * - **Placeholder**: Children's Prize
    * - **API ID Path**: prize_section.default.primary.childrens_prize_title
    * - **Documentation**: https://prismic.io/docs/fields/text
    */
   childrens_prize_title: prismic.KeyTextField;
 
   /**
-   * Children Prize Amount (£) field in *PrizeSection → Default → Primary*
+   * Children's Prize Amount (£) field in *PrizeSection → Default → Primary*
    *
    * - **Field Type**: Number
    * - **Placeholder**: 200
@@ -1877,7 +1877,7 @@ export interface PrizeSectionSliceDefaultPrimary {
   childrens_prize_amount: prismic.NumberField;
 
   /**
-   * Children Prize Description field in *PrizeSection → Default → Primary*
+   * Children's Prize Description field in *PrizeSection → Default → Primary*
    *
    * - **Field Type**: Rich Text
    * - **Placeholder**: *None*
@@ -2087,7 +2087,7 @@ export interface WinnersGridSliceDefaultPrimaryItemsItem {
    * - **Documentation**: https://prismic.io/docs/fields/select
    */
   prize_level: prismic.SelectField<
-    "1st Prize" | "2nd Prize" | "3rd Prize" | "Children Prize"
+    "1st Prize" | "2nd Prize" | "3rd Prize" | "Children's Prize"
   >;
 
   /**

@@ -59,7 +59,7 @@ export default function PrizeSection({ slice }: SliceComponentProps<PrizeSection
         </FadeIn>
       )}
 
-      {/* Children Prize Description */}
+      {/* Children's Prize Description */}
       {childrens_prize_description && (
         <FadeIn>
           <div className="prose prose-base max-w-none text-[#333333]">
@@ -68,7 +68,7 @@ export default function PrizeSection({ slice }: SliceComponentProps<PrizeSection
         </FadeIn>
       )}
 
-      {/* Children Prize Row */}
+      {/* Children's Prize Row */}
       {childrens_prize_title && (
         <FadeIn>
           <div className="rounded-lg overflow-hidden border border-[#FFE169]">
