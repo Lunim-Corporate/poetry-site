@@ -36,6 +36,20 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
     setMobileDropdownOpen(false);
   };
 
+  /** On the home page, Next.js does not navigate for `href="/"`, so scrolling + hash must be handled here. */
+  const goToHomeTop = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname !== "/") return;
+    e.preventDefault();
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    if (window.location.hash) {
+      window.history.replaceState(
+        null,
+        "",
+        `${window.location.pathname}${window.location.search}`
+      );
+    }
+  };
+
   const handleRulesNavClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     if (pathname === "/enter") {
       event.preventDefault();
@@ -96,6 +110,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
         <div className="w-full max-w-6xl mx-auto px-6 flex items-center justify-between gap-8">
           <Link
             href="/"
+            onClick={goToHomeTop}
             className="flex items-center gap-3 font-bold text-white hover:text-primary transition-colors"
           >
             <span className="flex items-center justify-center">
@@ -243,7 +258,10 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
 
                 <Link
                   href="/"
-                  onClick={() => setMobileNavOpen(false)}
+                  onClick={(e) => {
+                    goToHomeTop(e);
+                    setMobileNavOpen(false);
+                  }}
                   className={`px-4 py-3 font-medium transition-colors ${
                     isActive("/")
                       ? "text-primary underline underline-offset-4"
