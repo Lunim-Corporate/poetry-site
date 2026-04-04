@@ -1,3 +1,11 @@
+/** Main nav "Enter Your Book": dispatch + sessionStorage so /enter resets to step 1 + top. */
+export const ENTER_MAIN_NAV_EVENT = "enter-main-nav-enter-book";
+export const ENTER_MAIN_NAV_STORAGE_KEY = "maya_enter_main_nav";
+
+/** Main nav "The Rules": `/enter?step=1` + scroll to stepper (event + storage for cross-route navigation). */
+export const ENTER_MAIN_NAV_RULES_EVENT = "enter-main-nav-rules";
+export const ENTER_MAIN_NAV_RULES_STORAGE_KEY = "maya_enter_main_nav_rules";
+
 export const WIZARD_STEPS = [
   { label: "Read rules", mobileLabel: "Rules", sublabel: "of competition" },
   { label: "Enter details and", mobileLabel: "Details", sublabel: "number of books" },

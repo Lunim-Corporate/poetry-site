@@ -2,13 +2,20 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import type { NavigationMenuSliceData, SliceComponentProps } from "@/types";
 import { DEFAULT_YEARS } from "@/types";
+import {
+  ENTER_MAIN_NAV_EVENT,
+  ENTER_MAIN_NAV_STORAGE_KEY,
+  ENTER_MAIN_NAV_RULES_EVENT,
+  ENTER_MAIN_NAV_RULES_STORAGE_KEY,
+} from "@/app/enter/constants";
 
 export default function NavigationMenu({ slice }: SliceComponentProps<NavigationMenuSliceData>) {
   const pathname = usePathname();
+  const router = useRouter();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
@@ -50,12 +57,30 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
     }
   };
 
+  /** Main nav "The Rules": always `/enter?step=1` + scroll to stepper (including when already on /enter). */
   const handleRulesNavClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    if (pathname === "/enter") {
-      event.preventDefault();
-      window.dispatchEvent(new CustomEvent("enter-wizard-go-to-step", { detail: 1 }));
-    }
+    event.preventDefault();
     closeMobileNav();
+    try {
+      sessionStorage.setItem(ENTER_MAIN_NAV_RULES_STORAGE_KEY, "1");
+    } catch {
+      /* ignore */
+    }
+    window.dispatchEvent(new CustomEvent(ENTER_MAIN_NAV_RULES_EVENT));
+    router.replace("/enter?step=1", { scroll: false });
+  };
+
+  /** Main nav "Enter Your Book": always step 1 + instant scroll to top (including when already on /enter). */
+  const handleEnterBookNavClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    closeMobileNav();
+    try {
+      sessionStorage.setItem(ENTER_MAIN_NAV_STORAGE_KEY, "1");
+    } catch {
+      /* ignore */
+    }
+    window.dispatchEvent(new CustomEvent(ENTER_MAIN_NAV_EVENT));
+    router.replace("/enter", { scroll: false });
   };
 
   useEffect(() => {
@@ -161,6 +186,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
               <Link
                 key={index}
                 href={link.url}
+                onClick={link.url === "/enter" ? handleEnterBookNavClick : undefined}
                 className={`px-4 py-2 text-base font-medium transition-colors ${
                   isActive(link.url)
                     ? "text-[#FFE169] underline underline-offset-4 decoration-[#FFE169]"
@@ -275,7 +301,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                   <Link
                     key={index}
                     href={link.url}
-                    onClick={() => setMobileNavOpen(false)}
+                    onClick={link.url === "/enter" ? handleEnterBookNavClick : () => setMobileNavOpen(false)}
                     className={`px-4 py-3 font-medium transition-colors ${
                       isActive(link.url)
                         ? "text-primary underline underline-offset-4"

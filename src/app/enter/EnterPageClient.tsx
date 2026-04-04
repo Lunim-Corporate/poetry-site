@@ -1,9 +1,18 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import dynamic from "next/dynamic";
+import { usePathname } from "next/navigation";
 import type { EnterPageSettings } from "@/types";
-import { WIZARD_STEPS, DEFAULT_PRICE_SINGLE, DEFAULT_PRICE_MULTIPLE } from "./constants";
+import {
+  WIZARD_STEPS,
+  DEFAULT_PRICE_SINGLE,
+  DEFAULT_PRICE_MULTIPLE,
+  ENTER_MAIN_NAV_EVENT,
+  ENTER_MAIN_NAV_STORAGE_KEY,
+  ENTER_MAIN_NAV_RULES_EVENT,
+  ENTER_MAIN_NAV_RULES_STORAGE_KEY,
+} from "./constants";
 
 const PaymentForm = dynamic(() => import("./PaymentForm"), { ssr: false });
 
@@ -159,6 +168,47 @@ export default function EnterPageClient({
   const [entryToken, setEntryToken] = useState<string | null>(null);
   const isMobile = useIsMobile();
   const stepperRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+
+  const applyMainNavEnterBook = useCallback(() => {
+    sessionStorage.removeItem(ENTER_MAIN_NAV_STORAGE_KEY);
+    setCurrentStep(1);
+
+    const u = new URL(window.location.href);
+    if (u.pathname === "/enter" && u.searchParams.has("step")) {
+      u.searchParams.delete("step");
+      const qs = u.searchParams.toString();
+      window.history.replaceState(window.history.state, "", qs ? `${u.pathname}?${qs}` : u.pathname);
+    }
+
+    window.dispatchEvent(new CustomEvent("enter-wizard-step-changed", { detail: "1" }));
+
+    try {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    } catch {
+      window.scrollTo(0, 0);
+    }
+  }, []);
+
+  const applyMainNavRules = useCallback(() => {
+    sessionStorage.removeItem(ENTER_MAIN_NAV_RULES_STORAGE_KEY);
+    setCurrentStep(1);
+    window.history.replaceState(window.history.state, "", "/enter?step=1");
+    window.dispatchEvent(new CustomEvent("enter-wizard-step-changed", { detail: "1" }));
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (!stepperRef.current) return;
+        const navHeight = window.innerWidth < 900 ? 64 : 72;
+        const top =
+          stepperRef.current.getBoundingClientRect().top + window.scrollY - navHeight - 16;
+        try {
+          window.scrollTo({ top: Math.max(0, top), left: 0, behavior: "auto" });
+        } catch {
+          window.scrollTo(0, Math.max(0, top));
+        }
+      });
+    });
+  }, []);
 
   useEffect(() => {
     if (sessionStorage.getItem("maya_entry_complete") === "true") {
@@ -167,17 +217,40 @@ export default function EnterPageClient({
   }, []);
 
   useEffect(() => {
+    const onMainNavEnterBook = () => {
+      applyMainNavEnterBook();
+    };
+    window.addEventListener(ENTER_MAIN_NAV_EVENT, onMainNavEnterBook);
+    return () => window.removeEventListener(ENTER_MAIN_NAV_EVENT, onMainNavEnterBook);
+  }, [applyMainNavEnterBook]);
+
+  useEffect(() => {
+    const onMainNavRules = () => {
+      applyMainNavRules();
+    };
+    window.addEventListener(ENTER_MAIN_NAV_RULES_EVENT, onMainNavRules);
+    return () => window.removeEventListener(ENTER_MAIN_NAV_RULES_EVENT, onMainNavRules);
+  }, [applyMainNavRules]);
+
+  /** e.g. landed on /enter from another route with the main-nav flag (event can fire before mount). */
+  useEffect(() => {
+    if (pathname !== "/enter") return;
+    if (sessionStorage.getItem(ENTER_MAIN_NAV_STORAGE_KEY) !== "1") return;
+    applyMainNavEnterBook();
+  }, [pathname, applyMainNavEnterBook]);
+
+  useEffect(() => {
+    if (pathname !== "/enter") return;
+    if (sessionStorage.getItem(ENTER_MAIN_NAV_RULES_STORAGE_KEY) !== "1") return;
+    applyMainNavRules();
+  }, [pathname, applyMainNavRules]);
+
+  useEffect(() => {
     const nextUrl = new URL(window.location.href);
     const nextStep = String(currentStep);
 
-    if (nextUrl.searchParams.get("step") !== nextStep) {
-      nextUrl.searchParams.set("step", nextStep);
-      window.history.replaceState(window.history.state, "", nextUrl.toString());
-    }
-
-    window.dispatchEvent(new CustomEvent("enter-wizard-step-changed", { detail: nextStep }));
-
-    if (stepperRef.current) {
+    const scrollToStepperTop = () => {
+      if (!stepperRef.current) return;
       // nav is fixed: 72px desktop, 64px mobile (breakpoint 900px) — add 16px breathing room
       const navHeight = window.innerWidth < 900 ? 64 : 72;
       const top = stepperRef.current.getBoundingClientRect().top + window.scrollY - navHeight - 16;
@@ -186,7 +259,40 @@ export default function EnterPageClient({
       } catch {
         window.scrollTo(0, Math.max(0, top));
       }
+    };
+
+    // Step 1: do not add `?step=1` when the URL is bare `/enter`; if `step` is already present,
+    // leave it unchanged (except syncing a mismatched step value to 1). With `?step=n` in the URL
+    // (including 1), scroll to the stepper; bare `/enter` scrolls to the top of the page.
+    if (currentStep === 1) {
+      const sp = nextUrl.searchParams.get("step");
+      if (sp != null && sp !== "1") {
+        nextUrl.searchParams.set("step", "1");
+        window.history.replaceState(window.history.state, "", nextUrl.toString());
+      }
+
+      window.dispatchEvent(new CustomEvent("enter-wizard-step-changed", { detail: nextStep }));
+
+      if (nextUrl.searchParams.has("step")) {
+        scrollToStepperTop();
+      } else {
+        try {
+          window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+        } catch {
+          window.scrollTo(0, 0);
+        }
+      }
+      return;
     }
+
+    if (nextUrl.searchParams.get("step") !== nextStep) {
+      nextUrl.searchParams.set("step", nextStep);
+      window.history.replaceState(window.history.state, "", nextUrl.toString());
+    }
+
+    window.dispatchEvent(new CustomEvent("enter-wizard-step-changed", { detail: nextStep }));
+
+    scrollToStepperTop();
   }, [currentStep]);
 
   const priceSingle = settings.price_single_book ?? DEFAULT_PRICE_SINGLE;
