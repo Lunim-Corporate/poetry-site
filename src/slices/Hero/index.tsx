@@ -23,7 +23,7 @@ export default function Hero({ slice }: SliceComponentProps<HeroSliceData>) {
   const subtitleClasses: Record<HeroVariant, string> = {
     home: "font-sans font-semibold text-xl text-white/85 mt-4 max-w-3xl mx-auto [text-shadow:0_2px_18px_rgba(0,0,0,0.85)]",
     small: "font-sans text-white/85 mt-2 [text-shadow:0_2px_18px_rgba(0,0,0,0.85)]",
-    default: "font-sans text-lg text-white/85 mt-4 max-w-3xl mx-auto [text-shadow:0_2px_18px_rgba(0,0,0,0.85)]",
+    default: "font-sans font-semibold text-lg text-white/85 mt-4 max-w-3xl mx-auto [text-shadow:0_2px_18px_rgba(0,0,0,0.85)]",
   };
 
   const heroImage = slice.primary.hero_image;
