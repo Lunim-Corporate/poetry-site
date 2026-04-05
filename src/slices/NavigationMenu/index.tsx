@@ -189,7 +189,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                 onClick={link.url === "/enter" ? handleEnterBookNavClick : undefined}
                 className={`px-4 py-2 text-base font-medium transition-colors ${
                   isActive(link.url)
-                    ? "text-[#FFE169] underline underline-offset-4 decoration-[#FFE169]"
+                    ? "text-[#FFE169]"
                     : "text-white hover:underline hover:underline-offset-4 hover:decoration-white"
                 }`}
               >
@@ -204,7 +204,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                   href="/past-winners"
                   className={`px-4 py-2 text-base font-medium transition-colors ${
                     isPastWinnersActive()
-                      ? "text-[#FFE169] underline underline-offset-4 decoration-[#FFE169]"
+                      ? "text-[#FFE169]"
                       : "text-white hover:underline hover:underline-offset-4 hover:decoration-white"
                   }`}
                 >
@@ -243,7 +243,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
               href="/enter?step=1"
               className={`px-4 py-2 text-base font-medium transition-colors ${
                 isRulesStage
-                  ? "text-[#FFE169] underline underline-offset-4 decoration-[#FFE169]"
+                  ? "text-[#FFE169]"
                   : "text-white hover:underline hover:underline-offset-4 hover:decoration-white"
               }`}
               onClick={handleRulesNavClick}
@@ -290,7 +290,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                   }}
                   className={`px-4 py-3 font-medium transition-colors ${
                     isActive("/")
-                      ? "text-primary underline underline-offset-4"
+                      ? "text-primary"
                       : "text-slate-600 hover:text-primary hover:underline hover:underline-offset-4"
                   }`}
                 >
@@ -304,7 +304,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                     onClick={link.url === "/enter" ? handleEnterBookNavClick : () => setMobileNavOpen(false)}
                     className={`px-4 py-3 font-medium transition-colors ${
                       isActive(link.url)
-                        ? "text-primary underline underline-offset-4"
+                        ? "text-primary"
                         : "text-slate-600 hover:text-primary hover:underline hover:underline-offset-4"
                     }`}
                   >
@@ -319,7 +319,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                       onClick={() => setMobileNavOpen(false)}
                       className={`flex-1 px-4 py-3 font-medium transition-colors ${
                         isPastWinnersActive()
-                          ? "text-primary underline underline-offset-4"
+                          ? "text-primary"
                           : "text-slate-600 hover:text-primary hover:underline hover:underline-offset-4"
                       }`}
                     >
@@ -360,7 +360,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                   onClick={handleRulesNavClick}
                   className={`px-4 py-3 font-medium transition-colors ${
                     isRulesStage
-                      ? "text-primary underline underline-offset-4"
+                      ? "text-primary"
                       : "text-slate-600 hover:text-primary hover:underline hover:underline-offset-4"
                   }`}
                 >
