@@ -40,7 +40,7 @@ const RULES = [
   "No refunds will be given.",
   "Entrants will be signed up for the newsletter to be kept informed of changes in announcement dates, judges, winners, etc.",
   "Winners will be awarded a cash prize and emailed a certificate and logo to use for publicity, and will also receive a review from us on the relevant Goodreads and Amazon UK web pages, if your book is listed on these platforms.",
-  "Any entries received after the closing date will automatically be put forward for the following year\u2019s competition. No returns will be given.",
+  "Any entries received after the closing date of Sunday, 31st May 2026 will automatically be put forward for the following year\u2019s competition. No returns will be given.",
   "You retain all rights to your work.",
   "By entering this competition, each entrant agrees to be bound by these rules.",
 ];
