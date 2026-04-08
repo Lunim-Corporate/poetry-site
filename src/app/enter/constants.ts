@@ -10,7 +10,7 @@ export const WIZARD_STEPS = [
   { label: "Read rules", mobileLabel: "Rules", sublabel: "of competition" },
   { label: "Enter details and", mobileLabel: "Details", sublabel: "number of books" },
   { label: "Enter card", mobileLabel: "Pay", sublabel: "and pay" },
-  { label: "Print label and", mobileLabel: "Post book/s", sublabel: "post your book/s" },
+  { label: "Print label and", mobileLabel: "Post", sublabel: "post your book/s" },
 ];
 
 export const DEFAULT_SHIPPING = {
