@@ -23,6 +23,9 @@
             },
             "rich_text": {
               "type": "SharedSlice"
+            },
+            "listing": {
+              "type": "SharedSlice"
             }
           }
         }

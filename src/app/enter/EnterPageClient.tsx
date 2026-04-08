@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
-import type { EnterPageSettings } from "@/types";
+import { PrismicRichText, PrismicText } from "@prismicio/react";
+import type { EnterPageSettings, ListingSliceData } from "@/types";
 import {
   WIZARD_STEPS,
   DEFAULT_PRICE_SINGLE,
@@ -17,33 +18,6 @@ import {
 const PaymentForm = dynamic(() => import("./PaymentForm"), { ssr: false });
 
 type Step = 1 | 2 | 3;
-
-const RULES = [
-  "This is an international competition and we accept poetry books & pamphlets from anywhere in the world provided all submissions are in English. The competition is open to anyone aged 18 or over at the time of entering.",
-  "Each book must only be sent once. We only accept physical copies (i.e. paperbacks or pamphlets) as we then donate your book(s) to local libraries (RCT), Storyville Books (free library/bookshop), and Tesco (free books) each autumn/Christmas.",
-  "Only poetry books published by small, truly independent presses and self-published books are eligible to enter. Publishers that receive grants from arts councils, universities and other sponsorships are not considered independent.",
-  "Only individual poets are eligible to enter (although if a book is co-authored we may bend the rules \u2013 please contact us first). The poet must be living. We do not accept anthologies. Translations of other poets\u2019 works are not accepted.",
-  "Entry fees are payable via credit or debit card. Unfortunately, we can no longer accept UK cheques due to our bank charging excessive fees.",
-  "You may enter the competition as many times as you wish, as long as each submission is accompanied by an entry fee.",
-  "There is no publication date requirement but books should not be out of print.",
-  "Only books under 200 pages are eligible. If in doubt, please email us first.",
-  "Unpublished manuscripts are not accepted and will not be returned. No refund will be issued.",
-  "Entries cannot be returned but all books will be donated to local libraries in south Wales, so your book will have the chance to be read by even more people.",
-  "The Maya Poetry Book Awards holds no responsibility for incomplete or ineligible entries.",
-  "It is your responsibility to ensure the correct postage is applied to your parcel and to pay for it. Incorrect postage could result in your package being returned to you and possibly in you missing the deadline.",
-  "If posting from overseas (outside the UK), it is exclusively your responsibility to fill out any customs forms and declarations that may be needed.",
-  "All prizes will be paid in pounds sterling by card. The Poetry Book Awards cannot be held responsible for any payment processing or currency conversion fees.",
-  "By entering, you agree that if you win one of our awards, you will send us a photo and short biography for us to post on our website, to share on social media, as well as for any other advertising/press releases.",
-  "The judge(s) will read all entries. Their decision is final and no correspondence will be entered into.",
-  "The competition organisers reserve the right to change the judge(s) without notice.",
-  "No feedback is offered and no personal comments regarding entries will be given.",
-  "No refunds will be given.",
-  "Entrants will be signed up for the newsletter to be kept informed of changes in announcement dates, judges, winners, etc.",
-  "Winners will be awarded a cash prize and emailed a certificate and logo to use for publicity, and will also receive a review from us on the relevant Goodreads and Amazon UK web pages, if your book is listed on these platforms.",
-  "Any entries received after the closing date of Sunday, 31st May 2026 will automatically be put forward for the following year\u2019s competition. No returns will be given.",
-  "You retain all rights to your work.",
-  "By entering this competition, each entrant agrees to be bound by these rules.",
-];
 
 const PHONE_COUNTRY_CODES = [
   { value: "+44", label: "United Kingdom (+44)" },
@@ -146,8 +120,14 @@ function generateEntryToken(length = 8): string {
 
 export default function EnterPageClient({
   settings,
+  rulesItems,
+  rulesCopy,
+  rulesTitle,
 }: {
   settings: EnterPageSettings;
+  rulesItems?: ListingSliceData["primary"]["items"];
+  rulesCopy?: ListingSliceData["primary"]["copy"];
+  rulesTitle?: ListingSliceData["primary"]["title"];
 }) {
   const [currentStep, setCurrentStep] = useState<Step>(1);
   const [rulesConfirmed, setRulesConfirmed] = useState(false);
@@ -478,15 +458,33 @@ export default function EnterPageClient({
         {/* Step 1: Read Rules */}
         {currentStep === 1 && (
           <div className="bg-white border border-slate-200 rounded-xl p-6 md:p-8 shadow-sm">
-            <h2 className="text-lg font-semibold text-slate-900 mb-1">Competition Rules</h2>
-            <p className="text-base text-slate-700 mb-6">
-              Please review the competition rules before submitting your entry.
-            </p>
+            <h2 className="text-lg font-semibold text-slate-900 mb-1">
+              {rulesTitle?.length ? <PrismicText field={rulesTitle} /> : "Competition Rules"}
+            </h2>
+            {rulesCopy?.length ? (
+              <div className="text-base text-slate-700 mb-6">
+                <PrismicRichText
+                  field={rulesCopy}
+                  components={{
+                    paragraph: ({ children }) => <p className="m-0">{children}</p>,
+                  }}
+                />
+              </div>
+            ) : (
+              <p className="text-base text-slate-700 mb-6">
+                Please review the competition rules before submitting your entry.
+              </p>
+            )}
 
             <ol className="list-decimal list-outside pl-5 space-y-3 text-base text-slate-600 font-normal">
-              {RULES.map((rule, index) => (
-                <li key={index} className="leading-relaxed">{rule}</li>
-              ))}
+              {(rulesItems ?? [])
+                .map((i) => String(i?.text ?? "").trim())
+                .filter(Boolean)
+                .map((rule, index) => (
+                  <li key={index} className="leading-relaxed">
+                    {rule}
+                  </li>
+                ))}
             </ol>
 
             <div className="mt-6 space-y-4">

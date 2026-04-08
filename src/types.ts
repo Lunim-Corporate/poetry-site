@@ -71,6 +71,17 @@ export interface RichTextSliceData extends PrismicSlice {
   };
 }
 
+export interface ListingSliceData extends PrismicSlice {
+  slice_type: "listing";
+  primary: {
+    title?: RichTextField;
+    copy?: RichTextField;
+    items?: Array<{
+      text: string;
+    }>;
+  };
+}
+
 export interface FaqSliceData extends PrismicSlice {
   slice_type: "faq";
   primary: {

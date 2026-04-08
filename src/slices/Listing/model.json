@@ -1,0 +1,53 @@
+{
+  "id": "listing",
+  "type": "SharedSlice",
+  "name": "Listing",
+  "description": "A titled list of items (no answers)",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default listing",
+      "imageUrl": "",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Title",
+            "placeholder": "Competition Rules",
+            "allowTargetBlank": false,
+            "single": "heading2"
+          }
+        },
+        "copy": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Copy",
+            "placeholder": "Please review the competition rules before submitting your entry.",
+            "allowTargetBlank": true,
+            "multi": "paragraph,strong,em,hyperlink"
+          }
+        },
+        "items": {
+          "type": "Group",
+          "config": {
+            "label": "Items",
+            "fields": {
+              "text": {
+                "type": "Text",
+                "config": {
+                  "label": "Text",
+                  "placeholder": "Enter list item..."
+                }
+              }
+            }
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}
+

@@ -4,7 +4,7 @@ import { createClient } from "@/prismicio";
 import { components } from "@/slices";
 import { partitionSlices } from "@/utils/slices";
 import { generateMetaDataInfo } from "@/utils/generateMetaDataInfo";
-import type { PrismicMetaFields, PrismicSlice, EnterPageSettings } from "@/types";
+import type { PrismicMetaFields, PrismicSlice, EnterPageSettings, ListingSliceData } from "@/types";
 import EnterPageClient from "./EnterPageClient";
 
 export const revalidate = 60;
@@ -15,7 +15,11 @@ export default async function EnterPage() {
 
   const data = (doc?.data ?? {}) as Record<string, unknown>;
   const slices: PrismicSlice[] = (data.slices as PrismicSlice[]) ?? [];
-  const { hero } = partitionSlices(slices);
+  const { hero, extra } = partitionSlices(slices, ["listing"]);
+  const rulesSlice = extra.find((s) => s.slice_type === "listing") as ListingSliceData | undefined;
+  const rulesItems = rulesSlice?.primary?.items;
+  const rulesTitle = rulesSlice?.primary?.title;
+  const rulesCopy = rulesSlice?.primary?.copy;
 
   const settings: EnterPageSettings = {
     price_single_book: data.price_single_book as number | undefined,
@@ -32,7 +36,12 @@ export default async function EnterPage() {
       {hero.length > 0 && (
         <SliceZone slices={hero} components={components} />
       )}
-      <EnterPageClient settings={settings} />
+      <EnterPageClient
+        settings={settings}
+        rulesTitle={rulesTitle}
+        rulesItems={rulesItems}
+        rulesCopy={rulesCopy}
+      />
     </>
   );
 }

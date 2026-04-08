@@ -69,7 +69,7 @@ type ContentRelationshipFieldWithData<
   >;
 }[Exclude<TCustomType[number], string>["id"]];
 
-type EnterPageDocumentDataSlicesSlice = HeroSlice | RichTextSlice;
+type EnterPageDocumentDataSlicesSlice = HeroSlice | RichTextSlice | ListingSlice;
 
 /**
  * Content for Enter Page documents
@@ -2073,6 +2073,82 @@ export type RichTextSlice = prismic.SharedSlice<
   "rich_text",
   RichTextSliceVariation
 >;
+
+/**
+ * Item in *Listing → Default → Primary → Items*
+ */
+export interface ListingSliceDefaultPrimaryItemsItem {
+  /**
+   * Text field in *Listing → Default → Primary → Items*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: Enter list item...
+   * - **API ID Path**: listing.default.primary.items[].text
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  text: prismic.KeyTextField;
+}
+
+/**
+ * Primary content in *Listing → Default → Primary*
+ */
+export interface ListingSliceDefaultPrimary {
+  /**
+   * Title field in *Listing → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: Competition Rules
+   * - **API ID Path**: listing.default.primary.title
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  title: prismic.RichTextField;
+
+  /**
+   * Copy field in *Listing → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: Please review the competition rules before submitting your entry.
+   * - **API ID Path**: listing.default.primary.copy
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  copy: prismic.RichTextField;
+
+  /**
+   * Items field in *Listing → Default → Primary*
+   *
+   * - **Field Type**: Group
+   * - **API ID Path**: listing.default.primary.items[]
+   * - **Documentation**: https://prismic.io/docs/fields/group
+   */
+  items: prismic.GroupField<Simplify<ListingSliceDefaultPrimaryItemsItem>>;
+}
+
+/**
+ * Default variation for Listing Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default listing
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type ListingSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<ListingSliceDefaultPrimary>,
+  never
+>;
+
+/**
+ * Slice variation for *Listing*
+ */
+type ListingSliceVariation = ListingSliceDefault;
+
+/**
+ * Listing Shared Slice
+ *
+ * - **API ID**: `listing`
+ * - **Description**: A titled list of items (no answers)
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type ListingSlice = prismic.SharedSlice<"listing", ListingSliceVariation>;
 
 /**
  * Item in *WinnersGrid → Default → Primary → Winners*
