@@ -1,3 +1,32 @@
+function startOfDay(date: Date): Date {
+  const d = new Date(date);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+/** Last day entries are accepted (competition closed from the following day). */
+export const CompetitionClosingDate = startOfDay(new Date(2026, 4, 23));
+
+/** First day entries open again for the next competition cycle. */
+export const CompetitionOpeningDate = startOfDay(new Date(2027, 0, 1));
+
+export function isCompetitionClosed(now: Date = new Date()): boolean {
+  const today = startOfDay(now);
+  return today > CompetitionClosingDate && today < CompetitionOpeningDate;
+}
+
+export function formatCompetitionOpeningDate(): string {
+  return CompetitionOpeningDate.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+export function getCompetitionClosedMessage(): string {
+  return `The competition is now closed. Next year's competition opens on ${formatCompetitionOpeningDate()}.`;
+}
+
 /** Main nav "Enter Your Book": dispatch + sessionStorage so /enter resets to step 1 + top. */
 export const ENTER_MAIN_NAV_EVENT = "enter-main-nav-enter-book";
 export const ENTER_MAIN_NAV_STORAGE_KEY = "maya_enter_main_nav";

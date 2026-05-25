@@ -69,7 +69,11 @@ type ContentRelationshipFieldWithData<
   >;
 }[Exclude<TCustomType[number], string>["id"]];
 
-type EnterPageDocumentDataSlicesSlice = HeroSlice | RichTextSlice | ListingSlice;
+type EnterPageDocumentDataSlicesSlice =
+  | ClosedHeroSlice
+  | HeroSlice
+  | RichTextSlice
+  | ListingSlice;
 
 /**
  * Content for Enter Page documents
@@ -1160,6 +1164,82 @@ export type AboutSectionSlice = prismic.SharedSlice<
 >;
 
 /**
+ * Primary content in *ClosedHero → Default → Primary*
+ */
+export interface ClosedHeroSliceDefaultPrimary {
+  /**
+   * Title field in *ClosedHero → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: Enter hero title...
+   * - **API ID Path**: closed_hero.default.primary.title
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  title: prismic.RichTextField;
+
+  /**
+   * Subtitle field in *ClosedHero → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: Enter subtitle...
+   * - **API ID Path**: closed_hero.default.primary.subtitle
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  subtitle: prismic.RichTextField;
+
+  /**
+   * Hero Image field in *ClosedHero → Default → Primary*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: closed_hero.default.primary.hero_image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  hero_image: prismic.ImageField<never>;
+
+  /**
+   * Variant field in *ClosedHero → Default → Primary*
+   *
+   * - **Field Type**: Select
+   * - **Placeholder**: Select variant
+   * - **Default Value**: default
+   * - **API ID Path**: closed_hero.default.primary.variant
+   * - **Documentation**: https://prismic.io/docs/fields/select
+   */
+  variant: prismic.SelectField<"default" | "home" | "small", "filled">;
+}
+
+/**
+ * Default variation for ClosedHero Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type ClosedHeroSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<ClosedHeroSliceDefaultPrimary>,
+  never
+>;
+
+/**
+ * Slice variation for *ClosedHero*
+ */
+type ClosedHeroSliceVariation = ClosedHeroSliceDefault;
+
+/**
+ * ClosedHero Shared Slice
+ *
+ * - **API ID**: `closed_hero`
+ * - **Description**: ClosedHero
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type ClosedHeroSlice = prismic.SharedSlice<
+  "closed_hero",
+  ClosedHeroSliceVariation
+>;
+
+/**
  * Primary content in *ContactCard → Default → Primary*
  */
 export interface ContactCardSliceDefaultPrimary {
@@ -1604,6 +1684,86 @@ type JudgeProfileSliceVariation = JudgeProfileSliceDefault;
 export type JudgeProfileSlice = prismic.SharedSlice<
   "judge_profile",
   JudgeProfileSliceVariation
+>;
+
+/**
+ * Item in *Listing → Default → Primary → Items*
+ */
+export interface ListingSliceDefaultPrimaryItemsItem {
+  /**
+   * Text field in *Listing → Default → Primary → Items*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: Enter list item...
+   * - **API ID Path**: listing.default.primary.items[].text
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  text: prismic.KeyTextField;
+}
+
+/**
+ * Primary content in *Listing → Default → Primary*
+ */
+export interface ListingSliceDefaultPrimary {
+  /**
+   * Title field in *Listing → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: Competition Rules
+   * - **API ID Path**: listing.default.primary.title
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  title: prismic.RichTextField;
+
+  /**
+   * Copy field in *Listing → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: Please review the competition rules before submitting your entry.
+   * - **API ID Path**: listing.default.primary.copy
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  copy: prismic.RichTextField;
+
+  /**
+   * Items field in *Listing → Default → Primary*
+   *
+   * - **Field Type**: Group
+   * - **Placeholder**: *None*
+   * - **API ID Path**: listing.default.primary.items[]
+   * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+   */
+  items: prismic.GroupField<Simplify<ListingSliceDefaultPrimaryItemsItem>>;
+}
+
+/**
+ * Default variation for Listing Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default listing
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type ListingSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<ListingSliceDefaultPrimary>,
+  never
+>;
+
+/**
+ * Slice variation for *Listing*
+ */
+type ListingSliceVariation = ListingSliceDefault;
+
+/**
+ * Listing Shared Slice
+ *
+ * - **API ID**: `listing`
+ * - **Description**: A titled list of items (no answers)
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type ListingSlice = prismic.SharedSlice<
+  "listing",
+  ListingSliceVariation
 >;
 
 /**
@@ -2075,82 +2235,6 @@ export type RichTextSlice = prismic.SharedSlice<
 >;
 
 /**
- * Item in *Listing → Default → Primary → Items*
- */
-export interface ListingSliceDefaultPrimaryItemsItem {
-  /**
-   * Text field in *Listing → Default → Primary → Items*
-   *
-   * - **Field Type**: Text
-   * - **Placeholder**: Enter list item...
-   * - **API ID Path**: listing.default.primary.items[].text
-   * - **Documentation**: https://prismic.io/docs/fields/text
-   */
-  text: prismic.KeyTextField;
-}
-
-/**
- * Primary content in *Listing → Default → Primary*
- */
-export interface ListingSliceDefaultPrimary {
-  /**
-   * Title field in *Listing → Default → Primary*
-   *
-   * - **Field Type**: Rich Text
-   * - **Placeholder**: Competition Rules
-   * - **API ID Path**: listing.default.primary.title
-   * - **Documentation**: https://prismic.io/docs/fields/rich-text
-   */
-  title: prismic.RichTextField;
-
-  /**
-   * Copy field in *Listing → Default → Primary*
-   *
-   * - **Field Type**: Rich Text
-   * - **Placeholder**: Please review the competition rules before submitting your entry.
-   * - **API ID Path**: listing.default.primary.copy
-   * - **Documentation**: https://prismic.io/docs/fields/rich-text
-   */
-  copy: prismic.RichTextField;
-
-  /**
-   * Items field in *Listing → Default → Primary*
-   *
-   * - **Field Type**: Group
-   * - **API ID Path**: listing.default.primary.items[]
-   * - **Documentation**: https://prismic.io/docs/fields/group
-   */
-  items: prismic.GroupField<Simplify<ListingSliceDefaultPrimaryItemsItem>>;
-}
-
-/**
- * Default variation for Listing Slice
- *
- * - **API ID**: `default`
- * - **Description**: Default listing
- * - **Documentation**: https://prismic.io/docs/slices
- */
-export type ListingSliceDefault = prismic.SharedSliceVariation<
-  "default",
-  Simplify<ListingSliceDefaultPrimary>,
-  never
->;
-
-/**
- * Slice variation for *Listing*
- */
-type ListingSliceVariation = ListingSliceDefault;
-
-/**
- * Listing Shared Slice
- *
- * - **API ID**: `listing`
- * - **Description**: A titled list of items (no answers)
- * - **Documentation**: https://prismic.io/docs/slices
- */
-export type ListingSlice = prismic.SharedSlice<"listing", ListingSliceVariation>;
-
-/**
  * Item in *WinnersGrid → Default → Primary → Winners*
  */
 export interface WinnersGridSliceDefaultPrimaryItemsItem {
@@ -2366,6 +2450,10 @@ declare module "@prismicio/client" {
       AboutSectionSliceDefaultPrimary,
       AboutSectionSliceVariation,
       AboutSectionSliceDefault,
+      ClosedHeroSlice,
+      ClosedHeroSliceDefaultPrimary,
+      ClosedHeroSliceVariation,
+      ClosedHeroSliceDefault,
       ContactCardSlice,
       ContactCardSliceDefaultPrimary,
       ContactCardSliceVariation,
@@ -2388,6 +2476,11 @@ declare module "@prismicio/client" {
       JudgeProfileSliceDefaultPrimary,
       JudgeProfileSliceVariation,
       JudgeProfileSliceDefault,
+      ListingSlice,
+      ListingSliceDefaultPrimaryItemsItem,
+      ListingSliceDefaultPrimary,
+      ListingSliceVariation,
+      ListingSliceDefault,
       NavigationMenuSlice,
       NavigationMenuSliceDefaultPrimaryNavLinksItem,
       NavigationMenuSliceDefaultPrimaryPastWinnersYearsItem,

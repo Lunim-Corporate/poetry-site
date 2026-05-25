@@ -13,6 +13,7 @@ import {
   ENTER_MAIN_NAV_STORAGE_KEY,
   ENTER_MAIN_NAV_RULES_EVENT,
   ENTER_MAIN_NAV_RULES_STORAGE_KEY,
+  getCompetitionClosedMessage,
 } from "./constants";
 
 const PaymentForm = dynamic(() => import("./PaymentForm"), { ssr: false });
@@ -119,11 +120,13 @@ function generateEntryToken(length = 8): string {
 }
 
 export default function EnterPageClient({
+  competitionClosed,
   settings,
   rulesItems,
   rulesCopy,
   rulesTitle,
 }: {
+  competitionClosed: boolean;
   settings: EnterPageSettings;
   rulesItems?: ListingSliceData["primary"]["items"];
   rulesCopy?: ListingSliceData["primary"]["copy"];
@@ -280,6 +283,10 @@ export default function EnterPageClient({
   const bookPrices = buildBookPrices(priceSingle, priceMultiple);
   const action = isMobile ? "tap" : "click";
 
+  const showCompetitionClosedModal = () => {
+    setModalMessage(getCompetitionClosedMessage());
+  };
+
   const bookOptions = Array.from({ length: 6 }, (_, i) => {
     const count = i + 1;
     return {
@@ -289,6 +296,10 @@ export default function EnterPageClient({
   });
 
   const handleStepClick = (stepNum: number) => {
+    if (competitionClosed) {
+      showCompetitionClosedModal();
+      return;
+    }
     if (stepNum === currentStep) return;
     if (stepNum < currentStep) {
       if (isWizardLocked) {
@@ -373,6 +384,10 @@ export default function EnterPageClient({
   useEffect(() => {
     const handleWizardStepRequest = (event: Event) => {
       const requestedStep = (event as CustomEvent<number>).detail;
+      if (competitionClosed) {
+        showCompetitionClosedModal();
+        return;
+      }
       if (requestedStep === currentStep) return;
       if (requestedStep < currentStep) {
         if (isWizardLocked) {
@@ -395,7 +410,7 @@ export default function EnterPageClient({
 
     window.addEventListener("enter-wizard-go-to-step", handleWizardStepRequest);
     return () => window.removeEventListener("enter-wizard-go-to-step", handleWizardStepRequest);
-  }, [action, clientSecret, currentStep, isWizardLocked, rulesConfirmed]);
+  }, [action, clientSecret, competitionClosed, currentStep, isWizardLocked, rulesConfirmed]);
 
   return (
     <section className="py-10 font-sans">
@@ -488,20 +503,26 @@ export default function EnterPageClient({
             </ol>
 
             <div className="mt-6 space-y-4">
-              <label className="flex items-start gap-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={rulesConfirmed}
-                  onChange={(e) => setRulesConfirmed(e.target.checked)}
-                  className="mt-0.5 w-4 h-4 accent-primary shrink-0"
-                />
-                <span className="text-base text-slate-700">
-                  I confirm I have read and understood the rules of the competition
-                </span>
-              </label>
+              {!competitionClosed && (
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={rulesConfirmed}
+                    onChange={(e) => setRulesConfirmed(e.target.checked)}
+                    className="mt-0.5 w-4 h-4 accent-primary shrink-0"
+                  />
+                  <span className="text-base text-slate-700">
+                    I confirm I have read and understood the rules of the competition
+                  </span>
+                </label>
+              )}
               <button
                 type="button"
                 onClick={() => {
+                  if (competitionClosed) {
+                    showCompetitionClosedModal();
+                    return;
+                  }
                   setCurrentStep(2);
                   // User is starting a new entry — release any post-payment lock
                   if (isWizardLocked) {
@@ -509,10 +530,10 @@ export default function EnterPageClient({
                     sessionStorage.removeItem("maya_entry_complete");
                   }
                 }}
-                disabled={!rulesConfirmed}
+                disabled={!competitionClosed && !rulesConfirmed}
                 className="w-full border-2 border-[#23100A] bg-[#FFE169] hover:bg-[#23100A] hover:text-[#FFE169] disabled:bg-slate-300 disabled:border-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed text-[#23100A] font-bold py-3 px-4 rounded-lg transition-colors"
               >
-                Continue to enter details
+                {competitionClosed ? "Competition Closed" : "Continue to enter details"}
               </button>
             </div>
           </div>

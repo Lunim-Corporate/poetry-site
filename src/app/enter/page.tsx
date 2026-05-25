@@ -6,6 +6,7 @@ import { partitionSlices } from "@/utils/slices";
 import { generateMetaDataInfo } from "@/utils/generateMetaDataInfo";
 import type { PrismicMetaFields, PrismicSlice, EnterPageSettings, ListingSliceData } from "@/types";
 import EnterPageClient from "./EnterPageClient";
+import { isCompetitionClosed } from "./constants";
 
 export const revalidate = 60;
 
@@ -15,7 +16,9 @@ export default async function EnterPage() {
 
   const data = (doc?.data ?? {}) as Record<string, unknown>;
   const slices: PrismicSlice[] = (data.slices as PrismicSlice[]) ?? [];
-  const { hero, extra } = partitionSlices(slices, ["listing"]);
+  const heroSliceType = isCompetitionClosed() ? "closed_hero" : "hero";
+  const hero = slices.filter((s) => s.slice_type === heroSliceType);
+  const { extra } = partitionSlices(slices, ["listing"]);
   const rulesSlice = extra.find((s) => s.slice_type === "listing") as ListingSliceData | undefined;
   const rulesItems = rulesSlice?.primary?.items;
   const rulesTitle = rulesSlice?.primary?.title;
@@ -37,6 +40,7 @@ export default async function EnterPage() {
         <SliceZone slices={hero} components={components} />
       )}
       <EnterPageClient
+        competitionClosed={isCompetitionClosed()}
         settings={settings}
         rulesTitle={rulesTitle}
         rulesItems={rulesItems}

@@ -64,6 +64,16 @@ export interface HeroSliceData extends PrismicSlice {
   };
 }
 
+export interface ClosedHeroSliceData extends PrismicSlice {
+  slice_type: "closed_hero";
+  primary: {
+    title: RichTextField;
+    subtitle?: RichTextField;
+    variant?: "default" | "home" | "small";
+    hero_image?: ImageField;
+  };
+}
+
 export interface RichTextSliceData extends PrismicSlice {
   slice_type: "rich_text";
   primary: {

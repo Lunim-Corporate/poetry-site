@@ -1,0 +1,58 @@
+{
+  "id": "closed_hero",
+  "type": "SharedSlice",
+  "name": "ClosedHero",
+  "description": "ClosedHero",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Title",
+            "placeholder": "Enter hero title...",
+            "allowTargetBlank": true,
+            "single": "heading1"
+          }
+        },
+        "subtitle": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Subtitle",
+            "placeholder": "Enter subtitle...",
+            "allowTargetBlank": true,
+            "single": "paragraph"
+          }
+        },
+        "hero_image": {
+          "type": "Image",
+          "config": {
+            "label": "Hero Image",
+            "constraint": {},
+            "thumbnails": []
+          }
+        },
+        "variant": {
+          "type": "Select",
+          "config": {
+            "label": "Variant",
+            "placeholder": "Select variant",
+            "options": [
+              "default",
+              "home",
+              "small"
+            ],
+            "default_value": "default"
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}
