@@ -5,7 +5,7 @@ function startOfDay(date: Date): Date {
 }
 
 /** Last day entries are accepted (competition closed from the following day). */
-export const CompetitionClosingDate = startOfDay(new Date(2026, 4, 23));
+export const CompetitionClosingDate = startOfDay(new Date(2026, 4, 31));
 
 /** First day entries open again for the next competition cycle. */
 export const CompetitionOpeningDate = startOfDay(new Date(2027, 0, 1));
