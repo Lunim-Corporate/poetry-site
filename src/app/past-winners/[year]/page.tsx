@@ -531,7 +531,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
                   {(data.year ?? year) as string} Longlist
                 </h3>
                 <p className="text-base text-slate-600 mt-2 mb-4">
-                  The shortlist celebrates a wide range of voices and styles.
+                  The longlist celebrates a wide range of voices and styles.
                 </p>
 
                 <div className="mt-1 rounded-xl border border-[#B7A08F] bg-[#F9F5EF] px-4 py-4 md:px-5 md:py-5">
