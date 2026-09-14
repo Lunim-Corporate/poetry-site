@@ -1,5 +1,9 @@
 import { createHash } from "node:crypto";
 
+function skipMailchimp(): boolean {
+  return process.env.SKIP_MAILCHIMP?.trim().toLowerCase() === "true";
+}
+
 function getMailchimpConfig(): { apiKey: string; audienceId: string; dc: string } | null {
   const apiKey = process.env.MAILCHIMP_API_KEY;
   const audienceId = process.env.MAILCHIMP_AUDIENCE_ID;
@@ -28,6 +32,11 @@ export async function upsertListMember(
   email: string,
   mergeFields?: { FNAME?: string; LNAME?: string }
 ): Promise<MailchimpResult> {
+  if (skipMailchimp()) {
+    console.info("[mailchimp] SKIP_MAILCHIMP=true; skipping list member upsert.");
+    return { ok: true };
+  }
+
   const cfg = getMailchimpConfig();
   if (!cfg) {
     console.error("Missing Mailchimp environment variables.");

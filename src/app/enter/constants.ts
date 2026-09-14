@@ -4,11 +4,28 @@ function startOfDay(date: Date): Date {
   return d;
 }
 
+function addMonths(date: Date, months: number): Date {
+  const d = new Date(date);
+  d.setMonth(d.getMonth() + months);
+  return d;
+}
+
+function ignoreCompetitionClose(): boolean {
+  return process.env.IGNORE_COMPETITION_CLOSE?.trim().toLowerCase() === "true";
+}
+
+const REAL_CLOSING_DATE = new Date(2026, 4, 31);
+const REAL_OPENING_DATE = new Date(2027, 0, 1);
+
 /** Last day entries are accepted (competition closed from the following day). */
-export const CompetitionClosingDate = startOfDay(new Date(2026, 4, 31));
+export const CompetitionClosingDate = startOfDay(
+  ignoreCompetitionClose() ? addMonths(new Date(), 6) : REAL_CLOSING_DATE
+);
 
 /** First day entries open again for the next competition cycle. */
-export const CompetitionOpeningDate = startOfDay(new Date(2027, 0, 1));
+export const CompetitionOpeningDate = startOfDay(
+  ignoreCompetitionClose() ? addMonths(new Date(), -6) : REAL_OPENING_DATE
+);
 
 export function isCompetitionClosed(now: Date = new Date()): boolean {
   const today = startOfDay(now);

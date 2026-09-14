@@ -105,6 +105,17 @@ export interface PaidEntryUpdate {
   bookTitles?: string[];
 }
 
+function skipGoogleSheets(): boolean {
+  return process.env.SKIP_GOOGLE_SHEETS?.trim().toLowerCase() === "true";
+}
+
+function skippedSheetUrl(): string {
+  const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID?.trim();
+  return spreadsheetId
+    ? `https://docs.google.com/spreadsheets/d/${spreadsheetId}/edit`
+    : "";
+}
+
 function getSheetsConfig() {
   const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID?.trim();
   const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
@@ -219,6 +230,11 @@ export async function appendContactMessageRow(entry: {
   newsletter: "Yes" | "No";
   message: string;
 }): Promise<void> {
+  if (skipGoogleSheets()) {
+    console.info("[googleSheets] SKIP_GOOGLE_SHEETS=true; skipping Messages append.");
+    return;
+  }
+
   const { spreadsheetId } = getSheetsConfig();
   const sheets = await getSheetsClient();
   const tab = resolveMessagesTabTitle();
@@ -236,6 +252,11 @@ export async function appendContactMessageRow(entry: {
 }
 
 export async function upsertIncompleteEntry(entry: IncompleteEntryRow): Promise<string> {
+  if (skipGoogleSheets()) {
+    console.info("[googleSheets] SKIP_GOOGLE_SHEETS=true; skipping incomplete entry upsert.");
+    return skippedSheetUrl();
+  }
+
   const { spreadsheetId } = getSheetsConfig();
   const rowNumber = await findRowByToken(entry.token);
 
@@ -281,6 +302,10 @@ export async function upsertIncompleteEntry(entry: IncompleteEntryRow): Promise<
 
 /** Book titles from column G (comma-joined in the sheet), for email fallback when Stripe metadata is missing. */
 export async function getBookTitlesForToken(token: string): Promise<string[]> {
+  if (skipGoogleSheets()) {
+    return [];
+  }
+
   const rowNumber = await findRowByToken(token);
   if (!rowNumber) return [];
   const row = await getRowValues(rowNumber);
@@ -290,6 +315,11 @@ export async function getBookTitlesForToken(token: string): Promise<string[]> {
 }
 
 export async function markEntryPaidByToken(entry: PaidEntryUpdate): Promise<string> {
+  if (skipGoogleSheets()) {
+    console.info("[googleSheets] SKIP_GOOGLE_SHEETS=true; skipping paid entry sync.");
+    return skippedSheetUrl();
+  }
+
   const { spreadsheetId } = getSheetsConfig();
   const rowNumber = await findRowByToken(entry.token);
 
