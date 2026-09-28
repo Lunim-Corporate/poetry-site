@@ -262,6 +262,16 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
             >
               Contact Us
             </Link>
+            <Link
+              href="/account"
+              className={`ml-1 px-3.5 py-1.5 text-base font-medium rounded-full border transition-colors ${
+                isActive("/account")
+                  ? "text-[#FFE169] border-[#FFE169]/70"
+                  : "text-white border-white/35 hover:border-white/70 hover:bg-white/10"
+              }`}
+            >
+              My Account
+            </Link>
           </nav>
 
           {/* Mobile nav */}
@@ -379,6 +389,17 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                   className="px-4 py-3 font-medium text-slate-600 hover:text-primary hover:underline hover:underline-offset-4 transition-colors"
                 >
                   Contact Us
+                </Link>
+                <Link
+                  href="/account"
+                  onClick={() => setMobileNavOpen(false)}
+                  className={`mx-4 mt-1 px-4 py-3 font-medium rounded-lg border transition-colors ${
+                    isActive("/account")
+                      ? "text-primary border-primary/40 bg-primary/5"
+                      : "text-slate-600 border-slate-200 hover:text-primary hover:border-slate-300"
+                  }`}
+                >
+                  My Account
                 </Link>
               </nav>
             </>
