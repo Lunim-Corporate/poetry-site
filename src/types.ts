@@ -17,6 +17,7 @@ export interface PrismicSlice {
   id: string;
   slice_type: string;
   variation: string;
+  
   primary: Record<string, unknown>;
   items?: Record<string, unknown>[];
 }
