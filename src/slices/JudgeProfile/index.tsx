@@ -1,3 +1,4 @@
+import { isFilled } from "@prismicio/client";
 import { PrismicNextImage } from "@prismicio/next";
 import { PrismicRichText } from "@prismicio/react";
 import Link from "next/link";
@@ -9,6 +10,8 @@ const richTextClasses =
 
 export default function JudgeProfile({ slice }: SliceComponentProps<JudgeProfileSliceData>) {
   const books = slice.primary.books || [];
+  const preliminaryJudgesHeading = slice.primary.preliminary_judges_heading?.trim() ?? "";
+  const preliminaryJudges = slice.primary.preliminary_judges ?? [];
 
   return (
     <div
@@ -52,10 +55,11 @@ export default function JudgeProfile({ slice }: SliceComponentProps<JudgeProfile
       </div>
 
       {/* Entrepreneurial History */}
-      {slice.primary.entrepreneurial_history && (
+      {isFilled.richText(slice.primary.entrepreneurial_history) && (
         <div className="mb-10">
           <h3 className="text-lg font-semibold text-slate-900 mb-3 pb-2 border-b border-slate-200">
-            Entrepreneurial History
+            {slice.primary.entrepreneurial_history_heading?.trim() ||
+              "Entrepreneurial History"}
           </h3>
           <div className={richTextClasses}>
             <PrismicRichText field={slice.primary.entrepreneurial_history} />
@@ -64,10 +68,10 @@ export default function JudgeProfile({ slice }: SliceComponentProps<JudgeProfile
       )}
 
       {/* Literary History */}
-      {slice.primary.literary_history && (
+      {isFilled.richText(slice.primary.literary_history) && (
         <div className="mb-10">
           <h3 className="text-lg font-semibold text-slate-900 mb-3 pb-2 border-b border-slate-200">
-            Literary History
+            {slice.primary.literary_history_heading?.trim() || "Literary History"}
           </h3>
           <div className={richTextClasses}>
             <PrismicRichText field={slice.primary.literary_history} />
@@ -119,6 +123,54 @@ export default function JudgeProfile({ slice }: SliceComponentProps<JudgeProfile
           Enter Your Book
         </Link>
       </div>
+
+      {(preliminaryJudgesHeading || preliminaryJudges.length > 0) && (
+        <section className="mt-12 pt-8 border-t border-slate-200 space-y-8">
+          {preliminaryJudgesHeading && (
+            <h2 className="text-2xl font-bold text-[#333333] mb-3 pb-2 border-b border-slate-200">
+              {preliminaryJudgesHeading}
+            </h2>
+          )}
+
+          {preliminaryJudges.map((judge, index) => {
+            const hasPhoto = isFilled.image(judge.profile_picture);
+            const hasName = isFilled.keyText(judge.name);
+            const hasBio = isFilled.richText(judge.biography);
+
+            if (!hasPhoto && !hasName && !hasBio) return null;
+
+            return (
+              <article
+                key={`${judge.name ?? "judge"}-${index}`}
+                className="flex flex-col items-center text-center md:flex-row md:items-start md:text-left gap-6"
+              >
+                {hasPhoto && (
+                  <div className="shrink-0 w-[120px] h-[120px] md:w-[140px] md:h-[140px] aspect-square rounded-full overflow-hidden border border-slate-200 bg-white">
+                    <PrismicNextImage
+                      field={judge.profile_picture}
+                      className="w-full h-full object-cover"
+                      fallbackAlt=""
+                    />
+                  </div>
+                )}
+
+                <div className="min-w-0 flex-1 space-y-3">
+                  {hasName && (
+                    <h3 className="text-xl font-semibold text-slate-800">
+                      {judge.name}
+                    </h3>
+                  )}
+                  {hasBio && (
+                    <div className={richTextClasses}>
+                      <PrismicRichText field={judge.biography} />
+                    </div>
+                  )}
+                </div>
+              </article>
+            );
+          })}
+        </section>
+      )}
     </div>
   );
 }

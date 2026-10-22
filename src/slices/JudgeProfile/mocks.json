@@ -52,6 +52,11 @@
 					}
 				]
 			},
+			"entrepreneurial_history_heading": {
+				"__TYPE__": "FieldContent",
+				"value": "Entrepreneurial History",
+				"type": "Text"
+			},
 			"entrepreneurial_history": {
 				"__TYPE__": "StructuredTextContent",
 				"value": [
@@ -62,6 +67,11 @@
 						}
 					}
 				]
+			},
+			"literary_history_heading": {
+				"__TYPE__": "FieldContent",
+				"value": "Literary History",
+				"type": "Text"
 			},
 			"literary_history": {
 				"__TYPE__": "StructuredTextContent",
@@ -128,6 +138,69 @@
 									"__TYPE__": "FieldContent",
 									"value": "brother",
 									"type": "Text"
+								}
+							]
+						]
+					}
+				]
+			},
+			"preliminary_judges_heading": {
+				"__TYPE__": "FieldContent",
+				"value": "Preliminary Judges",
+				"type": "Text"
+			},
+			"preliminary_judges": {
+				"__TYPE__": "GroupContentType",
+				"value": [
+					{
+						"__TYPE__": "GroupItemContent",
+						"value": [
+							[
+								"profile_picture",
+								{
+									"origin": {
+										"id": "main",
+										"url": "https://images.unsplash.com/photo-1597223557154-721c1cecc4b0",
+										"width": 4000,
+										"height": 4000
+									},
+									"url": "https://images.unsplash.com/photo-1597223557154-721c1cecc4b0?w=400&h=400",
+									"width": 400,
+									"height": 400,
+									"edit": {
+										"zoom": 1,
+										"crop": {
+											"x": 0,
+											"y": 0
+										},
+										"background": "transparent"
+									},
+									"alt": "preliminary judge",
+									"credits": null,
+									"__TYPE__": "ImageContent",
+									"thumbnails": {}
+								}
+							],
+							[
+								"name",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "Alex Morgan",
+									"type": "Text"
+								}
+							],
+							[
+								"biography",
+								{
+									"__TYPE__": "StructuredTextContent",
+									"value": [
+										{
+											"type": "paragraph",
+											"content": {
+												"text": "A poet and editor who reads widely across contemporary collections."
+											}
+										}
+									]
 								}
 							]
 						]
