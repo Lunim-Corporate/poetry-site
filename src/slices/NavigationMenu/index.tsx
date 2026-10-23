@@ -13,7 +13,14 @@ import {
   ENTER_MAIN_NAV_RULES_STORAGE_KEY,
 } from "@/app/enter/constants";
 
-export default function NavigationMenu({ slice }: SliceComponentProps<NavigationMenuSliceData>) {
+type NavigationMenuProps = SliceComponentProps<NavigationMenuSliceData> & {
+  showAccount?: boolean;
+};
+
+export default function NavigationMenu({
+  slice,
+  showAccount = false,
+}: NavigationMenuProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -262,16 +269,18 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
             >
               Contact Us
             </Link>
-            <Link
-              href="/account"
-              className={`ml-1 px-3.5 py-1.5 text-base font-medium rounded-full border transition-colors ${
-                isActive("/account")
-                  ? "text-[#FFE169] border-[#FFE169]/70"
-                  : "text-white border-white/35 hover:border-white/70 hover:bg-white/10"
-              }`}
-            >
-              My Account
-            </Link>
+            {showAccount && (
+              <Link
+                href="/account"
+                className={`ml-1 px-3.5 py-1.5 text-base font-medium rounded-full border transition-colors ${
+                  isActive("/account")
+                    ? "text-[#FFE169] border-[#FFE169]/70"
+                    : "text-white border-white/35 hover:border-white/70 hover:bg-white/10"
+                }`}
+              >
+                My Account
+              </Link>
+            )}
           </nav>
 
           {/* Mobile nav */}
@@ -390,17 +399,19 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                 >
                   Contact Us
                 </Link>
-                <Link
-                  href="/account"
-                  onClick={() => setMobileNavOpen(false)}
-                  className={`mx-4 mt-1 px-4 py-3 font-medium rounded-lg border transition-colors ${
-                    isActive("/account")
-                      ? "text-primary border-primary/40 bg-primary/5"
-                      : "text-slate-600 border-slate-200 hover:text-primary hover:border-slate-300"
-                  }`}
-                >
-                  My Account
-                </Link>
+                {showAccount && (
+                  <Link
+                    href="/account"
+                    onClick={() => setMobileNavOpen(false)}
+                    className={`mx-4 mt-1 px-4 py-3 font-medium rounded-lg border transition-colors ${
+                      isActive("/account")
+                        ? "text-primary border-primary/40 bg-primary/5"
+                        : "text-slate-600 border-slate-200 hover:text-primary hover:border-slate-300"
+                    }`}
+                  >
+                    My Account
+                  </Link>
+                )}
               </nav>
             </>
           )}

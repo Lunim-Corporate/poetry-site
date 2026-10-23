@@ -94,6 +94,9 @@ export default async function RootLayout({
     (s) => s.slice_type === "footer"
   ) as FooterSliceData | undefined;
 
+  const showAccount =
+    process.env.SHOW_ACCOUNT?.trim().toLowerCase() === "true";
+
   return (
     <html lang="en" className={`${sourceSerifPro.variable} ${workSans.variable}`}>
       <body>
@@ -104,6 +107,7 @@ export default async function RootLayout({
             index={0}
             slices={navigationSlices}
             context={{}}
+            showAccount={showAccount}
           />
           <main>{children}</main>
           <BackToTopButton />
