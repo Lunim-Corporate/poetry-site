@@ -181,7 +181,7 @@ export default function EnterPageClient({
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         if (!stepperRef.current) return;
-        const navHeight = window.innerWidth < 900 ? 64 : 72;
+        const navHeight = window.innerWidth < 1060 ? 64 : 72;
         const top =
           stepperRef.current.getBoundingClientRect().top + window.scrollY - navHeight - 16;
         try {
@@ -234,8 +234,8 @@ export default function EnterPageClient({
 
     const scrollToStepperTop = () => {
       if (!stepperRef.current) return;
-      // nav is fixed: 72px desktop, 64px mobile (breakpoint 900px) — add 16px breathing room
-      const navHeight = window.innerWidth < 900 ? 64 : 72;
+      // nav is fixed: 72px desktop, 64px mobile (breakpoint 1060px) — add 16px breathing room
+      const navHeight = window.innerWidth < 1060 ? 64 : 72;
       const top = stepperRef.current.getBoundingClientRect().top + window.scrollY - navHeight - 16;
       try {
         window.scrollTo({ top: Math.max(0, top), left: 0, behavior: "auto" });

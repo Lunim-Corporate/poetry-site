@@ -138,7 +138,7 @@ export default function NavigationMenu({
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 h-[72px] max-[899px]:h-16 flex items-center border-b bg-gradient-to-r from-[#451E10] via-[#7a3520] to-[#451E10] backdrop-blur-sm">
+      <header className="fixed top-0 left-0 right-0 z-50 h-[72px] max-[1059px]:h-16 flex items-center border-b bg-gradient-to-r from-[#451E10] via-[#7a3520] to-[#451E10] backdrop-blur-sm">
         <div className="w-full max-w-6xl mx-auto px-6 flex items-center justify-between gap-8">
           <Link
             href="/"
@@ -168,7 +168,7 @@ export default function NavigationMenu({
           </Link>
 
           {/* Mobile menu button + Contact Us */}
-          <div className="max-[899px]:flex hidden items-center gap-4 ml-auto">
+          <div className="max-[1059px]:flex hidden items-center gap-4 ml-auto">
             <Link
               href="/#contact-form"
               className="text-base font-medium text-white hover:text-white/80 transition-colors"
@@ -188,7 +188,7 @@ export default function NavigationMenu({
           </div>
 
           {/* Desktop nav */}
-          <nav className="hidden min-[900px]:flex items-center gap-1">
+          <nav className="hidden min-[1060px]:flex items-center gap-1">
             {navLinks.map((link, index) => (
               <Link
                 key={index}

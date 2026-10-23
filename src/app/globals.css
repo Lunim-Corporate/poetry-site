@@ -99,7 +99,7 @@
     text-decoration: underline;
   }
 
-  @media (max-width: 899px) {
+  @media (max-width: 1059px) {
     :root {
       --header-height: 64px;
     }
