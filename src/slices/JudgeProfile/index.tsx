@@ -142,7 +142,7 @@ export default function JudgeProfile({ slice }: SliceComponentProps<JudgeProfile
             return (
               <article
                 key={`${judge.name ?? "judge"}-${index}`}
-                className="flex flex-col items-center text-center md:flex-row md:items-start md:text-left gap-6"
+                className="flex flex-col items-center md:flex-row md:items-start gap-6"
               >
                 {hasPhoto && (
                   <div className="shrink-0 w-[120px] h-[120px] md:w-[140px] md:h-[140px] aspect-square rounded-full overflow-hidden border border-slate-200 bg-white">
@@ -154,7 +154,7 @@ export default function JudgeProfile({ slice }: SliceComponentProps<JudgeProfile
                   </div>
                 )}
 
-                <div className="min-w-0 flex-1 space-y-3">
+                <div className="min-w-0 w-full flex-1 space-y-3 text-left">
                   {hasName && (
                     <h3 className="text-xl font-semibold text-slate-800">
                       {judge.name}
