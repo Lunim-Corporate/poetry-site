@@ -51,6 +51,14 @@ export interface AboutIntroSliceData extends PrismicSlice {
   };
 }
 
+export interface AnnouncementSectionSliceData extends PrismicSlice {
+  slice_type: "announcement_section";
+  primary: {
+    section_title?: string;
+    section_text?: RichTextField;
+  };
+}
+
 export interface HeroSliceData extends PrismicSlice {
   slice_type: "hero";
   primary: {

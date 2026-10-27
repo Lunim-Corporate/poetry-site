@@ -232,7 +232,7 @@ interface FooterDocumentData {
  */
 export type FooterDocument<Lang extends string = string> = prismic.PrismicDocumentWithoutUID<Simplify<FooterDocumentData>, "footer", Lang>;
 
-type HomepageDocumentDataSlicesSlice = HeroSlice | RichTextSlice | FaqSlice | PrizeTableSlice | NewsletterSlice | ContactCardSlice | AboutIntroSlice | AboutSectionSlice | PrizeSectionSlice
+type HomepageDocumentDataSlicesSlice = HeroSlice | RichTextSlice | FaqSlice | PrizeTableSlice | NewsletterSlice | ContactCardSlice | AboutIntroSlice | AnnouncementSectionSlice | PrizeSectionSlice | AboutSectionSlice
 
 /**
  * Content for Homepage documents
@@ -1060,6 +1060,54 @@ type AboutSectionSliceVariation = AboutSectionSliceDefault
  * - **Documentation**: https://prismic.io/docs/slices
  */
 export type AboutSectionSlice = prismic.SharedSlice<"about_section", AboutSectionSliceVariation>;
+
+/**
+ * Primary content in *AnnouncementSection → Default → Primary*
+ */
+export interface AnnouncementSectionSliceDefaultPrimary {
+	/**
+	 * Section Title field in *AnnouncementSection → Default → Primary*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: Announcement
+	 * - **API ID Path**: announcement_section.default.primary.section_title
+	 * - **Documentation**: https://prismic.io/docs/fields/text
+	 */
+	section_title: prismic.KeyTextField;
+	
+	/**
+	 * Section Text field in *AnnouncementSection → Default → Primary*
+	 *
+	 * - **Field Type**: Rich Text
+	 * - **Placeholder**: Enter announcement text...
+	 * - **API ID Path**: announcement_section.default.primary.section_text
+	 * - **Documentation**: https://prismic.io/docs/fields/rich-text
+	 */
+	section_text: prismic.RichTextField;
+}
+
+/**
+ * Default variation for AnnouncementSection Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Announcement section with title and text
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type AnnouncementSectionSliceDefault = prismic.SharedSliceVariation<"default", Simplify<AnnouncementSectionSliceDefaultPrimary>, never>;
+
+/**
+ * Slice variation for *AnnouncementSection*
+ */
+type AnnouncementSectionSliceVariation = AnnouncementSectionSliceDefault
+
+/**
+ * AnnouncementSection Shared Slice
+ *
+ * - **API ID**: `announcement_section`
+ * - **Description**: Homepage announcement with title and rich text
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type AnnouncementSectionSlice = prismic.SharedSlice<"announcement_section", AnnouncementSectionSliceVariation>;
 
 /**
  * Primary content in *ClosedHero → Default → Primary*
@@ -2325,6 +2373,10 @@ declare module "@prismicio/client" {
 			AboutSectionSliceDefaultPrimary,
 			AboutSectionSliceVariation,
 			AboutSectionSliceDefault,
+			AnnouncementSectionSlice,
+			AnnouncementSectionSliceDefaultPrimary,
+			AnnouncementSectionSliceVariation,
+			AnnouncementSectionSliceDefault,
 			ClosedHeroSlice,
 			ClosedHeroSliceDefaultPrimary,
 			ClosedHeroSliceVariation,

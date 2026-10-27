@@ -1,0 +1,35 @@
+{
+  "id": "announcement_section",
+  "type": "SharedSlice",
+  "name": "AnnouncementSection",
+  "description": "Homepage announcement with title and rich text",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Announcement section with title and text",
+      "imageUrl": "",
+      "primary": {
+        "section_title": {
+          "type": "Text",
+          "config": {
+            "label": "Section Title",
+            "placeholder": "Announcement"
+          }
+        },
+        "section_text": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Section Text",
+            "placeholder": "Enter announcement text...",
+            "allowTargetBlank": true,
+            "single": "paragraph,strong,em,hyperlink,list-item,o-list-item"
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}
