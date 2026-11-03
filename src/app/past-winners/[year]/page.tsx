@@ -14,6 +14,10 @@ import type {
   ListEntry,
 } from "@/types";
 import { DEFAULT_YEARS } from "@/types";
+import {
+  getPastWinnersDetailHeading,
+  getPastWinnersYearStatus,
+} from "@/utils/pastWinnersYearStatus";
 import { wrapCoverWithBookLink } from "@/lib/wrapCoverWithBookLink";
 
 const proseClasses =
@@ -33,6 +37,15 @@ export default async function WinnersYearPage({ params }: PageProps) {
 
   if (doc) {
     const data = doc.data as unknown as PastWinnersYearData;
+    const winners: WinnerEntry[] = data.winners ?? [];
+    const shortlist: ListEntry[] = data.shortlist ?? [];
+    const longlist: ListEntry[] = data.longlist ?? [];
+    const yearStatus = getPastWinnersYearStatus({
+      winners,
+      shortlist,
+      longlist,
+    });
+    const detailHeading = getPastWinnersDetailHeading(yearStatus);
     const allSlices = (data.slices ?? []) as PrismicSlice[];
     const heroSlices = allSlices
       .filter((s) => s.slice_type === "hero")
@@ -41,12 +54,20 @@ export default async function WinnersYearPage({ params }: PageProps) {
         primary: {
           ...s.primary,
           variant: "small",
+          ...(yearStatus === "shortlist" || yearStatus === "longlist"
+            ? {
+                subtitle: [
+                  {
+                    type: "paragraph",
+                    text: detailHeading,
+                    spans: [],
+                  },
+                ] as RichTextField,
+              }
+            : {}),
         },
       }));
 
-    const winners: WinnerEntry[] = data.winners ?? [];
-    const shortlist: ListEntry[] = data.shortlist ?? [];
-    const longlist: ListEntry[] = data.longlist ?? [];
     const judgesPrizeComments = [
       data.judges_comments_first_prize,
       data.judges_comments_second_prize,
@@ -63,7 +84,7 @@ export default async function WinnersYearPage({ params }: PageProps) {
             <div className="w-full max-w-6xl mx-auto px-6 py-8">
               <div className="text-center">
                 <p className="text-xs font-semibold tracking-wider uppercase text-accent mb-2">{year}</p>
-                <h1 className="text-2xl md:text-3xl font-bold text-slate-900">Winners</h1>
+                <h1 className="text-2xl md:text-3xl font-bold text-slate-900">{detailHeading}</h1>
               </div>
             </div>
           </section>

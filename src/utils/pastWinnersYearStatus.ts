@@ -33,3 +33,17 @@ export function getPastWinnersNavLabel(
       return `${year} Winners`;
   }
 }
+
+/** Hero subtitle / fallback heading under the year on the detail page. */
+export function getPastWinnersDetailHeading(
+  status: PastWinnersYearStatus
+): "Winners" | "Shortlist" | "Longlist" {
+  switch (status) {
+    case "shortlist":
+      return "Shortlist";
+    case "longlist":
+      return "Longlist";
+    default:
+      return "Winners";
+  }
+}
