@@ -13,13 +13,20 @@ import {
   ENTER_MAIN_NAV_RULES_STORAGE_KEY,
 } from "@/app/enter/constants";
 
+type PastWinnersNavYear = {
+  year: number;
+  label: string;
+};
+
 type NavigationMenuProps = SliceComponentProps<NavigationMenuSliceData> & {
   showAccount?: boolean;
+  pastWinnersNavYears?: PastWinnersNavYear[];
 };
 
 export default function NavigationMenu({
   slice,
   showAccount = false,
+  pastWinnersNavYears,
 }: NavigationMenuProps) {
   const pathname = usePathname();
   const router = useRouter();
@@ -34,8 +41,15 @@ export default function NavigationMenu({
     { label: "Enter Your Book", url: "/enter" },
     { label: "Our Judge", url: "/judge" },
   ];
-  const pastWinnersYears =
-    slice.primary.past_winners_years?.map((y) => y.year) || DEFAULT_YEARS;
+  const pastWinnersYears: PastWinnersNavYear[] =
+    pastWinnersNavYears && pastWinnersNavYears.length > 0
+      ? pastWinnersNavYears
+      : (
+          slice.primary.past_winners_years?.map((y) => y.year) || DEFAULT_YEARS
+        ).map((year) => ({
+          year,
+          label: `${year} Winners`,
+        }));
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
@@ -232,14 +246,14 @@ export default function NavigationMenu({
               </div>
               {dropdownOpen && (
                 <div className="absolute top-full left-0 mt-2 min-w-[180px] p-2 bg-white border border-slate-200 rounded-xl shadow-lg z-50">
-                  {pastWinnersYears.map((year) => (
+                  {pastWinnersYears.map(({ year, label }) => (
                     <Link
                       key={year}
                       href={`/past-winners/${year}`}
                       onClick={() => setDropdownOpen(false)}
                       className="block px-3 py-2 text-base text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
                     >
-                      {year} Winners
+                      {label}
                     </Link>
                   ))}
                 </div>
@@ -357,7 +371,7 @@ export default function NavigationMenu({
                   </div>
                   {mobileDropdownOpen && (
                     <div className="ml-4 p-2 border border-slate-200 rounded-lg space-y-1">
-                      {pastWinnersYears.map((year) => (
+                      {pastWinnersYears.map(({ year, label }) => (
                         <Link
                           key={year}
                           href={`/past-winners/${year}`}
@@ -367,7 +381,7 @@ export default function NavigationMenu({
                           }}
                           className="block px-3 py-2 text-base text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
                         >
-                          {year} Winners
+                          {label}
                         </Link>
                       ))}
                     </div>

@@ -5,8 +5,17 @@ import { createClient, repositoryName } from "@/prismicio";
 import NavigationMenu from "@/slices/NavigationMenu";
 import FooterSlice from "@/slices/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
-import type { NavigationMenuSliceData, FooterSliceData, PrismicSlice } from "@/types";
+import type {
+  NavigationMenuSliceData,
+  FooterSliceData,
+  PastWinnersYearData,
+  PrismicSlice,
+} from "@/types";
 import { DEFAULT_YEARS } from "@/types";
+import {
+  getPastWinnersNavLabel,
+  getPastWinnersYearStatus,
+} from "@/utils/pastWinnersYearStatus";
 import "./globals.css";
 import BackToTopButton from "@/components/BackToTopButton";
 
@@ -97,6 +106,25 @@ export default async function RootLayout({
   const showAccount =
     process.env.SHOW_ACCOUNT?.trim().toLowerCase() === "true";
 
+  const yearDocs = await client.getAllByType("past_winners_year").catch(() => []);
+  const pastWinnersNavYears = yearDocs
+    .map((yearDoc) => {
+      const year = Number(yearDoc.uid);
+      if (Number.isNaN(year)) return null;
+      const status = getPastWinnersYearStatus(
+        yearDoc.data as unknown as PastWinnersYearData
+      );
+      if (status === "hidden") return null;
+      return {
+        year,
+        label: getPastWinnersNavLabel(year, status),
+      };
+    })
+    .filter(
+      (entry): entry is { year: number; label: string } => entry !== null
+    )
+    .sort((a, b) => b.year - a.year);
+
   return (
     <html lang="en" className={`${sourceSerifPro.variable} ${workSans.variable}`}>
       <body>
@@ -108,6 +136,7 @@ export default async function RootLayout({
             slices={navigationSlices}
             context={{}}
             showAccount={showAccount}
+            pastWinnersNavYears={pastWinnersNavYears}
           />
           <main>{children}</main>
           <BackToTopButton />
