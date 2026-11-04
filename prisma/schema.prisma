@@ -27,25 +27,64 @@ enum BookStatus {
   MAIN_RECEIVED
 }
 
+enum CheckoutStatus {
+  PENDING
+  PAID
+  FAILED
+  CANCELED
+}
+
 // -------------------------------------
 // USER
 // -------------------------------------
 
 model User {
-  id           String   @id @default(uuid()) @db.Uuid
-  name         String   @db.VarChar(255)
-  email        String   @unique @db.VarChar(255)
-  passwordHash String   @map("password_hash") @db.VarChar(255)
-  phoneNumber  String?  @map("phone_number") @db.VarChar(50)
-  role         Role     @default(ENTRANT)
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
+  id           String  @id @default(uuid()) @db.Uuid
+  name         String  @db.VarChar(255)
+  email        String  @unique @db.VarChar(255)
+  passwordHash String? @map("password_hash") @db.VarChar(255)
+  phoneNumber  String? @map("phone_number") @db.VarChar(50)
+  role         Role    @default(ENTRANT)
 
-  judgeProfile JudgeProfile?
-  submissions  Submission[]
-  judgements   Judgement[]
+  // Ghost account and Stripe integration
+  isGhost          Boolean @default(false) @map("is_ghost")
+  stripeCustomerId String? @unique @map("stripe_customer_id") @db.VarChar(255)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  judgeProfile     JudgeProfile?
+  submissions      Submission[]
+  judgements       Judgement[]
+  pendingCheckouts PendingCheckout[]
 
   @@map("users")
+}
+
+// -------------------------------------
+// PENDING CHECKOUT
+// -------------------------------------
+
+model PendingCheckout {
+  id                    String         @id @default(uuid()) @db.Uuid
+  userId                String         @map("user_id") @db.Uuid
+  competitionId         String         @map("competition_id") @db.Uuid
+  stripePaymentIntentId String?        @unique @map("stripe_payment_intent_id") @db.VarChar(255)
+  entryToken            String         @unique @map("entry_token") @db.VarChar(100)
+  bookTitles            String[]       @map("book_titles")
+  expectedAmountPence   Int            @map("expected_amount_pence")
+  currency              String         @default("gbp") @db.VarChar(3)
+  status                CheckoutStatus @default(PENDING)
+  createdAt             DateTime       @default(now()) @map("created_at")
+  updatedAt             DateTime       @updatedAt @map("updated_at")
+
+  user        User        @relation(fields: [userId], references: [id])
+  competition Competition @relation(fields: [competitionId], references: [id])
+  submission  Submission?
+
+  @@index([userId])
+  @@index([competitionId])
+  @@map("pending_checkouts")
 }
 
 // -------------------------------------
@@ -79,7 +118,8 @@ model Competition {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
-  submissions Submission[]
+  submissions      Submission[]
+  pendingCheckouts PendingCheckout[]
 
   @@map("competitions")
 }
@@ -89,17 +129,19 @@ model Competition {
 // -------------------------------------
 
 model Submission {
-  id            String   @id @default(uuid()) @db.Uuid
-  competitionId String   @map("competition_id") @db.Uuid
-  entrantId     String   @map("entrant_id") @db.Uuid
-  title         String   @db.VarChar(255)
-  coverImageUrl String?  @map("cover_image_url") @db.Text
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @updatedAt @map("updated_at")
+  id                String   @id @default(uuid()) @db.Uuid
+  competitionId     String   @map("competition_id") @db.Uuid
+  entrantId         String   @map("entrant_id") @db.Uuid
+  pendingCheckoutId String?  @unique @map("pending_checkout_id") @db.Uuid
+  title             String   @db.VarChar(255)
+  coverImageUrl     String?  @map("cover_image_url") @db.Text
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
 
-  competition Competition @relation(fields: [competitionId], references: [id])
-  entrant     User        @relation(fields: [entrantId], references: [id])
-  books       Book[]
+  competition     Competition      @relation(fields: [competitionId], references: [id])
+  entrant         User             @relation(fields: [entrantId], references: [id])
+  pendingCheckout PendingCheckout? @relation(fields: [pendingCheckoutId], references: [id])
+  books           Book[]
 
   @@index([competitionId])
   @@index([entrantId])

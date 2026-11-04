@@ -264,6 +264,9 @@ export async function upsertIncompleteEntry(entry: IncompleteEntryRow): Promise<
 
   if (rowNumber) {
     const current: (string | number)[] = await getRowValues(rowNumber);
+    if (String(current[10]).trim().toLowerCase() === "paid") {
+      return buildRowUrl(spreadsheetId, rowNumber);
+    }
     // index 0 is reference, which we don't know yet at "incomplete" stage
     current[2] = entry.name;
     current[3] = entry.email;
