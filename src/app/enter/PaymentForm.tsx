@@ -13,10 +13,7 @@ import {
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 function CheckoutForm({
-  entryToken,
   totalGBP,
-  bookCount,
-  bookTitles,
 }: {
   entryToken: string;
   totalGBP: number;
@@ -59,32 +56,21 @@ function CheckoutForm({
     }
 
     if (paymentIntent?.status === "succeeded") {
-      if (entryToken) {
-        try {
-          const syncResponse = await fetch("/api/entry-status", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              token: entryToken,
-              paymentId: paymentIntent.id,
-              bookCount,
-              totalGBP,
-              paidAt: new Date().toISOString(),
-              bookTitles,
-            }),
-          });
-
-          if (!syncResponse.ok) {
-            throw new Error("Paid entry sync failed.");
-          }
-        } catch (syncError) {
-          console.error("Failed to mark sheet entry as paid from client:", syncError);
-        }
-      }
-
-      sessionStorage.setItem("maya_entry_complete", "true");
-      router.push(`/enter/success?payment_intent_id=${paymentIntent.id}`);
+      router.push(
+        `/enter/success?payment_intent_id=${encodeURIComponent(paymentIntent.id)}`
+      );
+      return;
     }
+
+    if (paymentIntent?.status === "processing") {
+      router.push(
+        `/enter/success?payment_intent_id=${encodeURIComponent(paymentIntent.id)}`
+      );
+      return;
+    }
+
+    setError("Payment has not been completed. Please check your payment details.");
+    setIsProcessing(false);
   };
 
   return (
