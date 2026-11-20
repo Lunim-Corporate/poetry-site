@@ -41,6 +41,7 @@
     "prisma": "^6.19.3",
     "slice-machine-ui": "^2.21.1",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5"
   }
 }
