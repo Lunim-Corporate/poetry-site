@@ -776,10 +776,7 @@ export default function EnterPageClient({
               {clientSecret ? (
                 <PaymentForm
                   clientSecret={clientSecret}
-                  entryToken={entryToken ?? ""}
                   totalGBP={bookPrices[formData.bookCount]}
-                  bookCount={formData.bookCount}
-                  bookTitles={formData.bookTitles}
                 />
               ) : (
                 <div className="flex items-center justify-center py-8 text-slate-400 text-base gap-2">
