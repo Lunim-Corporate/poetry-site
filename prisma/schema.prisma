@@ -34,6 +34,12 @@ enum CheckoutStatus {
   CANCELED
 }
 
+enum FulfillmentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+}
+
 // -------------------------------------
 // USER
 // -------------------------------------
@@ -78,13 +84,35 @@ model PendingCheckout {
   createdAt             DateTime       @default(now()) @map("created_at")
   updatedAt             DateTime       @updatedAt @map("updated_at")
 
-  user        User        @relation(fields: [userId], references: [id])
-  competition Competition @relation(fields: [competitionId], references: [id])
+  user        User                @relation(fields: [userId], references: [id])
+  competition Competition         @relation(fields: [competitionId], references: [id])
   submission  Submission?
+  fulfillment PaymentFulfillment?
 
   @@index([userId])
   @@index([competitionId])
   @@map("pending_checkouts")
+}
+
+model PaymentFulfillment {
+  id         String @id @default(uuid()) @db.Uuid
+  checkoutId String @unique @map("checkout_id") @db.Uuid
+
+  sheetsSyncedAt   DateTime? @map("sheets_synced_at")
+  entrantEmailedAt DateTime? @map("entrant_emailed_at")
+  adminEmailedAt   DateTime? @map("admin_emailed_at")
+
+  lastError String? @map("last_error") @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  checkout PendingCheckout @relation(fields: [checkoutId], references: [id])
+
+  sheetsStatus    FulfillmentStatus @default(PENDING) @map("sheets_status")
+  sheetsClaimedAt DateTime?         @map("sheets_claimed_at")
+
+  @@map("payment_fulfillments")
 }
 
 // -------------------------------------
