@@ -105,6 +105,17 @@ export interface PaidEntryUpdate {
   bookTitles?: string[];
 }
 
+
+export interface VerifiedPaidEntry extends PaidEntryUpdate {
+  reference: string;
+  name: string;
+  email: string;
+  phone: string;
+  rulesConfirmed: boolean;
+  createdAt: string;
+}
+
+
 function skipGoogleSheets(): boolean {
   return process.env.SKIP_GOOGLE_SHEETS?.trim().toLowerCase() === "true";
 }
@@ -348,4 +359,57 @@ export async function markEntryPaidByToken(entry: PaidEntryUpdate): Promise<stri
   await updateRowValues(rowNumber, current);
 
   return buildRowUrl(spreadsheetId, rowNumber);
+}
+
+
+
+export async function syncVerifiedPaidEntry(
+  entry: VerifiedPaidEntry
+): Promise<string> {
+  if (skipGoogleSheets()) {
+    throw new Error(
+      "Google Sheets synchronization is disabled."
+    );
+  }
+
+  const { spreadsheetId } = getSheetsConfig();
+
+  const rowNumber = await findRowByToken(entry.token);
+
+  const paidValues = [
+    entry.reference,
+    entry.createdAt,
+    entry.name,
+    entry.email,
+    entry.phone,
+    entry.quantity,
+    (entry.bookTitles ?? []).join(", "),
+    entry.priceGBP,
+    entry.paymentId,
+    entry.token,
+    "Paid",
+    entry.rulesConfirmed ? "Yes" : "No",
+    entry.paidAt,
+  ];
+
+  if (rowNumber) {
+    const current = await getRowValues(rowNumber);
+
+    // Preserve the original creation date and any
+    // previously recorded contact details.
+    paidValues[1] = current[1] || entry.createdAt;
+    paidValues[4] = current[4] || entry.phone;
+    paidValues[11] =
+      current[11] || (entry.rulesConfirmed ? "Yes" : "No");
+
+    await updateRowValues(rowNumber, paidValues);
+
+    return buildRowUrl(spreadsheetId, rowNumber);
+  }
+
+  // If the incomplete checkout row was never written,
+  // create the verified paid entry directly.
+  const newRowNumber = await appendRow(paidValues);
+
+  return buildRowUrl(spreadsheetId, newRowNumber);
 }
