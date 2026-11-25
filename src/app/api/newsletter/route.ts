@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { upsertListMember } from "@/lib/mailchimp";
+import { upsertSubscriber } from "@/lib/sequenzy";
 
 export async function POST(req: NextRequest) {
   const { email } = await req.json();
@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Email is required." }, { status: 400 });
   }
 
-  const result = await upsertListMember(email.trim());
+  const result = await upsertSubscriber(email.trim());
   if (!result.ok) {
     return NextResponse.json({ error: result.error }, { status: 500 });
   }

@@ -47,6 +47,3 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .cursor/debug-7c3c63.log
-# .env.example
-
-/src/generated/prisma

@@ -10,6 +10,10 @@ const nextConfig: NextConfig = {
     ],
   },
 
+  turbopack: {
+    root: __dirname,
+  },
+
   async redirects() {
     const permanent = true;
     return [
@@ -34,16 +38,32 @@ const nextConfig: NextConfig = {
       { source: "/winners/", destination: "/past-winners", permanent },
 
       // Winners by year (covers 2020–2025 and beyond)
-      { source: "/winners-:year", destination: "/past-winners/:year", permanent },
-      { source: "/winners-:year/", destination: "/past-winners/:year", permanent },
+      {
+        source: "/winners-:year",
+        destination: "/past-winners/:year",
+        permanent,
+      },
+      {
+        source: "/winners-:year/",
+        destination: "/past-winners/:year",
+        permanent,
+      },
 
       // Children's Prize → Home
       { source: "/childrens-prize", destination: "/", permanent },
       { source: "/childrens-prize/", destination: "/", permanent },
 
       // Children's Prize by year → Past Winners by year
-      { source: "/childrens-prize-:year", destination: "/past-winners/:year", permanent },
-      { source: "/childrens-prize-:year/", destination: "/past-winners/:year", permanent },
+      {
+        source: "/childrens-prize-:year",
+        destination: "/past-winners/:year",
+        permanent,
+      },
+      {
+        source: "/childrens-prize-:year/",
+        destination: "/past-winners/:year",
+        permanent,
+      },
 
       // Links → Home
       { source: "/links", destination: "/", permanent },

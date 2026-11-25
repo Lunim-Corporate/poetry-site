@@ -141,6 +141,7 @@ export default function EnterPageClient({
     phoneNumber: "",
     bookCount: 0,
     bookTitles: [] as string[],
+    newsletter: false,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [clientSecret, setClientSecret] = useState<string | null>(null);
@@ -361,6 +362,7 @@ export default function EnterPageClient({
           bookTitles: Array.from({ length: formData.bookCount }, (_, i) =>
             String(formData.bookTitles[i] ?? "").trim()
           ),
+          newsletter: formData.newsletter,
         }),
       });
 
@@ -703,6 +705,28 @@ export default function EnterPageClient({
                     )}
                   </div>
                 )}
+
+                <div className="flex items-center gap-2">
+                  <input
+                    id="entry-newsletter"
+                    type="checkbox"
+                    name="newsletter"
+                    checked={formData.newsletter}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        newsletter: e.target.checked,
+                      })
+                    }
+                    className="w-4 h-4 accent-primary rounded"
+                  />
+                  <label
+                    htmlFor="entry-newsletter"
+                    className="text-base font-bold text-[#333333]"
+                  >
+                    Sign me up to your newsletter
+                  </label>
+                </div>
 
                 {checkoutError && (
                   <p className="text-base text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3" role="alert">

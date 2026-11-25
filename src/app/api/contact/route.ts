@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendContactFormNotification } from "@/lib/email";
 import { appendContactMessageRow } from "@/lib/googleSheets";
-import { parseFullName, upsertListMember } from "@/lib/mailchimp";
+import { parseFullName, upsertSubscriber } from "@/lib/sequenzy";
 
 export async function POST(req: NextRequest) {
   let body: unknown;
@@ -66,12 +66,12 @@ export async function POST(req: NextRequest) {
 
   if (wantsNewsletter) {
     const { firstName, lastName } = parseFullName(trimmedName);
-    const result = await upsertListMember(trimmedEmail, {
-      FNAME: firstName,
-      LNAME: lastName,
+    const result = await upsertSubscriber(trimmedEmail, {
+      firstName,
+      lastName,
     });
     if (!result.ok) {
-      console.error("Contact form: Mailchimp signup failed after email was sent:", result.error);
+      console.error("Contact form: Sequenzy signup failed after email was sent:", result.error);
     }
   }
 

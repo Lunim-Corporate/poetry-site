@@ -3,6 +3,7 @@ import Stripe from "stripe";
 import { createClient } from "@/prismicio";
 import { DEFAULT_PRICE_SINGLE, DEFAULT_PRICE_MULTIPLE } from "@/app/enter/constants";
 import { upsertIncompleteEntry } from "@/lib/googleSheets";
+import { parseFullName, upsertSubscriber } from "@/lib/sequenzy";
 
 function getStripe() {
   return new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -22,7 +23,7 @@ function calculateTotal(
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, phone, token, rulesConfirmed, bookCount, bookTitles } = body as {
+    const { name, email, phone, token, rulesConfirmed, bookCount, bookTitles, newsletter } = body as {
       name: string;
       email: string;
       phone?: string;
@@ -30,7 +31,9 @@ export async function POST(request: NextRequest) {
       rulesConfirmed?: boolean;
       bookCount: number;
       bookTitles?: string[];
+      newsletter?: boolean;
     };
+    const wantsNewsletter = Boolean(newsletter);
 
     if (!name || !email || !token || !bookCount || bookCount < 1 || bookCount > 6) {
       return NextResponse.json(
@@ -102,6 +105,14 @@ export async function POST(request: NextRequest) {
         await upsertIncompleteEntry(sheetPayload);
       } catch (sheetErr) {
         console.error("Google Sheets upsert failed (payment intent still created):", sheetErr);
+      }
+
+      if (wantsNewsletter) {
+        const { firstName, lastName } = parseFullName(name.trim());
+        const result = await upsertSubscriber(email.trim(), { firstName, lastName });
+        if (!result.ok) {
+          console.error("Enter wizard: Sequenzy signup failed after payment intent created:", result.error);
+        }
       }
     });
 
