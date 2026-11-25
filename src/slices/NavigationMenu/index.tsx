@@ -13,7 +13,21 @@ import {
   ENTER_MAIN_NAV_RULES_STORAGE_KEY,
 } from "@/app/enter/constants";
 
-export default function NavigationMenu({ slice }: SliceComponentProps<NavigationMenuSliceData>) {
+type PastWinnersNavYear = {
+  year: number;
+  label: string;
+};
+
+type NavigationMenuProps = SliceComponentProps<NavigationMenuSliceData> & {
+  showAccount?: boolean;
+  pastWinnersNavYears?: PastWinnersNavYear[];
+};
+
+export default function NavigationMenu({
+  slice,
+  showAccount = false,
+  pastWinnersNavYears,
+}: NavigationMenuProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -27,8 +41,15 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
     { label: "Enter Your Book", url: "/enter" },
     { label: "Our Judge", url: "/judge" },
   ];
-  const pastWinnersYears =
-    slice.primary.past_winners_years?.map((y) => y.year) || DEFAULT_YEARS;
+  const pastWinnersYears: PastWinnersNavYear[] =
+    pastWinnersNavYears && pastWinnersNavYears.length > 0
+      ? pastWinnersNavYears
+      : (
+          slice.primary.past_winners_years?.map((y) => y.year) || DEFAULT_YEARS
+        ).map((year) => ({
+          year,
+          label: `${year} Winners`,
+        }));
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
@@ -131,7 +152,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 h-[72px] max-[899px]:h-16 flex items-center border-b bg-gradient-to-r from-[#451E10] via-[#7a3520] to-[#451E10] backdrop-blur-sm">
+      <header className="fixed top-0 left-0 right-0 z-50 h-[72px] max-[1059px]:h-16 flex items-center border-b bg-gradient-to-r from-[#451E10] via-[#7a3520] to-[#451E10] backdrop-blur-sm">
         <div className="w-full max-w-6xl mx-auto px-6 flex items-center justify-between gap-8">
           <Link
             href="/"
@@ -161,7 +182,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
           </Link>
 
           {/* Mobile menu button + Contact Us */}
-          <div className="max-[899px]:flex hidden items-center gap-4 ml-auto">
+          <div className="max-[1059px]:flex hidden items-center gap-4 ml-auto">
             <Link
               href="/#contact-form"
               className="text-base font-medium text-white hover:text-white/80 transition-colors"
@@ -181,7 +202,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
           </div>
 
           {/* Desktop nav */}
-          <nav className="hidden min-[900px]:flex items-center gap-1">
+          <nav className="hidden min-[1060px]:flex items-center gap-1">
             {navLinks.map((link, index) => (
               <Link
                 key={index}
@@ -225,14 +246,14 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
               </div>
               {dropdownOpen && (
                 <div className="absolute top-full left-0 mt-2 min-w-[180px] p-2 bg-white border border-slate-200 rounded-xl shadow-lg z-50">
-                  {pastWinnersYears.map((year) => (
+                  {pastWinnersYears.map(({ year, label }) => (
                     <Link
                       key={year}
                       href={`/past-winners/${year}`}
                       onClick={() => setDropdownOpen(false)}
                       className="block px-3 py-2 text-base text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
                     >
-                      {year} Winners
+                      {label}
                     </Link>
                   ))}
                 </div>
@@ -262,6 +283,18 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
             >
               Contact Us
             </Link>
+            {showAccount && (
+              <Link
+                href="/account"
+                className={`ml-1 px-3.5 py-1.5 text-base font-medium rounded-full border transition-colors ${
+                  isActive("/account")
+                    ? "text-[#FFE169] border-[#FFE169]/70"
+                    : "text-white border-white/35 hover:border-white/70 hover:bg-white/10"
+                }`}
+              >
+                My Account
+              </Link>
+            )}
           </nav>
 
           {/* Mobile nav */}
@@ -338,7 +371,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                   </div>
                   {mobileDropdownOpen && (
                     <div className="ml-4 p-2 border border-slate-200 rounded-lg space-y-1">
-                      {pastWinnersYears.map((year) => (
+                      {pastWinnersYears.map(({ year, label }) => (
                         <Link
                           key={year}
                           href={`/past-winners/${year}`}
@@ -348,7 +381,7 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                           }}
                           className="block px-3 py-2 text-base text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
                         >
-                          {year} Winners
+                          {label}
                         </Link>
                       ))}
                     </div>
@@ -380,6 +413,19 @@ export default function NavigationMenu({ slice }: SliceComponentProps<Navigation
                 >
                   Contact Us
                 </Link>
+                {showAccount && (
+                  <Link
+                    href="/account"
+                    onClick={() => setMobileNavOpen(false)}
+                    className={`mx-4 mt-1 px-4 py-3 font-medium rounded-lg border transition-colors ${
+                      isActive("/account")
+                        ? "text-primary border-primary/40 bg-primary/5"
+                        : "text-slate-600 border-slate-200 hover:text-primary hover:border-slate-300"
+                    }`}
+                  >
+                    My Account
+                  </Link>
+                )}
               </nav>
             </>
           )}

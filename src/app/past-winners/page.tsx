@@ -6,6 +6,7 @@ import { components } from "@/slices";
 import Link from "next/link";
 import TwoColumnLayout from "@/components/TwoColumnLayout";
 import { generateMetaDataInfo } from "@/utils/generateMetaDataInfo";
+import { getPastWinnersYearStatus } from "@/utils/pastWinnersYearStatus";
 import type {
   PrismicMetaFields,
   PrismicSlice,
@@ -26,12 +27,16 @@ export default async function PastWinnersPage() {
   const parsedYearDocs =
     yearDocs.length > 0
       ? yearDocs
-          .map((doc) => {
-            const yearNumber = Number(doc.uid);
+          .map((yearDoc) => {
+            const yearNumber = Number(yearDoc.uid);
             if (Number.isNaN(yearNumber)) return null;
+            const data = yearDoc.data as unknown as PastWinnersYearData;
+            const status = getPastWinnersYearStatus(data);
+            if (status === "hidden") return null;
             return {
               yearNumber,
-              data: doc.data as unknown as PastWinnersYearData,
+              data,
+              status,
             };
           })
           .filter(
@@ -40,6 +45,7 @@ export default async function PastWinnersPage() {
             ): entry is {
               yearNumber: number;
               data: PastWinnersYearData;
+              status: Exclude<ReturnType<typeof getPastWinnersYearStatus>, "hidden">;
             } => entry !== null
           )
           .sort((a, b) => b.yearNumber - a.yearNumber)
@@ -78,7 +84,33 @@ export default async function PastWinnersPage() {
       <TwoColumnLayout>
         <div className="space-y-10">
           {parsedYearDocs.length > 0 ? (
-            parsedYearDocs.map(({ yearNumber, data }) => {
+            parsedYearDocs.map(({ yearNumber, data, status }) => {
+              if (status === "shortlist" || status === "longlist") {
+                const announcement =
+                  status === "shortlist" ? "Shortlist" : "Longlist";
+
+                return (
+                  <section
+                    key={yearNumber}
+                    className="bg-[#F9F5EF] border border-[#B7A08F] rounded-2xl p-4 md:p-8 shadow-sm"
+                  >
+                    <h2 className="text-2xl font-semibold text-slate-900 mb-0 md:mb-4 text-left">
+                      {yearNumber} {announcement} Announced
+                    </h2>
+
+                    <div className="mt-4 text-right">
+                      <Link
+                        href={`/past-winners/${yearNumber}`}
+                        className="text-md font-medium text-slate-700 hover:text-primary transition-colors underline underline-offset-2 hover:no-underline"
+                      >
+                        View the {yearNumber} competition {announcement.toLowerCase()}{" "}
+                        &raquo;
+                      </Link>
+                    </div>
+                  </section>
+                );
+              }
+
               const winners: WinnerEntry[] = data.winners ?? [];
               const childrenWinner = winners.find(
                 (w) => w.prize_level === "Children's Prize"

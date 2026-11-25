@@ -17,6 +17,7 @@ export interface PrismicSlice {
   id: string;
   slice_type: string;
   variation: string;
+  
   primary: Record<string, unknown>;
   items?: Record<string, unknown>[];
 }
@@ -47,6 +48,14 @@ export interface AboutIntroSliceData extends PrismicSlice {
   primary: {
     title?: string;
     subtitle?: RichTextField;
+  };
+}
+
+export interface AnnouncementSectionSliceData extends PrismicSlice {
+  slice_type: "announcement_section";
+  primary: {
+    section_title?: string;
+    section_text?: RichTextField;
   };
 }
 
@@ -142,13 +151,21 @@ export interface JudgeProfileSliceData extends PrismicSlice {
     location?: string;
     portrait?: ImageField;
     bio?: RichTextField;
+    entrepreneurial_history_heading?: string;
     entrepreneurial_history?: RichTextField;
+    literary_history_heading?: string;
     literary_history?: RichTextField;
     books?: Array<{
       book_title?: string;
       book_image?: ImageField;
       book_amazon_url?: string;
       book_description?: string;
+    }>;
+    preliminary_judges_heading?: string;
+    preliminary_judges?: Array<{
+      profile_picture?: ImageField;
+      name?: string;
+      biography?: RichTextField;
     }>;
   };
 }

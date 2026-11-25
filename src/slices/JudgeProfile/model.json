@@ -53,6 +53,13 @@
             "multi": "paragraph,strong,em,hyperlink,list-item,o-list-item"
           }
         },
+        "entrepreneurial_history_heading": {
+          "type": "Text",
+          "config": {
+            "label": "Entrepreneurial History Heading",
+            "placeholder": "Entrepreneurial History"
+          }
+        },
         "entrepreneurial_history": {
           "type": "StructuredText",
           "config": {
@@ -60,6 +67,13 @@
             "placeholder": "Enter entrepreneurial history...",
             "allowTargetBlank": true,
             "multi": "paragraph,strong,em,hyperlink,list-item,o-list-item"
+          }
+        },
+        "literary_history_heading": {
+          "type": "Text",
+          "config": {
+            "label": "Literary History Heading",
+            "placeholder": "Literary History"
           }
         },
         "literary_history": {
@@ -106,6 +120,48 @@
                 "config": {
                   "label": "Description",
                   "placeholder": "Short description..."
+                }
+              }
+            }
+          }
+        },
+        "preliminary_judges_heading": {
+          "type": "Text",
+          "config": {
+            "label": "Preliminary Judges Heading",
+            "placeholder": "Preliminary Judges"
+          }
+        },
+        "preliminary_judges": {
+          "type": "Group",
+          "config": {
+            "label": "Preliminary Judges",
+            "fields": {
+              "profile_picture": {
+                "type": "Image",
+                "config": {
+                  "label": "Profile Picture",
+                  "constraint": {
+                    "width": 400,
+                    "height": 400
+                  },
+                  "thumbnails": []
+                }
+              },
+              "name": {
+                "type": "Text",
+                "config": {
+                  "label": "Name",
+                  "placeholder": "Judge name..."
+                }
+              },
+              "biography": {
+                "type": "StructuredText",
+                "config": {
+                  "label": "Biography",
+                  "placeholder": "Enter biography...",
+                  "allowTargetBlank": true,
+                  "multi": "paragraph,strong,em,hyperlink"
                 }
               }
             }

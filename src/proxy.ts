@@ -8,6 +8,8 @@ import { NextRequest, NextResponse } from "next/server";
 const VALID_PATHS = [
   /^\/$/, // homepage
   /^\/enter(\/success)?\/?$/,
+  /^\/dashboard\/?$/,
+  /^\/account\/?$/,
   /^\/judge\/?$/,
   /^\/past-winners(\/\d{4})?\/?$/,
   /^\/slice-simulator\/?$/,

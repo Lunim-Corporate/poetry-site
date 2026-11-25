@@ -2,13 +2,22 @@ import type { Metadata } from "next";
 import QRCode from "qrcode";
 import Link from "next/link";
 import Stripe from "stripe";
-import { createClient } from "@/prismicio";
-import { DEFAULT_SHIPPING } from "../constants";
-import PrintButton from "./PrintButton";
 import MarkEntryComplete from "./MarkEntryComplete";
 import SuccessStepper from "./SuccessStepper";
+import CreateAccountForm from "./CreateAccountForm";
+import PostingAddressSection from "@/components/PostingAddressSection";
 import { getBookTitlesForToken, markEntryPaidByToken } from "@/lib/googleSheets";
 import { sendEntrantConfirmation, sendAdminNotification } from "@/lib/email";
+import { postingBookFromShipping } from "@/lib/mockAuth";
+
+type AssignedJudge = {
+  id: string;
+  name: string;
+  street: string;
+  town: string;
+  postcode: string;
+  country: string;
+};
 
 export const metadata: Metadata = {
   title: "Entry Confirmed - Maya Poetry Book Awards",
@@ -134,16 +143,22 @@ export default async function SuccessPage({
 
   const reference = `MAYA-${new Date().getFullYear()}-${intentId.slice(-8).toUpperCase()}`;
 
-  const client = createClient();
-  const doc = await client.getSingle("enter_page").catch(() => null);
-  const data = (doc?.data ?? {}) as Record<string, unknown>;
+  // TODO: wire to real assignment data (judge assigned instantly at entry time)
+  const assignedJudge: AssignedJudge = {
+    id: "placeholder-sub-judge-1",
+    name: "Alex Morgan",
+    street: "14 Chapel Street",
+    town: "Cardiff",
+    postcode: "CF10 2AB",
+    country: "United Kingdom",
+  };
 
   const shipping = {
-    name: (data.shipping_name as string) || DEFAULT_SHIPPING.name,
-    street: (data.shipping_street as string) || DEFAULT_SHIPPING.street,
-    town: (data.shipping_town as string) || DEFAULT_SHIPPING.town,
-    postcode: (data.shipping_postcode as string) || DEFAULT_SHIPPING.postcode,
-    country: (data.shipping_country as string) || DEFAULT_SHIPPING.country,
+    name: assignedJudge.name,
+    street: assignedJudge.street,
+    town: assignedJudge.town,
+    postcode: assignedJudge.postcode,
+    country: assignedJudge.country,
   };
 
   const emailEntry = {
@@ -234,44 +249,18 @@ export default async function SuccessPage({
             include the proof of payment reference.
           </p>
 
-          {/* Label grid */}
-          <div
-            id="print-label"
-            className="grid grid-cols-1 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] print:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] gap-6 mt-2 mb-5 p-4 border-2 border-dashed border-slate-400/60 rounded-lg"
-          >
-            <div>
-              <h3 className="text-base font-semibold text-slate-700 mt-0 mb-2">Address</h3>
-              <p className="text-base text-slate-600 leading-relaxed">
-                <strong>{shipping.name}</strong>
-                <br />
-                {shipping.street.split("\n").map((line, i) => (
-                  <span key={i}>
-                    {line}
-                    <br />
-                  </span>
-                ))}
-                {shipping.town}
-                <br />
-                {shipping.postcode}
-                <br />
-                {shipping.country}
-              </p>
-            </div>
-            <div>
-              <h3 className="text-base font-semibold text-slate-700 mt-0 mb-3">Reference</h3>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={qrDataUrl}
-                alt="QR code linking to this entry in Google Sheets"
-                width={112}
-                height={112}
-                className="rounded"
-              />
-              <p className="text-base font-extrabold text-slate-900 mt-3">{reference}</p>
-            </div>
+          <div className="mt-2 mb-5">
+            <PostingAddressSection
+              book={postingBookFromShipping(
+                shipping,
+                "assigned_not_posted",
+                `success-${intentId.slice(-8)}`
+              )}
+              reference={reference}
+              qrDataUrl={qrDataUrl}
+              showPrintButton
+            />
           </div>
-
-          <PrintButton />
 
           <p className="text-xs text-slate-500 mt-4 leading-relaxed">
             The reference QR code and number are for the organiser&apos;s use only. If
@@ -289,14 +278,7 @@ export default async function SuccessPage({
             needed.
           </p>
 
-          <div className="mt-5">
-            <Link
-              href="/"
-              className="text-base text-slate-500 underline hover:text-slate-700"
-            >
-              Return to home page
-            </Link>
-          </div>
+          <CreateAccountForm email={entrantEmail} entryReference={reference} />
         </div>
       </div>
     </section>
