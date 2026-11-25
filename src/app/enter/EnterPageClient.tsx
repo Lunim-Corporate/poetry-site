@@ -119,24 +119,31 @@ function generateEntryToken(length = 8): string {
   return token;
 }
 
+type AuthenticatedEntrant = {
+  name: string;
+  email: string;
+};
+
 export default function EnterPageClient({
   competitionClosed,
   settings,
   rulesItems,
   rulesCopy,
   rulesTitle,
+  authenticatedUser,
 }: {
   competitionClosed: boolean;
   settings: EnterPageSettings;
   rulesItems?: ListingSliceData["primary"]["items"];
   rulesCopy?: ListingSliceData["primary"]["copy"];
   rulesTitle?: ListingSliceData["primary"]["title"];
+  authenticatedUser: AuthenticatedEntrant | null;
 }) {
   const [currentStep, setCurrentStep] = useState<Step>(1);
   const [rulesConfirmed, setRulesConfirmed] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
+    name: authenticatedUser?.name ?? "",
+    email: authenticatedUser?.email ?? "",
     phoneCountryCode: "",
     phoneNumber: "",
     bookCount: 0,
@@ -354,7 +361,9 @@ export default function EnterPageClient({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: formData.name.trim(),
-          email: formData.email.trim(),
+          email: (
+            authenticatedUser?.email ?? formData.email
+          ).trim(),
           phone,
           token,
           rulesConfirmed,
@@ -591,13 +600,35 @@ export default function EnterPageClient({
                     inputMode="email"
                     autoComplete="email"
                     required
-                    value={formData.email}
+                    value={authenticatedUser?.email ?? formData.email}
+                    disabled={Boolean(authenticatedUser)}
                     onChange={(e) => {
-                      setFormData({ ...formData, email: e.target.value });
-                      if (errors.email) setErrors({ ...errors, email: "" });
+                      if (authenticatedUser) return;
+
+                      setFormData((prev) => ({
+                        ...prev,
+                        email: e.target.value,
+                      }));
+
+                      if (errors.email) {
+                        setErrors((prev) => ({
+                          ...prev,
+                          email: "",
+                        }));
+                      }
                     }}
-                    className="w-full px-4 py-2.5 text-base border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                    className={`w-full px-4 py-2.5 text-base border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors ${
+                      authenticatedUser
+                        ? "bg-slate-100 text-slate-500 cursor-not-allowed"
+                        : "bg-white"
+                    }`}
                   />
+
+                  {authenticatedUser && (
+                    <p className="text-xs text-slate-500 mt-1">
+                      You are signed in. Your entry will be associated with this email address.
+                    </p>
+                  )}
                   {errors.email && (
                     <p className="text-xs text-red-600 mt-1" role="alert">{errors.email}</p>
                   )}
@@ -769,10 +800,7 @@ export default function EnterPageClient({
               {clientSecret ? (
                 <PaymentForm
                   clientSecret={clientSecret}
-                  entryToken={entryToken ?? ""}
                   totalGBP={bookPrices[formData.bookCount]}
-                  bookCount={formData.bookCount}
-                  bookTitles={formData.bookTitles}
                 />
               ) : (
                 <div className="flex items-center justify-center py-8 text-slate-400 text-base gap-2">

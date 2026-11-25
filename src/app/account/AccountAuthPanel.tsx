@@ -241,6 +241,8 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 type Tab = "login" | "signup";
 
@@ -267,6 +269,7 @@ export default function AccountAuthPanel() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const router = useRouter();
 
   function switchTab(next: Tab) {
     setTab(next);
@@ -277,37 +280,44 @@ export default function AccountAuthPanel() {
     setEntryReference("");
   }
 
+
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     setError("");
     setSuccess("");
 
-    if (tab === "login") {
-      setError(
-        "Login is not yet available. Please create an account using the Sign up tab."
-      );
+    if (!email.trim() || !password) {
+      setError("Please enter your email and password.");
       return;
     }
 
-    if (!name.trim() || !email.trim() || !password) {
-      setError("Please fill in all required fields.");
-      return;
-    }
-
-    if (name.trim().length < 2) {
-      setError("Full name must contain at least 2 characters.");
-      return;
-    }
-
-    if (password.length < 12) {
-      setError("Password must contain at least 12 characters.");
+    if (tab === "signup" && !name.trim()) {
+      setError("Please enter your full name.");
       return;
     }
 
     setSubmitting(true);
 
     try {
+      if (tab === "login") {
+        const result = await signIn("credentials", {
+          email: email.trim().toLowerCase(),
+          password,
+          redirect: false,
+        });
+        console.log("Login result:", result);
+        if (!result || result.error) {
+          setError("Incorrect email or password. Please try again.");
+          return;
+        }
+
+        router.push("/dashboard");
+        router.refresh();
+        return;
+      }
+
+      // Registration
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
@@ -320,40 +330,42 @@ export default function AccountAuthPanel() {
         }),
       });
 
-      const result: RegisterResponse = await response.json();
+      const result = await response.json();
 
       if (!response.ok) {
-        if (result.errors) {
-          const firstError = Object.values(result.errors)
-            .flat()
-            .find(Boolean);
+        const firstError = result.errors
+          ? Object.values(result.errors)
+              .flat()
+              .find((message) => typeof message === "string")
+          : null;
 
-          setError(firstError || result.message);
-        } else {
-          setError(result.message || "Unable to create your account.");
-        }
-
+        setError(
+          typeof firstError === "string"
+            ? firstError
+            : result.message || "Unable to create your account."
+        );
         return;
       }
 
-      // Registration was successful.
-      // The optional entry reference is not yet persisted.
       setTab("login");
       setPassword("");
       setName("");
       setEntryReference("");
 
       setSuccess(
-        "Your account has been created successfully. Login functionality will be available soon."
+        "Account created successfully. You can now log in."
       );
-    } catch {
+    } catch (error) {
+      console.error("Authentication error:", error);
+
       setError(
-        "Unable to connect to the server. Please check your connection and try again."
+        "Something went wrong. Please try again."
       );
     } finally {
       setSubmitting(false);
     }
   }
+
 
   return (
     <div className="bg-white border-2 border-dashed border-slate-400/60 rounded-lg p-5 md:p-8 shadow-sm">
@@ -545,10 +557,13 @@ export default function AccountAuthPanel() {
           className={primaryButtonClassName}
         >
           {submitting
-            ? "Creating account…"
+            ? tab === "login"
+              ? "Logging in…"
+              : "Creating account…"
             : tab === "login"
               ? "Log in"
-              : "Create account"}
+              : "Create account"
+          }
         </button>
       </form>
 
