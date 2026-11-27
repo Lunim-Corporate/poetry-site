@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
 export interface EmailEntry {
   name: string;
@@ -32,6 +33,77 @@ function getResend() {
   return new Resend(apiKey);
 }
 
+interface EmailMessage {
+  from: string;
+  to: string;
+  subject: string;
+  html: string;
+  replyTo?: string;
+}
+
+async function sendEmail(message: EmailMessage): Promise<void> {
+  const transport = process.env.EMAIL_TRANSPORT
+    ?.trim()
+    .toLowerCase();
+
+  // Mailtrap sandbox for local testing.
+  if (transport === "mailtrap") {
+    const host = process.env.MAILTRAP_HOST;
+    const port = Number(process.env.MAILTRAP_PORT);
+    const user = process.env.MAILTRAP_USER;
+    const pass = process.env.MAILTRAP_PASSWORD;
+
+    if (
+      host !== "sandbox.smtp.mailtrap.io" ||
+      port !== 2525 ||
+      !user ||
+      !pass
+    ) {
+      throw new Error(
+        "Missing or invalid Mailtrap sandbox configuration."
+      );
+    }
+
+    const transporter = nodemailer.createTransport({
+      host,
+      port,
+      secure: false,
+      requireTLS: true,
+      auth: {
+        user,
+        pass,
+      },
+    });
+
+    await transporter.sendMail(message);
+
+    console.info("[email] Message sent to Mailtrap sandbox.");
+
+    return;
+  }
+
+  // Prevent accidental live email delivery during development.
+  if (process.env.NODE_ENV !== "production") {
+    throw new Error(
+      "Local email delivery requires EMAIL_TRANSPORT=mailtrap."
+    );
+  }
+
+  // Reject unsupported transport configurations.
+  if (transport && transport !== "resend") {
+    throw new Error("Unsupported email transport.");
+  }
+
+  // Preserve the existing production Resend integration.
+  const resend = getResend();
+
+  const { error } = await resend.emails.send(message);
+
+  if (error) {
+    throw new Error(`Resend email delivery failed: ${error.message}`);
+  }
+}
+
 function formatShipping(shipping: EmailEntry["shipping"]): string {
   return [
     shipping.name,
@@ -45,12 +117,11 @@ function formatShipping(shipping: EmailEntry["shipping"]): string {
 }
 
 export async function sendEntrantConfirmation(entry: EmailEntry): Promise<void> {
-  const resend = getResend();
   const fromEmail = process.env.EMAIL_FROM!;
   const bookWord = entry.quantity === 1 ? "book" : "books";
   const shippingFormatted = formatShipping(entry.shipping);
 
-  await resend.emails.send({
+  await sendEmail({
     from: fromEmail,
     to: entry.email,
     subject: "Your Maya Poetry Book Awards entry is confirmed",
@@ -84,7 +155,6 @@ export async function sendEntrantConfirmation(entry: EmailEntry): Promise<void> 
 }
 
 export async function sendAdminNotification(entry: EmailEntry): Promise<void> {
-  const resend = getResend();
   const fromEmail = process.env.EMAIL_FROM!;
   const adminEmail = process.env.ADMIN_EMAIL!;
 
@@ -98,7 +168,7 @@ export async function sendAdminNotification(entry: EmailEntry): Promise<void> {
       ? `<ol style="margin: 0; padding-left: 20px;">${titles.map((t) => `<li>${escapeHtml(t)}</li>`).join("")}</ol>`
       : `${entry.quantity} ${bookWord}`;
 
-  await resend.emails.send({
+  await sendEmail({
     from: fromEmail,
     to: adminEmail,
     subject: `New entry: ${entry.name} — ${entry.reference}`,
@@ -128,7 +198,7 @@ export interface ContactFormPayload {
 
 /** Sends the site contact form message to `ADMIN_EMAIL` (same inbox as entry notifications). */
 export async function sendContactFormNotification(payload: ContactFormPayload): Promise<void> {
-  const resend = getResend();
+
   const fromEmail = process.env.EMAIL_FROM!;
   const adminEmail = process.env.ADMIN_EMAIL;
 
@@ -137,7 +207,7 @@ export async function sendContactFormNotification(payload: ContactFormPayload): 
   const { name, email, message, newsletterOptIn } = payload;
   const timestamp = new Date().toISOString();
 
-  await resend.emails.send({
+  await sendEmail({
     from: fromEmail,
     to: adminEmail,
     replyTo: email,
