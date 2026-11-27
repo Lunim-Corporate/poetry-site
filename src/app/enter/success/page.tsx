@@ -372,13 +372,13 @@ import SuccessStepper from "./SuccessStepper";
 import CreateAccountForm from "./CreateAccountForm";
 
 import PostingAddressSection from "@/components/PostingAddressSection";
-import { markEntryPaidByToken } from "@/lib/googleSheets";
 import {
-  sendEntrantConfirmation,
-  sendAdminNotification,
-} from "@/lib/email";
+  syncPaymentToGoogleSheets,
+  sendPaymentConfirmationEmails,
+} from "@/lib/paymentFulfilment";
 import { postingBookFromShipping } from "@/lib/mockAuth";
 import { prisma } from "@/lib/prisma";
+
 
 type AssignedJudge = {
   id: string;
@@ -400,28 +400,6 @@ function getStripe() {
   return new Stripe(process.env.STRIPE_SECRET_KEY!, {
     apiVersion: "2026-01-28.clover",
   });
-}
-
-function mergeStripeMetadata(
-  existing: Stripe.Metadata | null,
-  patch: Record<string, string>
-): Record<string, string> {
-  const base: Record<string, string> = {};
-
-  if (existing) {
-    for (const key of Object.keys(existing)) {
-      const value = existing[key as keyof typeof existing];
-
-      if (typeof value === "string") {
-        base[key] = value;
-      }
-    }
-  }
-
-  return {
-    ...base,
-    ...patch,
-  };
 }
 
 function getPaymentStatusUrl(intentId: string) {
@@ -548,7 +526,6 @@ export default async function SuccessPage({
   const entrantName = checkout.user.name;
   const entrantEmail = checkout.user.email;
 
-  const entryToken = checkout.entryToken;
 
   const books = checkout.submission.books;
 
@@ -572,67 +549,63 @@ export default async function SuccessPage({
   // Do not use the old hardcoded judge address in production.
   // const assignedJudge: AssignedJudge | null = null;
   // Placeholder judge address for local testing only
-  const assignedJudge = {
-    id: "placeholder-sub-judge-1",
-    name: "Alex Morgan",
-    street: "14 Chapel Street",
-    town: "Cardiff",
-    postcode: "CF10 2AB",
-    country: "United Kingdom",
-  };
+  const isSandboxTesting =
+    intent.livemode === false &&
+    process.env.EMAIL_TRANSPORT?.trim().toLowerCase() === "mailtrap" &&
+    process.env.MAILTRAP_HOST === "sandbox.smtp.mailtrap.io" &&
+    Number(process.env.MAILTRAP_PORT) === 2525;
 
+  const assignedJudge: AssignedJudge | null = isSandboxTesting
+    ? {
+        id: "placeholder-sub-judge-1",
+        name: "Alex Morgan",
+        street: "14 Chapel Street",
+        town: "Cardiff",
+        postcode: "CF10 2AB",
+        country: "United Kingdom",
+      }
+    : null;
   // Shipping details required by EmailEntry
-  const shipping = {
-    name: assignedJudge.name,
-    street: assignedJudge.street,
-    town: assignedJudge.town,
-    postcode: assignedJudge.postcode,
-    country: assignedJudge.country,
-  };
-
-  const emailEntry = {
-    name: entrantName,
-    email: entrantEmail,
-    quantity: bookCount,
-    priceGBP: Number(totalGBP),
-    paymentId: intent.id,
-    reference,
-    bookTitles: resolvedBookTitles,
-    shipping,
-  };
-
-  // TEMPORARY: Existing post-payment side effects.
-  //
-  // These will be moved to a reliable backend workflow.
-  // Stripe metadata is not a fully reliable idempotency mechanism.
-  // Concurrent requests or partial failures can cause duplicates.
-  let sheetRowUrl: string | null =
-    intent.metadata?.sheet_row_url || null;
-
-  if (!intent.metadata?.entry_processed) {
-    try {
-      await Promise.all([
-        sendEntrantConfirmation(emailEntry),
-        sendAdminNotification(emailEntry),
-      ]);
-    } catch (error) {
-      console.error(
-        "Failed to send confirmation emails:",
-        error
-      );
+ const shipping = assignedJudge
+  ? {
+      name: assignedJudge.name,
+      street: assignedJudge.street,
+      town: assignedJudge.town,
+      postcode: assignedJudge.postcode,
+      country: assignedJudge.country,
     }
+  : null;
 
+const emailEntry = shipping
+  ? {
+      name: entrantName,
+      email: entrantEmail,
+      quantity: bookCount,
+      priceGBP: Number(totalGBP),
+      paymentId: intent.id,
+      reference,
+      bookTitles: resolvedBookTitles,
+      shipping,
+    }
+  : null;
+
+  // Preserve previously processed entries to avoid
+  // repeating historical notifications.
+  const legacyEntryProcessed =
+    intent.metadata?.entry_processed === "true";
+
+  let sheetRowUrl: string | null = null;
+
+  if (legacyEntryProcessed) {
+    sheetRowUrl = intent.metadata?.sheet_row_url || null;
+  } else {
+    // Synchronize the verified payment with Google Sheets.
     try {
-      sheetRowUrl = await markEntryPaidByToken({
-        token: entryToken,
-        quantity: bookCount,
-        priceGBP: Number(totalGBP),
-        paymentId: intent.id,
-        paidAt: new Date(
-          intent.created * 1000
-        ).toISOString(),
-        bookTitles: resolvedBookTitles,
-      });
+      const sheetsResult = await syncPaymentToGoogleSheets(
+        checkout.id
+      );
+
+      sheetRowUrl = sheetsResult.sheetRowUrl ?? null;
     } catch (error) {
       console.error(
         "Failed to sync payment to Google Sheets:",
@@ -640,25 +613,26 @@ export default async function SuccessPage({
       );
     }
 
-    try {
-      const updatedMetadata = mergeStripeMetadata(
-        intent.metadata,
-        {
-          entry_processed: "true",
-          ...(sheetRowUrl
-            ? { sheet_row_url: sheetRowUrl }
-            : {}),
-        }
-      );
+    // Send confirmation emails when shipping is available.
+    if (emailEntry) {
+      try {
+        const emailResult = await sendPaymentConfirmationEmails(
+          checkout.id,
+          emailEntry
+        );
 
-      await stripe.paymentIntents.update(intent.id, {
-        metadata: updatedMetadata,
-      });
-    } catch (error) {
-      console.error(
-        "Failed to update Stripe metadata:",
-        error
-      );
+        if (emailResult.errors.length > 0) {
+          console.error(
+            "Email fulfillment errors:",
+            emailResult.errors
+          );
+        }
+      } catch (error) {
+        console.error(
+          "Failed to send confirmation emails:",
+          error
+        );
+      }
     }
   }
 
