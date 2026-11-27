@@ -402,6 +402,16 @@ export async function syncVerifiedPaidEntry(
     paidValues[11] =
       current[11] || (entry.rulesConfirmed ? "Yes" : "No");
 
+    // Preserve the payment timestamp when retrying
+    // synchronization for the same verified payment.
+    if (
+      current[8] === entry.paymentId &&
+      current[10] === "Paid" &&
+      current[12]
+    ) {
+      paidValues[12] = current[12];
+    }
+
     await updateRowValues(rowNumber, paidValues);
 
     return buildRowUrl(spreadsheetId, rowNumber);

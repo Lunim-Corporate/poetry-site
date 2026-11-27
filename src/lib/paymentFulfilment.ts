@@ -1,6 +1,11 @@
 
 import { prisma } from "@/lib/prisma";
 import { syncVerifiedPaidEntry } from "@/lib/googleSheets";
+import {
+  sendEntrantConfirmation,
+  sendAdminNotification,
+  type EmailEntry,
+} from "@/lib/email";
 
 export async function processPaymentFulfillment(
   checkoutId: string
@@ -109,6 +114,7 @@ export async function syncPaymentToGoogleSheets(
   ) {
     return {
       alreadySynced: true,
+      sheetRowUrl: fulfillment.sheetRowUrl,
     };
   }
 
@@ -156,6 +162,7 @@ export async function syncPaymentToGoogleSheets(
         sheetsStatus: "COMPLETED",
         sheetsSyncedAt: new Date(),
         sheetsClaimedAt: null,
+        sheetRowUrl,
         lastError: null,
       },
     });
@@ -176,8 +183,11 @@ export async function syncPaymentToGoogleSheets(
         where: {
           checkoutId,
           sheetsStatus: "PROCESSING",
+          sheetsSyncedAt: null,
         },
         data: {
+          sheetsStatus: "PENDING",
+          sheetsClaimedAt: null,
           lastError: message,
         },
       });
@@ -190,5 +200,124 @@ export async function syncPaymentToGoogleSheets(
 
     throw error;
   }
+
+}
+
+
+export async function sendPaymentConfirmationEmails(
+  checkoutId: string,
+  emailEntry: EmailEntry
+) {
+  const fulfillment =
+    await prisma.paymentFulfillment.findUnique({
+      where: { checkoutId },
+      include: {
+        checkout: true,
+      },
+    });
+
+  if (!fulfillment) {
+    throw new Error("Payment fulfillment record not found.");
+  }
+
+  if (
+    fulfillment.checkout.status !== "PAID" ||
+    fulfillment.checkout.stripePaymentIntentId !==
+      emailEntry.paymentId
+  ) {
+    throw new Error("Payment registration is incomplete or mismatched.");
+  }
+
+  const errors: string[] = [];
+
+  let entrantEmailed = Boolean(
+    fulfillment.entrantEmailedAt
+  );
+
+  let adminEmailed = Boolean(
+    fulfillment.adminEmailedAt
+  );
+
+  // Send entrant confirmation if not previously recorded.
+  if (!entrantEmailed) {
+    try {
+      await sendEntrantConfirmation(emailEntry);
+
+      await prisma.paymentFulfillment.update({
+        where: { checkoutId },
+        data: {
+          entrantEmailedAt: new Date(),
+        },
+      });
+
+      entrantEmailed = true;
+    } catch (error) {
+      errors.push(
+        "Entrant email: " +
+          (error instanceof Error
+            ? error.message
+            : "Unknown error")
+      );
+    }
+  }
+
+  // Send administrator notification independently.
+  if (!adminEmailed) {
+    try {
+      await sendAdminNotification(emailEntry);
+
+      await prisma.paymentFulfillment.update({
+        where: { checkoutId },
+        data: {
+          adminEmailedAt: new Date(),
+        },
+      });
+
+      adminEmailed = true;
+    } catch (error) {
+      errors.push(
+        "Admin email: " +
+          (error instanceof Error
+            ? error.message
+            : "Unknown error")
+      );
+    }
+  }
+  if (errors.length > 0) {
+    await prisma.paymentFulfillment.update({
+      where: { checkoutId },
+      data: {
+        lastError: errors.join("; "),
+      },
+    });
+  } else if (entrantEmailed && adminEmailed) {
+    await prisma.paymentFulfillment.updateMany({
+      where: {
+        checkoutId,
+        sheetsStatus: "COMPLETED",
+        OR: [
+          {
+            lastError: {
+              startsWith: "Entrant email:",
+            },
+          },
+          {
+            lastError: {
+              startsWith: "Admin email:",
+            },
+          },
+        ],
+      },
+      data: {
+        lastError: null,
+      },
+    });
+  }
+
+  return {
+    entrantEmailed,
+    adminEmailed,
+    errors,
+  };
 
 }
